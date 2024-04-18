@@ -54,7 +54,14 @@ void GameScene::Update() {
 	sprite_->SetPosition(position);
 	
 	if (input_->TriggerKey(DIK_SPACE)) { //Stop the music playing
-		audio_->StopWave(voiceHandle_);
+		if (audio_->IsPlaying(voiceHandle_)) {
+			audio_->StopWave(voiceHandle_);
+		}
+		else {
+			voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
+		}
+		
+
 		//voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
 	}
 	ImGui::Begin("Debug1");
