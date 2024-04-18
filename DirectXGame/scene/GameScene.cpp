@@ -80,7 +80,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-	//sprite_->Draw(); //This must be written between PreDraw and PostDraw
+	sprite_->Draw(); //This must be written between PreDraw and PostDraw
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
