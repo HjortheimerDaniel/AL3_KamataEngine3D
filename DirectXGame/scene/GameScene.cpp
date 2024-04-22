@@ -8,6 +8,10 @@ GameScene::~GameScene() {
 
 	delete model_;
 	delete player_;
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		delete worldTransformBlock;
+	}
+	worldTransformBlocks_.clear();
 	
 
 }
@@ -24,10 +28,30 @@ void GameScene::Initialize() {
 	player_ = new Player();
 	player_->Initialize(model_, textureHandle_,&viewProjection_);
 
+	const uint32_t kNumBlockHorizontal = 20;
+	//ブロックの横幅
+	const float kBlockWidth = 2.0f;
+	worldTransformBlocks_.resize(kNumBlockHorizontal);
+
+	for (uint32_t i = 0; i < kNumBlockHorizontal; i++)
+	{
+		worldTransformBlocks_[i] = new WorldTransform();
+		worldTransformBlocks_[i]->Initialize();
+		worldTransformBlocks_[i]->translation_.x = kBlockWidth * i;
+		worldTransformBlocks_[i]->translation_.y = 0.0f;;
+	}
 }
 
 void GameScene::Update() {
 	player_->Update();
+
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		worldTransformBlock->scale_;
+		worldTransformBlock->rotation_;
+		worldTransformBlock->translation_;
+		
+	}
+	
 }
 
 void GameScene::Draw() {
