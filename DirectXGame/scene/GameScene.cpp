@@ -64,17 +64,21 @@ void GameScene::Update() {
 
 		//voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
 	}
+	#ifdef DEBUG
+
+
+
 	ImGui::Begin("Debug1");
 	ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);
 	ImGui::InputFloat3("InputFloat3", inputFloat3);
 	ImGui::SliderFloat3("SliderFloat3", inputFloat3, 0.0f, 1.0f); //Can use slider to change the value, in this case between 0 and 1
 	ImGui::ShowDemoWindow();
 	ImGui::End();
+	#endif // DEBUG
 
 	debugCamera_->Update();
 	
 }
-
 void GameScene::Draw() {
 
 	// コマンドリストの取得
