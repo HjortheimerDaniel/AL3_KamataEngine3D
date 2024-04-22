@@ -5,6 +5,7 @@
 #include <d3d12.h>
 #include <type_traits>
 #include <wrl.h>
+#include "OwnMath.h"
 
 // 定数バッファ用データ構造体
 struct ConstBufferDataWorldTransform {
@@ -37,6 +38,12 @@ public:
 	/// <summary>
 	/// 定数バッファ生成
 	/// </summary>
+	
+	/// <summary>
+	/// 行列を計算・転送する
+	/// </summary>
+	void UpdateMatrix();
+
 	void CreateConstBuffer();
 	/// <summary>
 	/// マッピングする

@@ -1,7 +1,4 @@
-#pragma once
-#include "Matrix4x4.h"
-#include "Vector3.h"
-#include "math.h"
+#include "OwnMath.h"
 
 Matrix4x4 Multiply(Matrix4x4& m1, Matrix4x4& m2)
 {
@@ -15,24 +12,56 @@ Matrix4x4 Multiply(Matrix4x4& m1, Matrix4x4& m2)
 	return result;
 }
 
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rot, const Vector3& translate) {
-	Matrix4x4 scale{
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rot, const Vector3& translate)
+{
+	Matrix4x4 Scale{
 		scale.x, 0, 0, 0,
 		0, scale.y, 0, 0,
 		0, 0, scale.z, 0,
 		0, 0, 0, 1
 	};
 
-	Matrix4x4 translate{
+	Matrix4x4 Translate{
 		1, 0, 0, 0,
 		0, 1, 0, 0,
 		0, 0, 1, 0,
 		translate.x, translate.y, translate.z, 1
 	};
 
-	//Matrix4x4 Rotate = Multiply(rot.x, Multiply(rot.y, rot.z));
+	Matrix4x4 MakeRotateMatrixZ{
+			cosf(rot.z), sinf(rot.z), 0, 0,
+			-sinf(rot.z), cosf(rot.z), 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1
+	};
 
+	Matrix4x4 MakeRotateMatrixX{
+			1, 0, 0, 0,
+			0, cosf(rot.x), sinf(rot.x), 0,
+			0, -sinf(rot.x), cosf(rot.x), 0,
+			0, 0, 0, 1
+	};
 
+	Matrix4x4 MakeRotateMatrixY{
+			cosf(rot.y), 0, -sinf(rot.y), 0,
+			0, 1, 0, 0,
+			sinf(rot.y), 0, cosf(rot.y), 0,
+			0, 0, 0, 1
+	};
 
+	Matrix4x4 RotateYZ = Multiply(MakeRotateMatrixY, MakeRotateMatrixZ);
 
-};
+	Matrix4x4 Rotate = Multiply(MakeRotateMatrixX, RotateYZ);
+	Matrix4x4 ScaleRotate = Multiply(Scale, Rotate);
+	Matrix4x4 result = Multiply(Translate, ScaleRotate);
+
+	/*Matrix4x4 result{
+		scale.x * Rotate.m[0][0], scale.x * Rotate.m[0][1], scale.x * Rotate.m[0][2], 0,
+		scale.y * Rotate.m[1][0], scale.y * Rotate.m[1][1], scale.y * Rotate.m[1][2], 0,
+		scale.z * Rotate.m[2][0], scale.z * Rotate.m[2][1], scale.z * Rotate.m[2][2], 0,
+		translate.x, translate.y, translate.z, 1
+
+	};*/
+
+	return result;
+}

@@ -9,6 +9,7 @@
 #include "WorldTransform.h"
 #include "Player.h"
 #include <vector>
+#include "OwnMath.h"
 
 /// <summary>
 /// ゲームシーン
@@ -51,7 +52,8 @@ private: // メンバ変数
 	WorldTransform worldTransform_;
 	Player* player_ = nullptr;
 	std::vector<WorldTransform*>worldTransformBlocks_;
-
+	std::vector<WorldTransform*>worldTransformBlocks_;
+	Model* modelBlock_;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

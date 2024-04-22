@@ -12,7 +12,7 @@ GameScene::~GameScene() {
 		delete worldTransformBlock;
 	}
 	worldTransformBlocks_.clear();
-	
+	delete modelBlock_;
 
 }
 
@@ -27,7 +27,7 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 	player_ = new Player();
 	player_->Initialize(model_, textureHandle_,&viewProjection_);
-
+	modelBlock_ = Model::Create();
 	const uint32_t kNumBlockHorizontal = 20;
 	//ブロックの横幅
 	const float kBlockWidth = 2.0f;
@@ -46,11 +46,12 @@ void GameScene::Update() {
 	player_->Update();
 
 	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		worldTransformBlock->scale_;
-		worldTransformBlock->rotation_;
-		worldTransformBlock->translation_;
-		
+	
+		worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+		worldTransformBlock->TransferMatrix();
 	}
+	
+	
 	
 }
 
@@ -66,7 +67,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-
+	
+	
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -80,7 +82,14 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	player_->Draw();
+	
+	//player_->Draw();
+	
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		modelBlock_->Draw(*worldTransformBlock, viewProjection_);
+	}
+	
+
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
