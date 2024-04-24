@@ -10,6 +10,7 @@
 #include "Player.h"
 #include <vector>
 #include "OwnMath.h"
+#include "DebugCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -51,8 +52,10 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	WorldTransform worldTransform_;
 	Player* player_ = nullptr;
-	std::vector<WorldTransform*>worldTransformBlocks_;
-	std::vector<WorldTransform*>worldTransformBlocks_;
+	bool isDebugCameraActive_ = false;
+	DebugCamera* debugCamera_ = nullptr;
+	//std::vector<WorldTransform*>worldTransformBlocks_;
+	std::vector<std::vector<WorldTransform*>>worldTransformBlocks_;
 	Model* modelBlock_;
 	/// <summary>
 	/// ゲームシーン用

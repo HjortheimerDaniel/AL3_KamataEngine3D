@@ -8,11 +8,14 @@ GameScene::~GameScene() {
 
 	delete model_;
 	delete player_;
-	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		delete worldTransformBlock;
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			delete worldTransformBlock;
+		}
 	}
 	worldTransformBlocks_.clear();
 	delete modelBlock_;
+	delete debugCamera_;
 
 }
 
@@ -29,30 +32,75 @@ void GameScene::Initialize() {
 	player_->Initialize(model_, textureHandle_,&viewProjection_);
 	modelBlock_ = Model::Create();
 	const uint32_t kNumBlockHorizontal = 20;
+	const uint32_t kNumBlockVertical = 10;
 	//ブロックの横幅
 	const float kBlockWidth = 2.0f;
-	worldTransformBlocks_.resize(kNumBlockHorizontal);
-
-	for (uint32_t i = 0; i < kNumBlockHorizontal; i++)
-	{
-		worldTransformBlocks_[i] = new WorldTransform();
-		worldTransformBlocks_[i]->Initialize();
-		worldTransformBlocks_[i]->translation_.x = kBlockWidth * i;
-		worldTransformBlocks_[i]->translation_.y = 0.0f;;
+	const float kBlockHeight = 2.0f;
+	worldTransformBlocks_.resize(kNumBlockVertical);
+	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
+		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
 	}
+
+	int map[kNumBlockHorizontal][kNumBlockVertical]{
+		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
+		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
+		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
+		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
+		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1, };
+	
+
+	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
+		for (uint32_t j = 0; j < kNumBlockHorizontal; j++)
+		{
+			worldTransformBlocks_[i][j] = new WorldTransform();
+			worldTransformBlocks_[i][j]->Initialize();
+			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
+			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+		}
+	}
+	
+	debugCamera_ = new DebugCamera(1280, 720);
 }
 
 void GameScene::Update() {
 	player_->Update();
-
-	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-	
-		worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-		worldTransformBlock->TransferMatrix();
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock)
+				continue;
+			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+			worldTransformBlock->TransferMatrix();
+			
+		}
 	}
 	
-	
-	
+	//debugCamera_->Update();
+
+#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_SPACE) && !isDebugCameraActive_) {
+		isDebugCameraActive_ = true;
+	}
+	else if (input_->TriggerKey(DIK_SPACE) && isDebugCameraActive_) {
+		isDebugCameraActive_ = false;
+
+	}
+#endif // _DEBUG
+
+	if (isDebugCameraActive_) {
+		debugCamera_->Update();
+		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
+	}
+	else {
+		viewProjection_.TransferMatrix();
+	}
+
 }
 
 void GameScene::Draw() {
@@ -84,9 +132,12 @@ void GameScene::Draw() {
 	/// </summary>
 	
 	//player_->Draw();
-	
-	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		modelBlock_->Draw(*worldTransformBlock, viewProjection_);
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock)
+				continue;
+			modelBlock_->Draw(*worldTransformBlock, viewProjection_);
+		}
 	}
 	
 
