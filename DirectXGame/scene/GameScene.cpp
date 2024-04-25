@@ -41,8 +41,7 @@ void GameScene::Initialize() {
 		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
 	}
 
-	int map[kNumBlockHorizontal][kNumBlockVertical]{
-		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+	int map[kNumBlockVertical][kNumBlockHorizontal]{ 
 		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
 		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
 		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
@@ -51,16 +50,22 @@ void GameScene::Initialize() {
 		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
 		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
 		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
-		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1, };
+		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
+		};
 	
 
 	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
 		for (uint32_t j = 0; j < kNumBlockHorizontal; j++)
 		{
-			worldTransformBlocks_[i][j] = new WorldTransform();
-			worldTransformBlocks_[i][j]->Initialize();
-			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
-			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+			if (map[i][j] == 1) { //if there is a block here
+				worldTransformBlocks_[i][j] = new WorldTransform();
+				worldTransformBlocks_[i][j]->Initialize();
+				worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
+				worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+			}
+			else { //if there isnt
+				NULL;
+			}
 		}
 	}
 	
@@ -69,10 +74,13 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 	player_->Update();
+	
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-			if (!worldTransformBlock)
-				continue;
+			
+			if (!worldTransformBlock) { //if there is a block here
+				continue; //keep going
+			}
 			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 			worldTransformBlock->TransferMatrix();
 			
@@ -95,12 +103,12 @@ void GameScene::Update() {
 		debugCamera_->Update();
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix();
+		viewProjection_.TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
 	}
 	else {
 		viewProjection_.TransferMatrix();
 	}
-
+	
 }
 
 void GameScene::Draw() {

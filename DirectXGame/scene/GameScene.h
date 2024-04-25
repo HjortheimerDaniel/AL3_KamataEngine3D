@@ -57,6 +57,7 @@ private: // メンバ変数
 	//std::vector<WorldTransform*>worldTransformBlocks_;
 	std::vector<std::vector<WorldTransform*>>worldTransformBlocks_;
 	Model* modelBlock_;
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
