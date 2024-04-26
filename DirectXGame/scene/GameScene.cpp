@@ -8,6 +8,7 @@ GameScene::~GameScene() {
 
 	delete model_;
 	delete player_;
+	delete skydome_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
@@ -16,7 +17,7 @@ GameScene::~GameScene() {
 	worldTransformBlocks_.clear();
 	delete modelBlock_;
 	delete debugCamera_;
-
+	delete modelSkydome_;
 }
 
 void GameScene::Initialize() {
@@ -24,12 +25,15 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	textureHandle_ = TextureManager::Load("emil.jpg");
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
 	//model_->Create();
 	model_ = Model::Create();
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 	player_ = new Player();
+	skydome_ = new Skydome();
 	player_->Initialize(model_, textureHandle_,&viewProjection_);
+	skydome_->Initialize(modelSkydome_, &viewProjection_);
 	modelBlock_ = Model::Create();
 	const uint32_t kNumBlockHorizontal = 20;
 	const uint32_t kNumBlockVertical = 10;
@@ -41,7 +45,7 @@ void GameScene::Initialize() {
 		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
 	}
 
-	int map[kNumBlockVertical][kNumBlockHorizontal]{ 
+	int map[kNumBlockVertical][kNumBlockHorizontal]{ //mapchip
 		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
 		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
 		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
@@ -73,9 +77,11 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+
 	player_->Update();
+	skydome_->Update();
 	
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			
 			if (!worldTransformBlock) { //if there is a block here
@@ -140,6 +146,7 @@ void GameScene::Draw() {
 	/// </summary>
 	
 	//player_->Draw();
+	skydome_->Draw();
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)

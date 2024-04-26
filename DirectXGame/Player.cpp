@@ -1,5 +1,15 @@
 #include "Player.h"
 
+Player::Player()
+{
+}
+
+Player::~Player()
+{
+	delete model_;
+	
+}
+
 void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection) {
 	assert(model);
 	model_ = model;

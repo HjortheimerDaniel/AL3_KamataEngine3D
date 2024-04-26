@@ -11,6 +11,7 @@
 #include <vector>
 #include "OwnMath.h"
 #include "DebugCamera.h"
+#include "Skydome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -52,11 +53,13 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	WorldTransform worldTransform_;
 	Player* player_ = nullptr;
+	Skydome* skydome_ = nullptr;
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
 	//std::vector<WorldTransform*>worldTransformBlocks_;
 	std::vector<std::vector<WorldTransform*>>worldTransformBlocks_;
 	Model* modelBlock_;
+	Model* modelSkydome_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用
