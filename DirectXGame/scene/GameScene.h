@@ -54,7 +54,7 @@ private: // メンバ変数
 	WorldTransform worldTransform_;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
-	bool isDebugCameraActive_ = false;
+	bool isDebugCameraActive_ = true;
 	DebugCamera* debugCamera_ = nullptr;
 	//std::vector<WorldTransform*>worldTransformBlocks_;
 	std::vector<std::vector<WorldTransform*>>worldTransformBlocks_;
