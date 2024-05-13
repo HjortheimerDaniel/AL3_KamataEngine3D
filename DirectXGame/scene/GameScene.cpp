@@ -25,17 +25,28 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	textureHandle_ = TextureManager::Load("emil.jpg");
-	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
+	//textureHandle_ = TextureManager::Load("emil.jpg");
 	//model_->Create();
-	model_ = Model::Create();
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
-	player_ = new Player();
-	skydome_ = new Skydome();
-	player_->Initialize(model_, textureHandle_,&viewProjection_);
-	skydome_->Initialize(modelSkydome_, &viewProjection_);
 	modelBlock_ = Model::Create();
+	
+#pragma region skydome
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_, &viewProjection_);
+
+
+#pragma endregion
+
+#pragma region player
+	model_ = Model::CreateFromOBJ("player", true);
+	player_ = new Player();
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
+	player_->Initialize(model_, &viewProjection_, playerPosition);
+
+
+#pragma endregion
 	
 	
 	debugCamera_ = new DebugCamera(1280, 720);
@@ -115,7 +126,7 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	
-	//player_->Draw();
+	player_->Draw();
 	skydome_->Draw();
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
