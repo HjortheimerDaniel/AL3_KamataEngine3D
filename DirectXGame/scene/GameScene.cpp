@@ -6,7 +6,7 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 
-	delete model_;
+	delete playerModel_;
 	delete player_;
 	delete skydome_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -19,6 +19,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete modelSkydome_;
 	delete mapChipField_;
+
 }
 
 void GameScene::Initialize() {
@@ -27,23 +28,24 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	//textureHandle_ = TextureManager::Load("emil.jpg");
 	//model_->Create();
-	worldTransform_.Initialize();
-	viewProjection_.Initialize();
+	viewProjection_ = new ViewProjection();
+	//worldTransform_.Initialize();
+	viewProjection_->Initialize();
 	modelBlock_ = Model::Create();
 	
 #pragma region skydome
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
 	skydome_ = new Skydome();
-	skydome_->Initialize(modelSkydome_, &viewProjection_);
+	skydome_->Initialize(modelSkydome_, viewProjection_);
 
 
 #pragma endregion
 
 #pragma region player
-	model_ = Model::CreateFromOBJ("player", true);
+	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
-	player_->Initialize(model_, &viewProjection_, playerPosition);
+	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 
 
 #pragma endregion
@@ -77,23 +79,29 @@ void GameScene::Update() {
 	//debugCamera_->Update();
 
 #ifdef _DEBUG
-	if (input_->TriggerKey(DIK_SPACE) && !isDebugCameraActive_) {
+	/*if (input_->TriggerKey(DIK_SPACE) && !isDebugCameraActive_) {
 		isDebugCameraActive_ = true;
 	}
 	else if (input_->TriggerKey(DIK_SPACE) && isDebugCameraActive_) {
 		isDebugCameraActive_ = false;
 
+	}*/
+	if (input_->TriggerKey(DIK_BACK)) 
+	{
+		isDebugCameraActive_ ^= true; //same as above
 	}
+
+
 #endif // _DEBUG
 
 	if (isDebugCameraActive_) {
 		debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
+		viewProjection_->matView = debugCamera_->GetViewProjection().matView;
+		viewProjection_->matProjection = debugCamera_->GetViewProjection().matProjection;
+		viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
 	}
 	else {
-		viewProjection_.TransferMatrix();
+		viewProjection_->UpdateMatrix();
 	}
 	
 }
@@ -132,9 +140,10 @@ void GameScene::Draw() {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
 				continue;
-			modelBlock_->Draw(*worldTransformBlock, viewProjection_);
+			modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 		}
 	}
+	
 	
 
 	// 3Dオブジェクト描画後処理
@@ -162,11 +171,11 @@ void GameScene::GenerateBlocks()
 	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
 
 	worldTransformBlocks_.resize(numBlockVertical);
-	for (uint32_t i = 0; i < numBlockVertical; i++) {
-		worldTransformBlocks_[i].resize(numBlockHorizontal);
-	}
+	
 
 	for (uint32_t i = 0; i < numBlockVertical; i++) {
+		worldTransformBlocks_[i].resize(numBlockHorizontal);
+
 		for (uint32_t j = 0; j < numBlockHorizontal; j++)
 		{
 			if (mapChipField_->GetMapChipTypeByIndex(j,i) == MapChipType::kBlock) { //if there is a block here

@@ -39,6 +39,7 @@ void MapChipField::ResetMapChipData()
 void MapChipField::LoadMapChipCsv(const std::string& filePath)
 {
 	//Open file
+	ResetMapChipData();
 	std::ifstream file;
 	file.open(filePath);
 	assert(file.is_open());
@@ -68,13 +69,6 @@ void MapChipField::LoadMapChipCsv(const std::string& filePath)
 			}
 		}
 	}
-
-
-
-
-
-	
-	
 }
 
 MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex)

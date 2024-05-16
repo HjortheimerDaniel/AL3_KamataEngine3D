@@ -6,6 +6,7 @@
 #include "Sprite.h"
 
 
+
 enum class MapChipType {
 	kBlank,
 	kBlock,

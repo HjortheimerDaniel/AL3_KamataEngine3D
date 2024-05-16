@@ -7,6 +7,10 @@
 #include "algorithm"
 
 
+enum class LRDirection {
+	kRight,
+	kLeft
+};
 
 class Player
 {
@@ -31,6 +35,8 @@ class Player
 		/// </summary>
 		void Movement();
 
+		void Rotation();
+
 		/// <summary>
 		/// 描画
 		/// </summary>
@@ -41,13 +47,13 @@ class Player
 
 		WorldTransform worldTransform_;
 		Model* model_ = nullptr;
-		uint32_t textureHandle_ = 0u;
+		//uint32_t textureHandle_ = 0u;
 		ViewProjection* viewProjection_ = nullptr;
 		Vector3 velocity_ = {};
 		static inline const float kAcceleration = 0.1f; //movement for frame
 		static inline const float kAttenuation = 0.7f; 
 		static inline const float kLimitRunSpeed = 1.0f; 
-
-
+		LRDirection lrDirection_ = LRDirection::kRight; //which way are we facing
+		
 };
 
