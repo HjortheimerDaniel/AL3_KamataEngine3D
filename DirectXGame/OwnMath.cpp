@@ -66,10 +66,10 @@ Vector3 Add(const Vector3& v1, const Vector3& v2) {
 
 Matrix4x4 MakeRotateMatrixX(float radian){
 	Matrix4x4 result = {
-	1, 0, 0, 0,
-	0, cosf(radian), sinf(radian), 0,
-	0, -sinf(radian), cosf(radian), 0,
-	0, 0, 0, 1 };
+	1.0f, 0.0f, 0.0f, 0.0f,
+	0.0f, cosf(radian), sinf(radian), 0.0f,
+	0.0f, -sinf(radian), cosf(radian), 0.0f,
+	0.0f, 0.0f, 0.0f, 1.0f };
 
 
 	return result;
@@ -78,10 +78,10 @@ Matrix4x4 MakeRotateMatrixX(float radian){
 Matrix4x4 MakeRotateMatrixY(float radian) {
 
 	Matrix4x4 result = {
-		cosf(radian), 0, -sinf(radian), 0,
-		0, 1, 0, 0,
-		sinf(radian), 0, cosf(radian), 0,
-		0, 0, 0, 1 };
+		cosf(radian), 0.0f, -sinf(radian), 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		sinf(radian), 0.0f, cosf(radian), 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f };
 
 
 	return result;
@@ -90,10 +90,10 @@ Matrix4x4 MakeRotateMatrixY(float radian) {
 Matrix4x4 MakeRotateMatrixZ(float radian) {
 
 	Matrix4x4 result = {
-		cosf(radian), sinf(radian), 0, 0,
-		-sinf(radian), cosf(radian), 0, 0,
-		0, 0, 1, 0,
-		0, 0, 0, 1 };
+		cosf(radian), sinf(radian), 0.0f, 0.0f,
+		-sinf(radian), cosf(radian), 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f };
 
 
 	return result;

@@ -5,6 +5,7 @@
 #include <numbers>
 #include "Input.h"
 #include "algorithm"
+#include <iostream>
 
 
 enum class LRDirection {
@@ -54,6 +55,9 @@ class Player
 		static inline const float kAttenuation = 0.7f; 
 		static inline const float kLimitRunSpeed = 1.0f; 
 		LRDirection lrDirection_ = LRDirection::kRight; //which way are we facing
-		
+		float turnFirstRotationY_ = 0.0f;
+		float turnTimer_ = 0.0f;
+		static inline const float kTimeTurn = 0.3f;
+
 };
 

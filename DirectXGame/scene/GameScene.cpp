@@ -52,6 +52,7 @@ void GameScene::Initialize() {
 	
 	
 	debugCamera_ = new DebugCamera(1280, 720);
+	debugCamera_->SetFarZ(2000);
 
 	mapChipField_ = new MapChipField;
 	mapChipField_->ResetMapChipData();

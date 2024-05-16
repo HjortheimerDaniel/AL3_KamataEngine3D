@@ -22,10 +22,11 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 }
 void Player::Update()
 {
-	//worldTransform_.TransferMatrix();
-	worldTransform_.UpdateMatrix();
 	Movement();
-
+	Rotation();
+	worldTransform_.UpdateMatrix();
+	//worldTransform_.TransferMatrix();
+	
 }
 void Player::Movement()
 {
@@ -37,9 +38,6 @@ void Player::Movement()
 		Vector3 acceleration = {};
 		if(Input::GetInstance()->PushKey(DIK_RIGHT))
 		{
-			
-		
-
 			if(velocity_.x < 0.0f) //were not moving to the right
 			{
 				velocity_.x *= (1.0f - kAttenuation);
@@ -50,6 +48,7 @@ void Player::Movement()
 			{
 				lrDirection_ = LRDirection::kRight; //face right
 
+
 			}
 
 			
@@ -57,8 +56,6 @@ void Player::Movement()
 		} 
 		else if(Input::GetInstance()->PushKey(DIK_LEFT))
 		{
-			
-
 			if (velocity_.x > 0.0f) //were not moving to the left
 			{
 				velocity_.x *= (1.0f - kAttenuation);
@@ -80,8 +77,6 @@ void Player::Movement()
 		velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); //set the limit for the max speed and min speed
 
 		worldTransform_.translation_.x += velocity_.x;
-
-		Rotation();
 		
 	}
 	else 
