@@ -1,5 +1,6 @@
 #include "Player.h"
 
+
 Player::Player()
 {
 }
@@ -153,7 +154,7 @@ void Player::Rotation()
 
 		float destinationRotationYTable[] =
 		{
-			 0.0f, // Facing right
+			 1.0f, // Facing right
 			std::numbers::pi_v<float> // Facing left
 		};
 

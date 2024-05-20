@@ -45,6 +45,7 @@ class Player
 
 		float EaseInSine(float frameX, float startX, float endX, float endFrameX);
 
+		WorldTransform& GetWorldTransform() { return worldTransform_; };
 
 		/// <summary>
 		/// 描画

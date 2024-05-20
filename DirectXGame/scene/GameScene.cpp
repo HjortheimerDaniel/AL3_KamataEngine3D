@@ -19,6 +19,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete modelSkydome_;
 	delete mapChipField_;
+	delete cameraController_;
 
 }
 
@@ -44,26 +45,44 @@ void GameScene::Initialize() {
 #pragma region player
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 
 
 #pragma endregion
 	
-	
-	debugCamera_ = new DebugCamera(1280, 720);
-	debugCamera_->SetFarZ(2000);
+#pragma region MapChipField
 
 	mapChipField_ = new MapChipField;
 	mapChipField_->ResetMapChipData();
 	mapChipField_->LoadMapChipCsv("Resources/mapchip/blocks.csv");
 	GenerateBlocks();
+
+#pragma endregion
+
+#pragma region CameraController
+
+	cameraController_ = new CameraController();
+	cameraController_->Initialize();
+	cameraController_->SetTarget(player_); //follow the player
+	cameraController_->Reset();
+	cameraController_->SetMoveableArea(cameraRange);
+
+#pragma endregion
+
+	debugCamera_ = new DebugCamera(1280, 720);
+	debugCamera_->SetFarZ(2000);
+
+
+
+
 }
 
 void GameScene::Update() {
 
 	player_->Update();
 	skydome_->Update();
+	cameraController_->Update();
 	
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -102,7 +121,9 @@ void GameScene::Update() {
 		viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
 	}
 	else {
-		viewProjection_->UpdateMatrix();
+		viewProjection_->matView = cameraController_->GetViewProjection().matView;
+		viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
+		viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
 	}
 	
 }
