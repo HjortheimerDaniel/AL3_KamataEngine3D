@@ -84,7 +84,7 @@ void Player::Movement()
 			velocity_.x += acceleration.x;
 			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); //set the limit for the max speed and min speed
 
-			worldTransform_.translation_.x += velocity_.x;
+			//worldTransform_.translation_.x += velocity_.x;
 
 		}
 		else
@@ -113,6 +113,7 @@ void Player::Movement()
 	}
 
 	worldTransform_.translation_.y += velocity_.y; //we need to update the new Y pos before were checking the landing, otherwise we will go through the mapchip for a short while
+	worldTransform_.translation_.x += velocity_.x;
 
 
 	bool landing = false;
