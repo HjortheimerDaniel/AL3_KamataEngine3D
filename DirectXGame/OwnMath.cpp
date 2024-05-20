@@ -102,8 +102,8 @@ Matrix4x4 MakeRotateMatrixZ(float radian) {
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rot, const Vector3& translate)
 {
 	Matrix4x4 RotateXMatrix = MakeRotateMatrixX(rot.x);
-	Matrix4x4 RotateYMatrix = MakeRotateMatrixX(rot.y);
-	Matrix4x4 RotateZMatrix = MakeRotateMatrixX(rot.z);
+	Matrix4x4 RotateYMatrix = MakeRotateMatrixY(rot.y);
+	Matrix4x4 RotateZMatrix = MakeRotateMatrixZ(rot.z);
 
 	Matrix4x4 RotateXYZMatrix = Multiply(RotateXMatrix, Multiply(RotateYMatrix, RotateZMatrix));
 
