@@ -51,12 +51,7 @@ void Player::Movement()
 
 					turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
 					turnTimer_ = kTimeTurn; // reset the timer
-
-
 				}
-
-
-
 			}
 			else if (Input::GetInstance()->PushKey(DIK_LEFT))
 			{
@@ -80,17 +75,14 @@ void Player::Movement()
 
 			//no matter if we press LEFT or RIGHT we pass here
 
-
-			velocity_.x += acceleration.x;
+			velocity_.x += acceleration.x; //add movement to our X
 			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); //set the limit for the max speed and min speed
 
 			//worldTransform_.translation_.x += velocity_.x;
-
 		}
 		else
 		{
 			velocity_.x *= (1.0f - kAttenuation);
-
 		}
 	}
 	else {
@@ -123,8 +115,6 @@ void Player::Movement()
 		if(worldTransform_.translation_.y <= 2.0f) //if were on the mapchip that is on pos 1.0f or below weve hit the ground
 		{
 			landing = true;
-
-
 		}
 	}
 
@@ -136,17 +126,17 @@ void Player::Movement()
 		}
 	}
 	else {
+
 		if(landing) //if were landing
 		{
 			worldTransform_.translation_.y = 2.0f;
-			velocity_.x *= (1.0f - 0.3f);
+			//velocity_.x *= (1.0f - 0.2f);
 			velocity_.y = 0.0f;
 			onGround_ = true;
 		}
 	}
-
-
 }
+
 void Player::Rotation()
 {
 	if (turnTimer_ > 0.0f) {

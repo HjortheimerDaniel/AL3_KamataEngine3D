@@ -47,6 +47,8 @@ class Player
 
 		WorldTransform& GetWorldTransform() { return worldTransform_; };
 
+		const Vector3& GetVelocity() const { return velocity_; };
+
 		/// <summary>
 		/// 描画
 		/// </summary>
