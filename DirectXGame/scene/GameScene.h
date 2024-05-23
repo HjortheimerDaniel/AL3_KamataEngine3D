@@ -67,7 +67,7 @@ private: // メンバ変数
 	Model* modelSkydome_ = nullptr;
 	MapChipField* mapChipField_ = nullptr;
 	CameraController* cameraController_ = nullptr;
-	Rect cameraRange = { 159,31.5f,0,16 };
+	Rect cameraRange = { 159.0f,31.5f,0,16 };
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

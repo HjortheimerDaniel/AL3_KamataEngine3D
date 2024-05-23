@@ -58,6 +58,10 @@ void Player::Movement()
 				if (velocity_.x > 0.0f) //were not moving to the left
 				{
 					velocity_.x *= (1.0f - kAttenuation);
+					if (velocity_.x * velocity_.x < 0.001f)
+					{
+						velocity_.x = 0;
+					}
 				}
 				acceleration.x -= kAcceleration;
 
@@ -83,6 +87,10 @@ void Player::Movement()
 		else
 		{
 			velocity_.x *= (1.0f - kAttenuation);
+			if (velocity_.x * velocity_.x < 0.001f)
+			{
+				velocity_.x = 0;
+			}
 		}
 	}
 	else {
@@ -92,7 +100,7 @@ void Player::Movement()
 		//velocity_.x = 0;
 		//velocity_.z = 0;
 
-		velocity_.y = max(velocity_.y, -kLimitFallSpeed);
+		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 	}
 
 	if (Input::GetInstance()->PushKey(DIK_UP))
@@ -105,7 +113,10 @@ void Player::Movement()
 	}
 
 	worldTransform_.translation_.y += velocity_.y; //we need to update the new Y pos before were checking the landing, otherwise we will go through the mapchip for a short while
-	worldTransform_.translation_.x += velocity_.x;
+	if (!(worldTransform_.translation_.x >= 70 && velocity_.x > 0
+		|| worldTransform_.translation_.x <= 20 && velocity_.x < 0)) {
+		worldTransform_.translation_.x += velocity_.x;
+	}
 
 
 	bool landing = false;
@@ -130,11 +141,13 @@ void Player::Movement()
 		if(landing) //if were landing
 		{
 			worldTransform_.translation_.y = 2.0f;
-			//velocity_.x *= (1.0f - 0.2f);
+			//velocity_.x *= (1.0f - kAttenuation);
+			
 			velocity_.y = 0.0f;
 			onGround_ = true;
 		}
 	}
+
 }
 
 void Player::Rotation()

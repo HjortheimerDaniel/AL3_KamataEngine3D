@@ -1,4 +1,5 @@
 #pragma once
+#define NOMINMAX
 #include "Model.h"
 #include "WorldTransform.h"
 #include "cassert"
@@ -7,8 +8,8 @@
 #include "algorithm"
 #include <iostream>
 #include "Windows.h"
-#define max(a,b) (((a) > (b)) ? (a) : (b))
-#define NOMINMAX
+
+
 
 
 enum class LRDirection {
@@ -66,7 +67,7 @@ class Player
 		//rotate the character when we face a new direction
 		static inline const float kAcceleration = 0.1f; //movement for frame
 		static inline const float kAttenuation = 0.7f; 
-		static inline const float kLimitRunSpeed = 0.9f; 
+		static inline const float kLimitRunSpeed = 0.6f; 
 		LRDirection lrDirection_ = LRDirection::kRight; //which way are we facing
 		float turnFirstRotationY_ = 0.0f;
 		float turnTimer_ = 0.0f;

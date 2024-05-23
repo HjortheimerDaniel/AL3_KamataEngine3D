@@ -8,16 +8,19 @@ void CameraController::Initialize()
 void CameraController::Update()
 {
 	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
+	if (target_->GetVelocity().x > 0.5f) {
+		printf("");
+	}
 	targetPosition = targetWorldTransform.translation_ + targetOffset_ + target_->GetVelocity().x * kVelocityBias;
 
 	viewProjection_.translation_ = Lerp(viewProjection_.translation_, targetPosition, kInterpolationRate);
 
 	//calculate where the camera is related to the world camera
-	//viewProjection_.translation_ = targetWorldTransform.translation_ + targetOffset_;
-	//viewProjection_.translation_.x = max(viewProjection_.translation_.x, targetPosition.x + margin.left);
-	//viewProjection_.translation_.x = min(viewProjection_.translation_.x, targetPosition.x + margin.right);
-	//viewProjection_.translation_.y = max(viewProjection_.translation_.y, targetPosition.y + margin.bottom);
-	//viewProjection_.translation_.y = min(viewProjection_.translation_.y, targetPosition.y + margin.top);
+//	viewProjection_.translation_ = targetWorldTransform.translation_ + targetOffset_;
+	viewProjection_.translation_.x = max(viewProjection_.translation_.x, targetWorldTransform.translation_ .x + margin.left);
+	viewProjection_.translation_.x = min(viewProjection_.translation_.x, targetWorldTransform.translation_.x + margin.right);
+	viewProjection_.translation_.y = max(viewProjection_.translation_.y, targetWorldTransform.translation_.y + margin.bottom);
+	viewProjection_.translation_.y = min(viewProjection_.translation_.y, targetWorldTransform.translation_.y + margin.top);
 
 	viewProjection_.translation_.x = min(viewProjection_.translation_.x, moveableArea_.left);
 	viewProjection_.translation_.x = max(viewProjection_.translation_.x, moveableArea_.right);
