@@ -42,23 +42,26 @@ void GameScene::Initialize() {
 
 #pragma endregion
 
-#pragma region player
-	playerModel_ = Model::CreateFromOBJ("player", true);
-	player_ = new Player();
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	player_->Initialize(playerModel_, viewProjection_, playerPosition);
-
-
-#pragma endregion
-	
 #pragma region MapChipField
 
 	mapChipField_ = new MapChipField;
+	mapChipField_->Initialize(); //HERE
 	mapChipField_->ResetMapChipData();
 	mapChipField_->LoadMapChipCsv("Resources/mapchip/blocks.csv");
 	GenerateBlocks();
 
 #pragma endregion
+
+#pragma region player
+	playerModel_ = Model::CreateFromOBJ("player", true);
+	player_ = new Player();
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
+	player_->Initialize(playerModel_, viewProjection_, playerPosition);
+	player_->SetMapChipField(mapChipField_);
+
+#pragma endregion
+	
+
 
 #pragma region CameraController
 

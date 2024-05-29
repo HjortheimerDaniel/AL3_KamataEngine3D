@@ -94,6 +94,13 @@ Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex
 {
 	return Vector3(kBlockWidth * xIndex, kBlockHeight * (kNumBlockVertical -1 - yIndex), 0);
 }
+//
+//IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position)
+//{
+//	/*IndexSet indexSet = {};
+//	indexSet.xIndex = (kNumBlockHorizontal + kBlockWidth / 2) / kBlockWidth;
+//	indexSet.xIndex = (kNumBlockVertical + kBlockWidth / 2) / kBlockWidth;*/
+//}
 
 void MapChipField::Update()
 {

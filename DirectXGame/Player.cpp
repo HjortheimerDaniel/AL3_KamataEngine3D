@@ -1,6 +1,7 @@
 #include "Player.h"
 
 
+
 Player::Player()
 {
 }
@@ -25,6 +26,13 @@ void Player::Update()
 {
 	Movement();
 	Rotation();
+	//initialize collision
+	CollisionMapInfo collisionMapInfo;
+	//copy the velocity
+	collisionMapInfo.movement = velocity_;
+
+	Collision(collisionMapInfo);
+	
 	worldTransform_.UpdateMatrix();
 	//worldTransform_.TransferMatrix();
 	
@@ -47,10 +55,11 @@ void Player::Movement()
 
 				if (lrDirection_ != LRDirection::kRight) //if were moving right and were not facing right
 				{
-					lrDirection_ = LRDirection::kRight; //face right
-
 					turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
 					turnTimer_ = kTimeTurn; // reset the timer
+					lrDirection_ = LRDirection::kRight; //face right
+
+					
 				}
 			}
 			else if (Input::GetInstance()->PushKey(DIK_LEFT))
@@ -67,10 +76,11 @@ void Player::Movement()
 
 				if (lrDirection_ != LRDirection::kLeft) //if were moving left and were not facing left
 				{
-					lrDirection_ = LRDirection::kLeft; //face left
-
 					turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
 					turnTimer_ = kTimeTurn; // reset the timer
+					lrDirection_ = LRDirection::kLeft; //face left
+
+					
 
 				}
 
@@ -155,7 +165,7 @@ void Player::Rotation()
 	if (turnTimer_ > 0.0f) {
 		turnTimer_ -= 1.0f / 60.0f;
 
-
+		
 		float destinationRotationYTable[] =
 		{
 			 1.0f, // Facing right
@@ -167,11 +177,43 @@ void Player::Rotation()
 			destinationRotationY -= 2.0f * std::numbers::pi_v<float>;
 		}
 		else if (destinationRotationY - turnFirstRotationY_ < -std::numbers::pi_v<float>) {
-			destinationRotationY += 2.0f * std::numbers::pi_v<float>;
+			destinationRotationY +=  3.0f / 2.0f * std::numbers::pi_v<float>;
 		}
+
+		//float easing = 1 - turnTimer_ / kTimeTurn;
+		//float nowRotationY = std::lerp(turnFirstRotationY_, destinationRotationY, easing);
+
 		//worldTransform_.rotation_.y = destinationRotationY;
 		worldTransform_.rotation_.y = EaseInSine(turnTimer_, turnFirstRotationY_, destinationRotationY, kTimeTurn);
 	}
+
+#pragma region Better rotation?
+
+	//if (turnTimer_ > 0.0f) {
+	//	turnTimer_ -= 1.0f / 60.0f;
+
+
+	//	float destinationRotationYTable[] =
+	//	{
+	//		 std::numbers::pi_v < float> / 2.0f, // Facing right
+	//		std::numbers::pi_v<float> *3.0f / 2.0f // Facing left
+	//	};
+
+	//	float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
+	//	if (destinationRotationY - turnFirstRotationY_ > std::numbers::pi_v<float>) {
+	//		destinationRotationY -= 2.0f * std::numbers::pi_v<float>;
+	//	}
+	//	else if (destinationRotationY - turnFirstRotationY_ < -std::numbers::pi_v<float>) {
+	//		destinationRotationY += 3.0f / 2.0f * std::numbers::pi_v<float>;
+	//	}
+
+	//	float easing = 1 - turnTimer_ / kTimeTurn;
+	//	float nowRotationY = std::lerp(turnFirstRotationY_, destinationRotationY, easing);
+
+	//	//worldTransform_.rotation_.y = destinationRotationY;
+	//	worldTransform_.rotation_.y = nowRotationY;
+
+#pragma endregion
 }
 
 float Player::EaseInOut(float x)
@@ -185,6 +227,55 @@ float Player::EaseInSine(float frameX, float startX, float endX, float endFrameX
 	float t = frameX / endFrameX; // Normalize the frameX to [0, 1]
 	float easedT = EaseInOut(t);
 	return startX + easedT * (endX - startX);
+}
+
+void Player::Collision(CollisionMapInfo& info)
+{
+	std::array<Vector3, kNumCorner> positionsNew;
+
+	for (uint32_t i = 0; i < positionsNew.size(); i++)
+	{
+		positionsNew[i] = CornerPositon(worldTransform_.translation_ + info.movement, static_cast<Corner>(i));
+	}
+
+	if(info.movement.y <= 0)
+	{
+		return;
+	}
+
+}
+
+Vector3 Player::CornerPositon(const Vector3& center, Corner corner)
+{
+	/*if (corner == kRightBottom)
+	{
+		return center + kWidth / 2.0f, -kHeight / 2.0f, 0;
+	} 
+	else if (corner == kLeftBottom)
+	{
+		return center + -kWidth / 2.0f, -kHeight / 2.0f, 0;
+	} 
+	else if(corner == kRightTop)
+	{
+		return center + kWidth / 2.0f, kHeight / 2.0f, 0;
+	}
+	else
+	{
+		return center + -kWidth / 2.0f, kHeight / 2.0f, 0;
+	}*/
+
+	//SAME AS ABOVE
+
+	Vector3 offsetTable[kNumCorner] =
+	{
+		{kWidth / 2.0f, -kHeight / 2.0f, 0}, //Right bottom
+		{-kWidth / 2.0f, -kHeight / 2.0f, 0}, //Left bottom
+		{kWidth / 2.0f, +kHeight / 2.0f, 0}, //Right top
+		{-kWidth / 2.0f, +kHeight / 2.0f, 0}, //Right bottom
+
+	};
+	return center + offsetTable[static_cast<uint32_t>(corner)];
+
 }
 
 void Player::Draw()
