@@ -36,11 +36,11 @@ class CameraController
 		ViewProjection viewProjection_;
 		Player* target_ = nullptr;
 		Vector3 targetOffset_ = { 0.0f,0.0f,-40.0f }; //how far away from the player do we want the camera to be
-		Rect moveableArea_ = { 0,100,0,100 };
+		Rect moveableArea_ = { 0.0f,100.0f,0.0f,100.0f };
 		Vector3 targetPosition;
 		static inline const float kInterpolationRate = 0.1f;
 		static inline const float kVelocityBias = 20.0f;
-		static inline const Rect margin = { -400, 400, -200, 200 };
+		static inline const Rect margin = { -400.0f, 400.0f, -200.0f, 200.0f };
 
 };
 

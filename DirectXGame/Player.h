@@ -75,6 +75,10 @@ class Player
 
 		Vector3 CornerPositon(const Vector3& center, Corner corner);
 
+		void AfterCollision(const CollisionMapInfo& info);
+
+		void HitCeiling(const CollisionMapInfo& info);
+
 		/// <summary>
 		/// 描画
 		/// </summary>
@@ -112,6 +116,7 @@ class Player
 
 		static inline const float kWidth = 1.8f;
 		static inline const float kHeight = 1.8f;
+		static inline const float kBlank = 2.0f;
 
 };
 

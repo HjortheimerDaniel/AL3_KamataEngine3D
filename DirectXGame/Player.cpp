@@ -1,4 +1,7 @@
 #include "Player.h"
+#include "MapChipField.h"
+#include "ImGuiManager.h"
+
 
 
 
@@ -243,6 +246,31 @@ void Player::Collision(CollisionMapInfo& info)
 		return;
 	}
 
+	MapChipType mapChipType;
+	bool hit = false;
+	IndexSet indexSet;
+	
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock) 
+	{
+		hit = true;
+	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock)
+	{
+		hit = true;
+	}
+
+	if (hit)
+	{
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+		info.movement.y = std::max(0.0f, (float)indexSet.yIndex);
+		info.isHittingCeiling = true;
+	}
 }
 
 Vector3 Player::CornerPositon(const Vector3& center, Corner corner)
@@ -276,6 +304,20 @@ Vector3 Player::CornerPositon(const Vector3& center, Corner corner)
 	};
 	return center + offsetTable[static_cast<uint32_t>(corner)];
 
+}
+
+void Player::AfterCollision(const CollisionMapInfo& info)
+{
+	worldTransform_.translation_ += info.movement;
+}
+
+void Player::HitCeiling(const CollisionMapInfo& info)
+{
+	if(info.isHittingCeiling)
+	{
+		ImGui::Text("hit ceiling");
+		velocity_.y = 0;
+	}
 }
 
 void Player::Draw()
