@@ -35,6 +35,7 @@ void Player::Update()
 	collisionMapInfo.movement = velocity_;
 
 	Collision(collisionMapInfo);
+	CollisionFalling(collisionMapInfo);
 	AfterCollision(collisionMapInfo);
 	HitCeiling(collisionMapInfo);
 	worldTransform_.UpdateMatrix();
@@ -43,122 +44,220 @@ void Player::Update()
 }
 void Player::Movement()
 {
-	if (onGround_) {
-		if (Input::GetInstance()->PushKey(DIK_RIGHT) ||
-			Input::GetInstance()->PushKey(DIK_LEFT))
-		{
+ #pragma region old movement
 
-			Vector3 acceleration = {};
-			if (Input::GetInstance()->PushKey(DIK_RIGHT))
-			{
-				if (velocity_.x < 0.0f) //were not moving to the right
-				{
-					velocity_.x *= (1.0f - kAttenuation);
-				}
-				acceleration.x += kAcceleration;
+	//if (onGround_){
+	//	if (Input::GetInstance()->PushKey(DIK_RIGHT) ||
+	//		Input::GetInstance()->PushKey(DIK_LEFT))
+	//	{
 
-				if (lrDirection_ != LRDirection::kRight) //if were moving right and were not facing right
-				{
-					turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
-					turnTimer_ = kTimeTurn; // reset the timer
-					lrDirection_ = LRDirection::kRight; //face right
-				}
-			}
-			else if (Input::GetInstance()->PushKey(DIK_LEFT))
-			{
-				if (velocity_.x > 0.0f) //were not moving to the left
-				{
-					velocity_.x *= (1.0f - kAttenuation);
-					if (velocity_.x * velocity_.x < 0.001f)
-					{
-						velocity_.x = 0;
-					}
-				}
-				acceleration.x -= kAcceleration;
+	//		Vector3 acceleration = {};
+	//		if (Input::GetInstance()->PushKey(DIK_RIGHT))
+	//		{
+	//			if (velocity_.x < 0.0f) //were not moving to the right
+	//			{
+	//				velocity_.x *= (1.0f - kAttenuation);
+	//			}
+	//			acceleration.x += kAcceleration;
 
-				if (lrDirection_ != LRDirection::kLeft) //if were moving left and were not facing left
-				{
-					turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
-					turnTimer_ = kTimeTurn; // reset the timer
-					lrDirection_ = LRDirection::kLeft; //face left
+	//			if (lrDirection_ != LRDirection::kRight) //if were moving right and were not facing right
+	//			{
+	//				turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
+	//				turnTimer_ = kTimeTurn; // reset the timer
+	//				lrDirection_ = LRDirection::kRight; //face right
+	//			}
+	//		}
+	//		else if (Input::GetInstance()->PushKey(DIK_LEFT))
+	//		{
+	//			if (velocity_.x > 0.0f) //were not moving to the left
+	//			{
+	//				velocity_.x *= (1.0f - kAttenuation);
+	//				if (velocity_.x * velocity_.x < 0.001f)
+	//				{
+	//					velocity_.x = 0;
+	//				}
+	//			}
+	//			acceleration.x -= kAcceleration;
 
-					
+	//			if (lrDirection_ != LRDirection::kLeft) //if were moving left and were not facing left
+	//			{
+	//				turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
+	//				turnTimer_ = kTimeTurn; // reset the timer
+	//				lrDirection_ = LRDirection::kLeft; //face left
 
-				}
+	//				
+
+	//			}
 
 
-			}
+	//		}
 
-			//no matter if we press LEFT or RIGHT we pass here
+	//		//no matter if we press LEFT or RIGHT we pass here
 
-			velocity_.x += acceleration.x; //add movement to our X
-			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); //set the limit for the max speed and min speed
+	//		velocity_.x += acceleration.x; //add movement to our X
+	//		velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); //set the limit for the max speed and min speed
 
-			//worldTransform_.translation_.x += velocity_.x;
-		}
-		else
-		{
-			velocity_.x *= (1.0f - kAttenuation);
-			if (velocity_.x * velocity_.x < 0.001f)
-			{
-				velocity_.x = 0;
-			}
-		}
-	}
-	else {
-		velocity_ += Vector3(0, -kGravityAcceleration, 0);
+	//		//worldTransform_.translation_.x += velocity_.x;
+	//	}
+	//	else
+	//	{
+	//		velocity_.x *= (1.0f - kAttenuation);
+	//		if (velocity_.x * velocity_.x < 0.001f)
+	//		{
+	//			velocity_.x = 0;
+	//		}
+	//	}
+	//}
+	//else {
+	//	velocity_ += Vector3(0, -kGravityAcceleration, 0);
 
-		//velocity_.y += -kGravityAcceleration;
-		//velocity_.x = 0;
-		//velocity_.z = 0;
+	//	//velocity_.y += -kGravityAcceleration;
+	//	//velocity_.x = 0;
+	//	//velocity_.z = 0;
 
-		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
-	}
+	//	velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
+	//}
 
-	if (Input::GetInstance()->PushKey(DIK_UP))
+	//if (Input::GetInstance()->PushKey(DIK_UP))
+	//{
+	//	if (onGround_)
+	//	{
+	//		velocity_ += Vector3(0, kJumpAcceleration, 0);
+	//		onGround_ = false;
+	//	}
+	//}
+
+	//worldTransform_.translation_.y += velocity_.y; //we need to update the new Y pos before were checking the landing, otherwise we will go through the mapchip for a short while
+	//if (!(worldTransform_.translation_.x >= 70 && velocity_.x > 0
+	//	|| worldTransform_.translation_.x <= 20 && velocity_.x < 0)) {
+	//	worldTransform_.translation_.x += velocity_.x;
+	//}
+
+
+	//bool landing = false;
+
+	//if (velocity_.y < 0)  //if were falling
+	//{
+	//	if(worldTransform_.translation_.y <= 2.0f) //if were on the mapchip that is on pos 1.0f or below weve hit the ground
+	//	{
+	//		landing = true;
+	//	}
+	//}
+
+	//if(onGround_)
+	//{
+	//	if(velocity_.y > 0.0f) //if were moving upwards
+	//	{
+	//		onGround_ = false; //we are not on the ground
+	//	}
+	//}
+	//else {
+
+	//	if(landing) //if were landing
+	//	{
+	//		worldTransform_.translation_.y = 2.0f;
+	//		//velocity_.x *= (1.0f - kAttenuation);
+	//		
+	//		velocity_.y = 0.0f;
+	//		onGround_ = true;
+	//	}
+	//}
+ #pragma endregion
+
+Vector3 acceleration = {};
+if (Input::GetInstance()->PushKey(DIK_RIGHT))
+{
+	if (velocity_.x < 0.0f) // were not moving to the right
 	{
-		if (onGround_)
-		{
-			velocity_ += Vector3(0, kJumpAcceleration, 0);
-			onGround_ = false;
-		}
+		velocity_.x *= (1.0f - kAttenuation);
 	}
+	acceleration.x += kAcceleration;
 
-	worldTransform_.translation_.y += velocity_.y; //we need to update the new Y pos before were checking the landing, otherwise we will go through the mapchip for a short while
-	if (!(worldTransform_.translation_.x >= 70 && velocity_.x > 0
-		|| worldTransform_.translation_.x <= 20 && velocity_.x < 0)) {
-		worldTransform_.translation_.x += velocity_.x;
-	}
-
-
-	bool landing = false;
-
-	if (velocity_.y < 0)  //if were falling
+	if (lrDirection_ != LRDirection::kRight) // if were moving right and were not facing right
 	{
-		if(worldTransform_.translation_.y <= 2.0f) //if were on the mapchip that is on pos 1.0f or below weve hit the ground
-		{
-			landing = true;
-		}
+		turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
+		turnTimer_ = kTimeTurn; // reset the timer
+		lrDirection_ = LRDirection::kRight; // face right
 	}
-
-	if(onGround_)
+}
+else if (Input::GetInstance()->PushKey(DIK_LEFT))
+{
+	if (velocity_.x > 0.0f) // were not moving to the left
 	{
-		if(velocity_.y > 0.0f) //if were moving upwards
+		velocity_.x *= (1.0f - kAttenuation);
+		if (velocity_.x * velocity_.x < 0.001f)
 		{
-			onGround_ = false; //we are not on the ground
+			velocity_.x = 0;
 		}
 	}
-	else {
+	acceleration.x -= kAcceleration;
 
-		if(landing) //if were landing
-		{
-			worldTransform_.translation_.y = 2.0f;
-			//velocity_.x *= (1.0f - kAttenuation);
-			
-			velocity_.y = 0.0f;
-			onGround_ = true;
-		}
+	if (lrDirection_ != LRDirection::kLeft) // if were moving left and were not facing left
+	{
+		turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
+		turnTimer_ = kTimeTurn; // reset the timer
+		lrDirection_ = LRDirection::kLeft; // face left
 	}
+}
+
+// Update horizontal velocity
+velocity_.x += acceleration.x; // add movement to our X
+velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); // set the limit for the max speed and min speed
+
+if (!Input::GetInstance()->PushKey(DIK_RIGHT) && !Input::GetInstance()->PushKey(DIK_LEFT))
+{
+	velocity_.x *= (1.0f - kAttenuation);
+	if (velocity_.x * velocity_.x < 0.001f)
+	{
+		velocity_.x = 0;
+	}
+}
+
+// Handle vertical movement (gravity and jumping)
+if (!onGround_)
+{
+	velocity_ += Vector3(0, -kGravityAcceleration, 0);
+	velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
+}
+
+if (Input::GetInstance()->PushKey(DIK_UP) && onGround_)
+{
+	velocity_ += Vector3(0, kJumpAcceleration, 0);
+	onGround_ = false;
+}
+
+// Update position
+worldTransform_.translation_.y += velocity_.y; // update Y pos before checking landing
+if (!(worldTransform_.translation_.x >= 70 && velocity_.x > 0
+	|| worldTransform_.translation_.x <= 20 && velocity_.x < 0)) {
+	worldTransform_.translation_.x += velocity_.x;
+}
+
+// Check for landing
+bool landing = false;
+if (velocity_.y < 0)  // if were falling
+{
+	if (worldTransform_.translation_.y <= 2.0f) // if were on the mapchip that is on pos 1.0f or below weve hit the ground
+	{
+		landing = true;
+	}
+}
+
+if (onGround_)
+{
+	if (velocity_.y > 0.0f) // if were moving upwards
+	{
+		onGround_ = false; // we are not on the ground
+	}
+}
+else {
+	if (landing) // if were landing
+	{
+		worldTransform_.translation_.y = 2.0f;
+		velocity_.y = 0.0f;
+		onGround_ = true;
+	}
+}
 
 }
 
@@ -269,6 +368,48 @@ void Player::Collision(CollisionMapInfo& info)
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 		info.movement.y = std::max(0.0f, kBlank);
 		info.isHittingCeiling = true;
+	}
+
+}
+
+void Player::CollisionFalling(CollisionMapInfo& info)
+{
+	std::array<Vector3, kNumCorner> positionsNew;
+
+	for (uint32_t i = 0; i < positionsNew.size(); i++)
+	{
+		positionsNew[i] = CornerPositon(worldTransform_.translation_ + info.movement, static_cast<Corner>(i));
+	}
+
+	if (info.movement.y >= 0) //are we falling
+	{
+		return;
+	}
+
+	MapChipType mapChipType;
+	bool hit = false;
+	IndexSet indexSet;
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock)
+	{
+		hit = true;
+	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock)
+	{
+		hit = true;
+	}
+
+	if (hit)
+	{
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(velocity_.y);
+		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+		info.movement.y = std::min(0.0f, kBlank);
+		info.isOnFloor = true;
 	}
 
 }

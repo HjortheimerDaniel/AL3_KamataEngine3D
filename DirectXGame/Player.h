@@ -21,7 +21,7 @@ enum class LRDirection
 struct CollisionMapInfo
 {
 	bool isHittingCeiling = false;
-	bool isOnFloor;
+	bool isOnFloor = false;
 	bool isHittingWall;
 	Vector3 movement;
 };
@@ -72,6 +72,8 @@ class Player
 		void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; };
 
 		void Collision(CollisionMapInfo& info);
+
+		void CollisionFalling(CollisionMapInfo& info);
 
 		Vector3 CornerPositon(const Vector3& center, Corner corner);
 
