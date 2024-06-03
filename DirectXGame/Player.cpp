@@ -35,7 +35,8 @@ void Player::Update()
 	collisionMapInfo.movement = velocity_;
 
 	Collision(collisionMapInfo);
-	
+	AfterCollision(collisionMapInfo);
+	HitCeiling(collisionMapInfo);
 	worldTransform_.UpdateMatrix();
 	//worldTransform_.TransferMatrix();
 	
@@ -61,8 +62,6 @@ void Player::Movement()
 					turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
 					turnTimer_ = kTimeTurn; // reset the timer
 					lrDirection_ = LRDirection::kRight; //face right
-
-					
 				}
 			}
 			else if (Input::GetInstance()->PushKey(DIK_LEFT))
@@ -240,7 +239,7 @@ void Player::Collision(CollisionMapInfo& info)
 	{
 		positionsNew[i] = CornerPositon(worldTransform_.translation_ + info.movement, static_cast<Corner>(i));
 	}
-
+	
 	if(info.movement.y <= 0)
 	{
 		return;
@@ -268,13 +267,15 @@ void Player::Collision(CollisionMapInfo& info)
 	{
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-		info.movement.y = std::max(0.0f, (float)indexSet.yIndex);
+		info.movement.y = std::max(0.0f, kBlank);
 		info.isHittingCeiling = true;
 	}
+
 }
 
 Vector3 Player::CornerPositon(const Vector3& center, Corner corner)
 {
+	
 	/*if (corner == kRightBottom)
 	{
 		return center + kWidth / 2.0f, -kHeight / 2.0f, 0;
@@ -315,7 +316,7 @@ void Player::HitCeiling(const CollisionMapInfo& info)
 {
 	if(info.isHittingCeiling)
 	{
-		ImGui::Text("hit ceiling");
+		//ImGui::Text("hit ceiling");
 		velocity_.y = 0;
 	}
 }
@@ -325,4 +326,3 @@ void Player::Draw()
 	model_->Draw(worldTransform_, *viewProjection_);
 }
 
-;

@@ -20,7 +20,7 @@ enum class LRDirection
 
 struct CollisionMapInfo
 {
-	bool isHittingCeiling;
+	bool isHittingCeiling = false;
 	bool isOnFloor;
 	bool isHittingWall;
 	Vector3 movement;
@@ -109,14 +109,14 @@ class Player
 		//are we on the ground
 		bool onGround_ = true;
 		static inline const float kGravityAcceleration = 0.2f;
-		static inline const float kLimitFallSpeed = 1.0f;
-		static inline const float kJumpAcceleration = 2.0f;
+		static inline const float kLimitFallSpeed = 0.3f;
+		static inline const float kJumpAcceleration = 1.3f;
 
 		//player collision
 
 		static inline const float kWidth = 1.8f;
 		static inline const float kHeight = 1.8f;
-		static inline const float kBlank = 2.0f;
+		static inline const float kBlank = 0.1f;
 
 };
 
