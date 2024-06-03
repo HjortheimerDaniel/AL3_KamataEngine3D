@@ -116,7 +116,7 @@ class Player
 
 		static inline const float kWidth = 1.8f;
 		static inline const float kHeight = 1.8f;
-		static inline const float kBlank = 0.1f;
+		static inline const float kBlank = -10.0f;
 
 };
 

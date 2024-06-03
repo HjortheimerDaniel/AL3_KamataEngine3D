@@ -265,7 +265,7 @@ void Player::Collision(CollisionMapInfo& info)
 
 	if (hit)
 	{
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(velocity_.y);
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 		info.movement.y = std::max(0.0f, kBlank);
 		info.isHittingCeiling = true;
