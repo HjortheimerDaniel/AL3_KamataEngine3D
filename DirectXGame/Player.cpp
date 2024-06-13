@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "MapChipField.h"
 #include "ImGuiManager.h"
+#include "imgui.h"
+
 
 
 
@@ -27,17 +29,25 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 }
 void Player::Update()
 {
-	Movement();
 	Rotation();
 	//initialize collision
 	CollisionMapInfo collisionMapInfo;
 	//copy the velocity
 	collisionMapInfo.movement = velocity_;
 
-	Collision(collisionMapInfo);
+	CollisionCeiling(collisionMapInfo);
 	CollisionFalling(collisionMapInfo);
 	AfterCollision(collisionMapInfo);
+	CollisionRight(collisionMapInfo);
+	CollisionLeft(collisionMapInfo);
 	HitCeiling(collisionMapInfo);
+	Movement();
+	ImGui::Begin("Window");
+	ImGui::Text("velocity %f", velocity_.x);
+	ImGui::Text("wall Right %d", hitRightWall);
+	ImGui::Text("wall left %d", hitLeftWall);
+	ImGui::End();
+	
 	worldTransform_.UpdateMatrix();
 	//worldTransform_.TransferMatrix();
 	
@@ -170,9 +180,14 @@ if (Input::GetInstance()->PushKey(DIK_RIGHT))
 	if (velocity_.x < 0.0f) // were not moving to the right
 	{
 		velocity_.x *= (1.0f - kAttenuation);
+		if (velocity_.x * velocity_.x < 0.001f)
+		{
+			velocity_.x = 0;
+		}
 	}
-	acceleration.x += kAcceleration;
-
+	if (!hitRightWall) {
+		acceleration.x += kAcceleration;
+	}
 	if (lrDirection_ != LRDirection::kRight) // if were moving right and were not facing right
 	{
 		turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
@@ -190,7 +205,10 @@ else if (Input::GetInstance()->PushKey(DIK_LEFT))
 			velocity_.x = 0;
 		}
 	}
-	acceleration.x -= kAcceleration;
+	if (!hitLeftWall)
+	{
+		acceleration.x -= kAcceleration;
+	}
 
 	if (lrDirection_ != LRDirection::kLeft) // if were moving left and were not facing left
 	{
@@ -228,10 +246,10 @@ if (Input::GetInstance()->PushKey(DIK_UP) && onGround_)
 
 // Update position
 worldTransform_.translation_.y += velocity_.y; // update Y pos before checking landing
-if (!(worldTransform_.translation_.x >= 70 && velocity_.x > 0
-	|| worldTransform_.translation_.x <= 20 && velocity_.x < 0)) {
-	worldTransform_.translation_.x += velocity_.x;
-}
+//if (!(worldTransform_.translation_.x >= 70 && velocity_.x > 0
+	//|| worldTransform_.translation_.x <= 20 && velocity_.x < 0)) {
+		worldTransform_.translation_.x += velocity_.x;
+//}
 
 // Check for landing
 bool landing = false;
@@ -250,7 +268,8 @@ if (onGround_)
 		onGround_ = false; // we are not on the ground
 	}
 }
-else {
+else 
+{
 	if (landing) // if were landing
 	{
 		worldTransform_.translation_.y = 2.0f;
@@ -330,7 +349,7 @@ float Player::EaseInSine(float frameX, float startX, float endX, float endFrameX
 	return startX + easedT * (endX - startX);
 }
 
-void Player::Collision(CollisionMapInfo& info)
+void Player::CollisionCeiling(CollisionMapInfo& info)
 {
 	std::array<Vector3, kNumCorner> positionsNew;
 
@@ -381,7 +400,147 @@ void Player::CollisionFalling(CollisionMapInfo& info)
 		positionsNew[i] = CornerPositon(worldTransform_.translation_ + info.movement, static_cast<Corner>(i));
 	}
 
-	if (info.movement.y >= 0) //are we falling
+	//THAT MAKES IT SO I DONT FALL OFF CLIFFS
+
+	//if (info.movement.y >= 0) //are we falling
+	//{
+	//	return;
+	//}
+
+	MapChipType mapChipType;
+	bool hit = false;
+	IndexSet indexSet;
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + Vector3(0, kAdjustLanding, 0));
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock)
+	{
+		hit = true;
+	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom] + Vector3(0, kAdjustLanding, 0));
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock)
+	{
+		hit = true;
+	}
+
+	if (!hit)
+	{
+		onGround_ = false;
+	}
+
+	if (hit)
+	{
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(info.movement.y);
+		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+		info.isOnFloor = true;
+		info.movement.y = 0; //TEMPORARY FIX FOR NOT FALLING OF CLIFFS
+		//info.movement.y = std::min(0.0f, kBlank);
+		
+	}
+	else {
+		info.isOnFloor = false;
+	}
+	
+
+	if(onGround_)
+	{
+		if (velocity_.y > 0.0f) 
+		{
+			onGround_ = false;
+		}
+	}
+	else
+	{
+		if (info.isOnFloor)
+		{
+			onGround_ = true;
+			velocity_.x *= (1.0f - kAttenuationLanding);
+			velocity_.y = 0.0f;
+		}
+	}
+}
+
+void Player::CollisionRight(CollisionMapInfo& info)
+{
+	std::array<Vector3, kNumCorner> positionsNew;
+
+	for (uint32_t i = 0; i < positionsNew.size(); i++)
+	{
+		positionsNew[i] = CornerPositon(worldTransform_.translation_ + info.movement, static_cast<Corner>(i));
+	}
+
+	if (info.movement.x <= 0)
+	{
+		return;
+	}
+
+	MapChipType mapChipType;
+	bool hit = false;
+	IndexSet indexSet;
+	
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop] + Vector3(kAdjustWall, 0, 0));
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex -1);
+	if (mapChipType == MapChipType::kBlock)
+	{
+		hit = true;
+	}
+	else
+	{
+		hit = false;
+	}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom] + Vector3(kAdjustWall, 0, 0));
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex -1);
+	if (mapChipType == MapChipType::kBlock)
+	{
+		hit = true;
+	} 
+	else 
+	{
+		hit = false;
+	}
+
+	if (hit) 
+	{
+			indexSet = mapChipField_->GetMapChipIndexSetByPosition(info.movement.x);
+			Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+			info.isHittingWall = true;
+			info.movement.x = 0.0f;
+			velocity_.x = 0.0f;
+			hitRightWall = true;	
+	}
+	else {
+		info.isHittingWall = false;
+		hitRightWall = false;
+	}
+
+	/*if(!hit)
+	{
+		hitRightWall = false;
+	}*/
+
+	
+
+	/*if(info.isHittingWall)
+	{
+		velocity_.x *= (1.0f - kAttenuationWall);
+	}*/
+	
+
+}
+
+void Player::CollisionLeft(CollisionMapInfo& info)
+{
+	std::array<Vector3, kNumCorner> positionsNew;
+
+	for (uint32_t i = 0; i < positionsNew.size(); i++)
+	{
+		positionsNew[i] = CornerPositon(worldTransform_.translation_ + info.movement, static_cast<Corner>(i));
+	}
+
+	if (info.movement.x >= 0)
 	{
 		return;
 	}
@@ -390,27 +549,42 @@ void Player::CollisionFalling(CollisionMapInfo& info)
 	bool hit = false;
 	IndexSet indexSet;
 
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
-	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop] + Vector3(-kAdjustWall, 0, 0));
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
 	if (mapChipType == MapChipType::kBlock)
 	{
 		hit = true;
 	}
+	else
+	{
+		hit = false;
+	}
 
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
-	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + Vector3(-kAdjustWall, 0, 0));
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
 	if (mapChipType == MapChipType::kBlock)
 	{
 		hit = true;
+	}
+	else
+	{
+		hit = false;
 	}
 
 	if (hit)
 	{
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(velocity_.y);
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(info.movement.x);
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-		info.movement.y = std::min(0.0f, kBlank);
-		info.isOnFloor = true;
+		info.isHittingWall = true;
+		info.movement.x = 0.0f;
+		velocity_.x = 0.0f;
+		hitLeftWall = true;
 	}
+	else {
+		info.isHittingWall = false;
+		
+	}
+
 
 }
 
@@ -451,6 +625,16 @@ Vector3 Player::CornerPositon(const Vector3& center, Corner corner)
 void Player::AfterCollision(const CollisionMapInfo& info)
 {
 	worldTransform_.translation_ += info.movement;
+
+	if (Input::GetInstance()->PushKey(DIK_LEFT) /*|| Input::GetInstance()->PushKey(DIK_UP)*/)
+	{
+		hitRightWall = false;
+	}
+
+	if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_UP))
+	{
+		hitLeftWall = false;
+	}
 }
 
 void Player::HitCeiling(const CollisionMapInfo& info)

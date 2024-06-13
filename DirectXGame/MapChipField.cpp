@@ -97,7 +97,14 @@ IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position)
 	IndexSet indexSet = {};
 	indexSet.xIndex = ((uint32_t)position.x + (uint32_t)kBlockWidth / 2) / (uint32_t)kBlockWidth;
 	//uint32_t rotateY = ((uint32_t)position.y + (uint32_t)kBlockHeight / 2) / (uint32_t)kBlockHeight;
-	indexSet.yIndex = (((uint32_t)kBlockHeight * (uint32_t)kNumBlockVertical - (uint32_t)position.y) / (uint32_t)kBlockHeight);
+	//float bh  = (kBlockHeight);
+	//float bnv = (kNumBlockVertical);
+	//float py  = (position.y);
+	//float y = (bh * (bnv - py)) / bh;
+	indexSet.yIndex = (((uint32_t)kBlockHeight * (uint32_t)kNumBlockVertical -  (uint32_t)position.y) / (uint32_t)kBlockHeight);
+	//indexSet.yIndex = uint32_t(y);
+	//int32_t maxYIndex = kNumBlockVertical - 1;
+	
 	return indexSet;
 }
 

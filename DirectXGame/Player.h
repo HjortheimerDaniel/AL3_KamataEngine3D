@@ -22,7 +22,7 @@ struct CollisionMapInfo
 {
 	bool isHittingCeiling = false;
 	bool isOnFloor = false;
-	bool isHittingWall;
+	bool isHittingWall = false;
 	Vector3 movement;
 };
 
@@ -71,9 +71,13 @@ class Player
 		//get info on the the mapchip
 		void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; };
 
-		void Collision(CollisionMapInfo& info);
+		void CollisionCeiling(CollisionMapInfo& info);
 
 		void CollisionFalling(CollisionMapInfo& info);
+
+		void CollisionRight(CollisionMapInfo& info);
+
+		void CollisionLeft(CollisionMapInfo& info);
 
 		Vector3 CornerPositon(const Vector3& center, Corner corner);
 
@@ -97,10 +101,11 @@ class Player
 
 		Vector3 velocity_ = {};
 
+
 		//rotate the character when we face a new direction
 		static inline const float kAcceleration = 0.1f; //movement for frame
 		static inline const float kAttenuation = 0.7f; 
-		static inline const float kLimitRunSpeed = 0.6f; 
+		static inline const float kLimitRunSpeed = 0.4f; 
 		LRDirection lrDirection_ = LRDirection::kRight; //which way are we facing
 
 		//rotation
@@ -118,7 +123,14 @@ class Player
 
 		static inline const float kWidth = 1.8f;
 		static inline const float kHeight = 1.8f;
-		static inline const float kBlank = -10.0f;
+		static inline const float kBlank = -0.1f;
+		static inline const float kAttenuationLanding = 1.0f;
+		static inline const float kAdjustLanding = 1.8f;
+		static inline const float kAdjustWall = 0.3f;
+		static inline const float kAttenuationWall = 0.3f;
+
+		bool hitRightWall = false;
+		bool hitLeftWall = false;
 
 };
 

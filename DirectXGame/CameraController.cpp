@@ -16,7 +16,7 @@ void CameraController::Update()
 	viewProjection_.translation_ = Lerp(viewProjection_.translation_, targetPosition, kInterpolationRate);
 
 	//calculate where the camera is related to the world camera
-//	viewProjection_.translation_ = targetWorldTransform.translation_ + targetOffset_;
+	//viewProjection_.translation_ = targetWorldTransform.translation_ + targetOffset_;
 	viewProjection_.translation_.x = max(viewProjection_.translation_.x, targetWorldTransform.translation_ .x + margin.left);
 	viewProjection_.translation_.x = min(viewProjection_.translation_.x, targetWorldTransform.translation_.x + margin.right);
 	viewProjection_.translation_.y = max(viewProjection_.translation_.y, targetWorldTransform.translation_.y + margin.bottom);
