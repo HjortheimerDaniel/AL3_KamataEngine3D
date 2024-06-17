@@ -14,6 +14,7 @@
 #include "Skydome.h"
 #include "MapChipField.h"
 #include "CameraController.h"
+#include "Enemy.h"
 #define NOMINMAX
 
 /// <summary>
@@ -55,6 +56,7 @@ private: // メンバ変数
 	Audio* audio_ = nullptr;
 	uint32_t textureHandle_ = 0;
 	Model* playerModel_ = nullptr;
+	Model* enemyModel_ = nullptr;
 	ViewProjection *viewProjection_ = nullptr;
 	//WorldTransform worldTransform_;
 	Player* player_ = nullptr;
@@ -68,6 +70,7 @@ private: // メンバ変数
 	MapChipField* mapChipField_ = nullptr;
 	CameraController* cameraController_ = nullptr;
 	Rect cameraRange = { 168.0f,28.5f,0,16 };
+	Enemy* enemy_ = nullptr;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

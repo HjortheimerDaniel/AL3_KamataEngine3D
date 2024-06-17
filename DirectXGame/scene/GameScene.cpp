@@ -20,10 +20,12 @@ GameScene::~GameScene() {
 	delete modelSkydome_;
 	delete mapChipField_;
 	delete cameraController_;
+	delete enemy_;
 
 }
 
 void GameScene::Initialize() {
+
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
@@ -61,6 +63,16 @@ void GameScene::Initialize() {
 
 #pragma endregion
 	
+#pragma region Enemy
+
+	enemyModel_ = Model::CreateFromOBJ("enemy", true);
+	enemy_ = new Enemy();
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18);
+	enemy_->Initialize(enemyModel_, viewProjection_, enemyPosition);
+	//enemy_->SetMapChipField(mapChipField_);
+
+
+#pragma endregion
 
 
 #pragma region CameraController
@@ -84,6 +96,7 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 
 	player_->Update();
+	enemy_->Update();
 	skydome_->Update();
 	cameraController_->Update();
 	
@@ -160,6 +173,7 @@ void GameScene::Draw() {
 	/// </summary>
 	
 	player_->Draw();
+	enemy_->Draw();
 	skydome_->Draw();
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
