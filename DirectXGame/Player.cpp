@@ -219,8 +219,9 @@ else if (Input::GetInstance()->PushKey(DIK_LEFT))
 }
 
 // Update horizontal velocity
-velocity_.x += acceleration.x; // add movement to our X
-velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); // set the limit for the max speed and min speed
+
+	velocity_.x += acceleration.x; // add movement to our X
+	velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); // set the limit for the max speed and min speed
 
 if (!Input::GetInstance()->PushKey(DIK_RIGHT) && !Input::GetInstance()->PushKey(DIK_LEFT))
 {
@@ -471,62 +472,45 @@ void Player::CollisionRight(CollisionMapInfo& info)
 		positionsNew[i] = CornerPositon(worldTransform_.translation_ + info.movement, static_cast<Corner>(i));
 	}
 
-	if (info.movement.x <= 0)
-	{
-		return;
-	}
+	// Initialize the hitRightWall flag to false at the beginning
+	hitRightWall = false;
 
+	// Always perform the collision check, regardless of movement direction
 	MapChipType mapChipType;
 	bool hit = false;
 	IndexSet indexSet;
-	
+
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop] + Vector3(kAdjustWall, 0, 0));
-	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex -1);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
 	if (mapChipType == MapChipType::kBlock)
 	{
 		hit = true;
-	}
-	else
-	{
-		hit = false;
 	}
 
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom] + Vector3(kAdjustWall, 0, 0));
-	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex -1);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
 	if (mapChipType == MapChipType::kBlock)
 	{
 		hit = true;
-	} 
-	else 
-	{
-		hit = false;
 	}
 
-	if (hit) 
+	if (hit)
 	{
-			indexSet = mapChipField_->GetMapChipIndexSetByPosition(info.movement.x);
-			Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-			info.isHittingWall = true;
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(info.movement.x);
+		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+		info.isHittingRightWall = true;
+		if (info.movement.x > 0) // Only set movement to 0 if moving right
+		{
 			info.movement.x = 0.0f;
 			velocity_.x = 0.0f;
-			hitRightWall = true;	
+		}
+		hitRightWall = true;
 	}
-	else {
-		info.isHittingWall = false;
-		hitRightWall = false;
+	else
+	{
+		info.isHittingRightWall = false;
 	}
 
-	/*if(!hit)
-	{
-		hitRightWall = false;
-	}*/
-
-	
-
-	/*if(info.isHittingWall)
-	{
-		velocity_.x *= (1.0f - kAttenuationWall);
-	}*/
 	
 
 }
@@ -540,10 +524,8 @@ void Player::CollisionLeft(CollisionMapInfo& info)
 		positionsNew[i] = CornerPositon(worldTransform_.translation_ + info.movement, static_cast<Corner>(i));
 	}
 
-	if (info.movement.x >= 0)
-	{
-		return;
-	}
+	hitLeftWall = false;
+	
 
 	MapChipType mapChipType;
 	bool hit = false;
@@ -555,10 +537,7 @@ void Player::CollisionLeft(CollisionMapInfo& info)
 	{
 		hit = true;
 	}
-	else
-	{
-		hit = false;
-	}
+	
 
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + Vector3(-kAdjustWall, 0, 0));
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
@@ -566,22 +545,23 @@ void Player::CollisionLeft(CollisionMapInfo& info)
 	{
 		hit = true;
 	}
-	else
-	{
-		hit = false;
-	}
+
 
 	if (hit)
 	{
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(info.movement.x);
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-		info.isHittingWall = true;
-		info.movement.x = 0.0f;
-		velocity_.x = 0.0f;
+		info.isHittingLeftWall = true;
+		if (info.movement.x < 0) // Only set movement to 0 if moving right
+		{
+			info.movement.x = 0.0f;
+			velocity_.x = 0.0f;
+		}
 		hitLeftWall = true;
 	}
-	else {
-		info.isHittingWall = false;
+	else 
+	{
+		info.isHittingLeftWall = false;
 		
 	}
 
@@ -626,15 +606,15 @@ void Player::AfterCollision(const CollisionMapInfo& info)
 {
 	worldTransform_.translation_ += info.movement;
 
-	if (Input::GetInstance()->PushKey(DIK_LEFT) /*|| Input::GetInstance()->PushKey(DIK_UP)*/)
-	{
-		hitRightWall = false;
-	}
+	//if (Input::GetInstance()->PushKey(DIK_LEFT) /*|| Input::GetInstance()->PushKey(DIK_UP)*/)
+	//{
+	//	hitRightWall = false;
+	//}
 
-	if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_UP))
-	{
-		hitLeftWall = false;
-	}
+	//if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_UP))
+	//{
+	//	hitLeftWall = false;
+	//}
 }
 
 void Player::HitCeiling(const CollisionMapInfo& info)

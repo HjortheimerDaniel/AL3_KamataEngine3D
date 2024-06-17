@@ -22,7 +22,8 @@ struct CollisionMapInfo
 {
 	bool isHittingCeiling = false;
 	bool isOnFloor = false;
-	bool isHittingWall = false;
+	bool isHittingLeftWall = false;
+	bool isHittingRightWall = false;
 	Vector3 movement;
 };
 
