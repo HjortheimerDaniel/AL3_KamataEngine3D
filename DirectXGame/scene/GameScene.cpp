@@ -55,6 +55,7 @@ void GameScene::Initialize() {
 #pragma endregion
 
 #pragma region player
+
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
@@ -67,7 +68,7 @@ void GameScene::Initialize() {
 
 	enemyModel_ = Model::CreateFromOBJ("enemy", true);
 	enemy_ = new Enemy();
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18);
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
 	enemy_->Initialize(enemyModel_, viewProjection_, enemyPosition);
 	//enemy_->SetMapChipField(mapChipField_);
 

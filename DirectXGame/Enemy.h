@@ -29,5 +29,15 @@ private:
 	Model* model_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 
+	//MOVEMENT
+	static inline const float kWalkspeed = 0.05f; //movement for frame
+	Vector3 velocity_ = {};
+
+	//ANIMATION
+	static inline const float kWalkMotionAngleStart = 0.05f; //movement for frame
+	static inline const float kWalkMotionAngleEnd = 0.3f; //movement for frame
+	static inline const float kWalkMotionTime = 0.3f; //movement for frame
+	float walkTimer_ = 0.0f;
+
 };
 
