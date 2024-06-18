@@ -16,6 +16,7 @@
 #include "CameraController.h"
 #include "Enemy.h"
 #define NOMINMAX
+#define MAXENEMIES 3
 
 /// <summary>
 /// ゲームシーン
@@ -71,6 +72,7 @@ private: // メンバ変数
 	CameraController* cameraController_ = nullptr;
 	Rect cameraRange = { 168.0f,28.5f,0,16 };
 	Enemy* enemy_ = nullptr;
+	std::list<Enemy*> enemies_;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

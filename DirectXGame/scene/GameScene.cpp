@@ -22,6 +22,12 @@ GameScene::~GameScene() {
 	delete cameraController_;
 	delete enemy_;
 
+	for ( Enemy* enemy : enemies_)
+	{
+		delete enemy;
+	}
+	enemies_.clear();
+
 }
 
 void GameScene::Initialize() {
@@ -67,11 +73,19 @@ void GameScene::Initialize() {
 #pragma region Enemy
 
 	enemyModel_ = Model::CreateFromOBJ("enemy", true);
-	enemy_ = new Enemy();
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
-	enemy_->Initialize(enemyModel_, viewProjection_, enemyPosition);
+	//enemy_ = new Enemy();
+	//Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
+	//enemy_->Initialize(enemyModel_, viewProjection_, enemyPosition);
 	//enemy_->SetMapChipField(mapChipField_);
 
+	for (int32_t i = 0; i < MAXENEMIES; i++)
+	{
+		Enemy* newEnemy = new Enemy();
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20 + (i *2), 18);
+		newEnemy->Initialize(enemyModel_, viewProjection_, enemyPosition);
+		enemies_.push_back(newEnemy);
+
+	}
 
 #pragma endregion
 
@@ -97,7 +111,10 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 
 	player_->Update();
-	enemy_->Update();
+	for (int i = 0; i < MAXENEMIES; i++)
+	{
+		
+	}
 	skydome_->Update();
 	cameraController_->Update();
 	
