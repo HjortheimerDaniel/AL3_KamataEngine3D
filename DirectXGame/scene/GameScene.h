@@ -45,6 +45,13 @@ public: // メンバ関数
 	void Update();
 
 	/// <summary>
+	/// Collision between player and objects
+	/// </summary>
+	void CheckAllCollisions();
+
+	bool IsCollision(const AABB& aabb1, const AABB& aabb2);
+
+	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw();

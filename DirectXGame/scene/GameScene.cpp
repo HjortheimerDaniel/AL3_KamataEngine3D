@@ -72,7 +72,7 @@ void GameScene::Initialize() {
 	
 #pragma region Enemy
 
-	enemyModel_ = Model::CreateFromOBJ("enemy", true);
+	enemyModel_ = Model::CreateFromOBJ("enemycolor", true);
 	//enemy_ = new Enemy();
 	//Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
 	//enemy_->Initialize(enemyModel_, viewProjection_, enemyPosition);
@@ -81,10 +81,10 @@ void GameScene::Initialize() {
 	for (int32_t i = 0; i < MAXENEMIES; i++)
 	{
 		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20 + (i *2), 18);
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20 + (5 * i) , 18 - i);
 		newEnemy->Initialize(enemyModel_, viewProjection_, enemyPosition);
 		enemies_.push_back(newEnemy);
-
+		
 	}
 
 #pragma endregion
@@ -111,10 +111,11 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 
 	player_->Update();
-	for (int i = 0; i < MAXENEMIES; i++)
-	{
-		
+
+	for (Enemy* enemy : enemies_) { //create new Enemy enemy 
+			enemy->Update();
 	}
+
 	skydome_->Update();
 	cameraController_->Update();
 	
@@ -162,6 +163,34 @@ void GameScene::Update() {
 	
 }
 
+void GameScene::CheckAllCollisions()
+{
+#pragma region player enemy
+
+	AABB aabb1, aabb2;
+
+	aabb1 = player_->GetAABB();
+
+	for (Enemy* enemy: enemies_)
+	{
+		aabb2 = enemy->GetAABB();
+	}
+
+#pragma endregion
+}
+
+bool GameScene::IsCollision(const AABB& aabb1, const AABB& aabb2)
+{
+	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
+		(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&
+		(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void GameScene::Draw() {
 
 	// コマンドリストの取得
@@ -191,7 +220,10 @@ void GameScene::Draw() {
 	/// </summary>
 	
 	player_->Draw();
-	enemy_->Draw();
+	for (Enemy* enemy : enemies_) {
+		enemy->Draw();
+	}
+	//enemy_->Draw();
 	skydome_->Draw();
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {

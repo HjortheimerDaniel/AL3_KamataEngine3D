@@ -8,6 +8,7 @@
 #include "algorithm"
 #include <iostream>
 #include "Windows.h"
+#include "struct.h"
 
 
 class MapChipField;
@@ -26,6 +27,8 @@ struct CollisionMapInfo
 	bool isHittingRightWall = false;
 	Vector3 movement;
 };
+
+
 
 enum Corner
 {
@@ -85,6 +88,11 @@ class Player
 		void AfterCollision(const CollisionMapInfo& info);
 
 		void HitCeiling(const CollisionMapInfo& info);
+
+		Vector3 GetWorldPosition();
+
+		AABB GetAABB();
+		
 
 		/// <summary>
 		/// 描画

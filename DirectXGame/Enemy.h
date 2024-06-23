@@ -4,6 +4,9 @@
 #include "cassert"
 #include <numbers>
 #include "Windows.h"
+#include "struct.h"
+
+
 
 
 class Enemy
@@ -20,6 +23,9 @@ public:
 
 	//void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; };
 
+	Vector3 GetWorldPosition();
+
+	AABB GetAABB();
 
 	void Draw();
 
@@ -38,6 +44,9 @@ private:
 	static inline const float kWalkMotionAngleEnd = 0.3f; //movement for frame
 	static inline const float kWalkMotionTime = 0.3f; //movement for frame
 	float walkTimer_ = 0.0f;
+
+	static inline const float kWidth = 1.8f;
+	static inline const float kHeight = 1.8f;
 
 };
 
