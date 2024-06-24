@@ -102,10 +102,6 @@ void GameScene::Initialize() {
 
 	debugCamera_ = new DebugCamera(1280, 720);
 	debugCamera_->SetFarZ(2000);
-
-
-
-
 }
 
 void GameScene::Update() {
@@ -118,7 +114,7 @@ void GameScene::Update() {
 
 	skydome_->Update();
 	cameraController_->Update();
-	
+	CheckAllCollisions();
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			
@@ -174,9 +170,15 @@ void GameScene::CheckAllCollisions()
 	for (Enemy* enemy: enemies_)
 	{
 		aabb2 = enemy->GetAABB();
-	}
 
+		if (IsCollision(aabb1, aabb2))
+		{
+			player_->OnCollision(enemy_);
+			enemy_->OnCollision(player_);
+		}
+	}
 #pragma endregion
+
 }
 
 bool GameScene::IsCollision(const AABB& aabb1, const AABB& aabb2)

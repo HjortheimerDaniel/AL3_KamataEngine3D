@@ -6,7 +6,7 @@
 #include "Windows.h"
 #include "struct.h"
 
-
+class Player;
 
 
 class Enemy
@@ -26,6 +26,8 @@ public:
 	Vector3 GetWorldPosition();
 
 	AABB GetAABB();
+
+	void OnCollision(const Player* player);
 
 	void Draw();
 

@@ -39,6 +39,8 @@ enum Corner
 	kNumCorner
 };
 
+class Enemy;
+
 class Player
 {
 	public:
@@ -92,6 +94,8 @@ class Player
 		Vector3 GetWorldPosition();
 
 		AABB GetAABB();
+
+		void OnCollision(const Enemy* enemy);
 		
 
 		/// <summary>
