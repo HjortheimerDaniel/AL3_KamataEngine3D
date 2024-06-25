@@ -21,6 +21,7 @@ GameScene::~GameScene() {
 	delete mapChipField_;
 	delete cameraController_;
 	delete enemy_;
+	delete deathParticles_;
 
 	for ( Enemy* enemy : enemies_)
 	{
@@ -28,6 +29,12 @@ GameScene::~GameScene() {
 	}
 	enemies_.clear();
 
+	
+	//for (DeathParticles* deathParticles : deathP_)
+	//{
+	//	delete deathParticles;
+	//}
+	deathP_.clear();
 }
 
 void GameScene::Initialize() {
@@ -100,8 +107,20 @@ void GameScene::Initialize() {
 
 #pragma endregion
 
+#pragma region DebugCamera
+
 	debugCamera_ = new DebugCamera(1280, 720);
 	debugCamera_->SetFarZ(2000);
+
+#pragma endregion
+
+#pragma region DeathParticles
+	deathparticleModel_ = Model::CreateFromOBJ("deathparticle", true);
+	deathParticles_ = new DeathParticles();
+	deathParticles_->Initialize(deathparticleModel_, viewProjection_, playerPosition);
+	
+#pragma endregion
+
 }
 
 void GameScene::Update() {
@@ -114,6 +133,13 @@ void GameScene::Update() {
 
 	skydome_->Update();
 	cameraController_->Update();
+
+	deathParticles_->Update();
+	//if (deathParticles_) 
+	//{
+	//	deathParticles_->Update();
+	//}
+
 	CheckAllCollisions();
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -123,7 +149,6 @@ void GameScene::Update() {
 			}
 			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 			worldTransformBlock->TransferMatrix();
-			
 		}
 	}
 	
@@ -225,6 +250,12 @@ void GameScene::Draw() {
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();
 	}
+
+		deathParticles_->Draw();
+	//if (deathParticles_)
+	//{
+	//}
+
 	//enemy_->Draw();
 	skydome_->Draw();
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -257,13 +288,11 @@ void GameScene::Draw() {
 
 void GameScene::GenerateBlocks()
 {
-	
 	uint32_t numBlockVertical = mapChipField_->GetNumBlockVertical();
 	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
 
 	worldTransformBlocks_.resize(numBlockVertical);
 	
-
 	for (uint32_t i = 0; i < numBlockVertical; i++) {
 		worldTransformBlocks_[i].resize(numBlockHorizontal);
 
@@ -275,8 +304,6 @@ void GameScene::GenerateBlocks()
 				worldTransformBlocks_[i][j] = worldTransform;
 				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j,i);
 			}
-			
 		}
 	}
-
 }

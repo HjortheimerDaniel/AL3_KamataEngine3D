@@ -15,6 +15,7 @@
 #include "MapChipField.h"
 #include "CameraController.h"
 #include "Enemy.h"
+#include "DeathParticles.h"
 #define NOMINMAX
 #define MAXENEMIES 3
 
@@ -65,14 +66,14 @@ private: // メンバ変数
 	uint32_t textureHandle_ = 0;
 	Model* playerModel_ = nullptr;
 	Model* enemyModel_ = nullptr;
+	Model* deathparticleModel_ = nullptr;
 	ViewProjection *viewProjection_ = nullptr;
-	//WorldTransform worldTransform_;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
-	//std::vector<WorldTransform*>worldTransformBlocks_;
 	std::vector<std::vector<WorldTransform*>>worldTransformBlocks_;
+	//std::vector<std::vector<WorldTransform*>>worldTransformDeathParticles_;
 	Model* modelBlock_ = nullptr;
 	Model* modelSkydome_ = nullptr;
 	MapChipField* mapChipField_ = nullptr;
@@ -80,6 +81,8 @@ private: // メンバ変数
 	Rect cameraRange = { 168.0f,28.5f,0,16 };
 	Enemy* enemy_ = nullptr;
 	std::list<Enemy*> enemies_;
+	DeathParticles* deathParticles_ = nullptr;
+	std::list<DeathParticles*> deathP_;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
