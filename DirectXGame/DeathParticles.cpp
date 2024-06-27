@@ -1,5 +1,6 @@
 #include "DeathParticles.h"
 #include "imgui.h"
+#include "algorithm"
 
 
 DeathParticles::DeathParticles()
@@ -18,43 +19,88 @@ void DeathParticles::Initialize(Model* model, ViewProjection* viewProjection, co
 	viewProjection_ = viewProjection;
 	for (auto& worldTransform : worldTransforms_ )
 	{
-
 		worldTransform.Initialize();
 		worldTransform.translation_ = position;
 	}
-	worldTransformParticles_.resize(kNumParticles);
 	
-	
-	for (uint32_t j = 0; j < kNumParticles; j++)
-	{
-		WorldTransform* worldTransform = new WorldTransform();
-		worldTransform->Initialize();
-		worldTransform->translation_ = position; // Set initial position
-		worldTransformParticles_[j] = worldTransform;
-	}
-	
+	objectColor_.Initialize();
+	color_ = { 1,1,1,1 };
+	particleFade_ = 1;
 
 }
 
 void DeathParticles::Update()
 {
-	for (WorldTransform* worldTransformDP : worldTransformParticles_) { //everything this is inside worldTransformParticles_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
+	ImGui::Begin("Window");
+	ImGui::Text("isFinished %d", isFinished_);
+	ImGui::Text("counter %f", counter_);
+	ImGui::Text("fade %f", particleFade_);
+	ImGui::End();
+	
 
-			worldTransformDP->matWorld_ = MakeAffineMatrix(worldTransformDP->scale_, worldTransformDP->rotation_, worldTransformDP->translation_);
-			worldTransformDP->TransferMatrix();
-			worldTransformDP->UpdateMatrix();
+	counter_ += 1.0f / 60.0f;
+	if (counter_ >= kDuration)
+	{
+		counter_ = kDuration;
+		isFinished_ = true;
+
 	}
 
-	ImGui::Begin("Window");
-	ImGui::Text("size %d", worldTransformParticles_.size());
-	ImGui::End();
+	if (isFinished_) 
+	{
+		return;
+	}
+	
+	for (int i = 0; i < kNumParticles; i++)
+	{
+		worldTransforms_[i].matWorld_ = MakeAffineMatrix(worldTransforms_[i].scale_, worldTransforms_[i].rotation_, worldTransforms_[i].translation_);
+		worldTransforms_[i].TransferMatrix();
+		worldTransforms_[i].UpdateMatrix();
+	}
+	
+	particleFade_ -= 0.01f;
+	
+	ParticleMovement();
+	ParticleFade();
+	
+	
+}
+
+void DeathParticles::ParticleMovement()
+{
+	for (uint32_t i = 0; i < kNumParticles; i++)
+	{
+		Vector3 velocity = { kSpeed, 0,0 };
+		float angle = kAngleUnit * i;
+		Matrix4x4 matrixRotation = MakeRotateMatrixZ(angle);
+		velocity = Transform(velocity, matrixRotation);
+		worldTransforms_[i].translation_ += velocity;
+	}
+
+	
+}
+
+void DeathParticles::ParticleFade()
+{
+	color_.w = std::clamp(particleFade_, 0.0f, 1.0f);
+	objectColor_.SetColor(color_);
+	objectColor_.TransferMatrix();
 }
 
 void DeathParticles::Draw()
 {
-	for (WorldTransform* worldTransformDP : worldTransformParticles_) {
-
-			model_->Draw(*worldTransformDP, *viewProjection_);
-		
+	if (isFinished_)
+	{
+		return;
 	}
+
+	for (auto& worldTransform : worldTransforms_) 
+	{
+		model_->Draw(worldTransform, *viewProjection_, &objectColor_);
+	}
+
+	/*for (int i = 0; i < kNumParticles; i++)
+	{
+		model_->Draw(worldTransforms_[i], *viewProjection_);
+	}*/
 }
