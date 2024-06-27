@@ -19,6 +19,13 @@
 #define NOMINMAX
 #define MAXENEMIES 3
 
+
+enum class Phase 
+{
+	kPlay,
+	kDeath,
+};
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -52,6 +59,8 @@ public: // メンバ関数
 
 	bool IsCollision(const AABB& aabb1, const AABB& aabb2);
 
+	void ChangePhase();
+
 	/// <summary>
 	/// 描画
 	/// </summary>
@@ -82,7 +91,7 @@ private: // メンバ変数
 	Enemy* enemy_ = nullptr;
 	std::list<Enemy*> enemies_;
 	DeathParticles* deathParticles_ = nullptr;
-	//std::list<DeathParticles*> deathP_;
+	Phase phase_;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

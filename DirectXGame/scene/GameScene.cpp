@@ -48,6 +48,7 @@ void GameScene::Initialize() {
 	//worldTransform_.Initialize();
 	viewProjection_->Initialize();
 	modelBlock_ = Model::Create();
+	phase_ = Phase::kPlay;
 	
 #pragma region skydome
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
@@ -96,7 +97,6 @@ void GameScene::Initialize() {
 
 #pragma endregion
 
-
 #pragma region CameraController
 
 	cameraController_ = new CameraController();
@@ -125,34 +125,38 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
-	player_->Update();
+	switch (phase_)	
+	{
 
-	for (Enemy* enemy : enemies_) { //create new Enemy enemy 
+	#pragma region Play
+
+	case Phase::kPlay:
+		player_->Update();
+
+		skydome_->Update();
+
+		cameraController_->Update();
+
+		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
-	}
-
-	skydome_->Update();
-	cameraController_->Update();
-
-	deathParticles_->Update();
-	//if (deathParticles_) 
-	//{
-	//	deathParticles_->Update();
-	//}
-
-	CheckAllCollisions();
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-			
-			if (!worldTransformBlock) { //if there is a block here
-				continue; //keep going
-			}
-			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-			worldTransformBlock->TransferMatrix();
 		}
-	}
-	
-	//debugCamera_->Update();
+
+		CheckAllCollisions();
+
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+
+				if (!worldTransformBlock) { //if there is a block here
+					continue; //keep going
+				}
+				worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+				worldTransformBlock->TransferMatrix();
+			}
+		}
+
+
+
+		//debugCamera_->Update();
 
 #ifdef _DEBUG
 	/*if (input_->TriggerKey(DIK_SPACE) && !isDebugCameraActive_) {
@@ -162,26 +166,91 @@ void GameScene::Update() {
 		isDebugCameraActive_ = false;
 
 	}*/
-	if (input_->TriggerKey(DIK_BACK)) 
-	{
-		isDebugCameraActive_ ^= true; //same as above
-	}
+		if (input_->TriggerKey(DIK_BACK))
+		{
+			isDebugCameraActive_ ^= true; //same as above
+		}
+
 
 
 #endif // _DEBUG
 
-	if (isDebugCameraActive_) {
-		debugCamera_->Update();
-		viewProjection_->matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_->matProjection = debugCamera_->GetViewProjection().matProjection;
-		viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
+		if (isDebugCameraActive_) {
+			debugCamera_->Update();
+			viewProjection_->matView = debugCamera_->GetViewProjection().matView;
+			viewProjection_->matProjection = debugCamera_->GetViewProjection().matProjection;
+			viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
+		}
+		else {
+			viewProjection_->matView = cameraController_->GetViewProjection().matView;
+			viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
+			viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
+		}
+
+
+		break;
+
+#pragma endregion
+
+	#pragma region Death
+	case Phase::kDeath:
+
+		skydome_->Update();
+		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
+			enemy->Update();
+		}
+		if (deathParticles_)
+		{
+			deathParticles_->Update();
+		}
+
+		#ifdef _DEBUG
+		
+		if (input_->TriggerKey(DIK_BACK))
+		{
+			isDebugCameraActive_ ^= true; //same as above
+		}
+		#endif // _DEBUG
+
+
+		if (isDebugCameraActive_) {
+			debugCamera_->Update();
+			viewProjection_->matView = debugCamera_->GetViewProjection().matView;
+			viewProjection_->matProjection = debugCamera_->GetViewProjection().matProjection;
+			viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
+		}
+		else {
+			viewProjection_->matView = cameraController_->GetViewProjection().matView;
+			viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
+			viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
+		}
+
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+
+				if (!worldTransformBlock) { //if there is a block here
+					continue; //keep going
+				}
+				worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+				worldTransformBlock->TransferMatrix();
+			}
+		}
+
+		break;
+
+		#pragma endregion
+
+	default:
+		break;
 	}
-	else {
-		viewProjection_->matView = cameraController_->GetViewProjection().matView;
-		viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
-		viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
-	}
+
 	
+
+
+	
+	
+
+
 }
 
 void GameScene::CheckAllCollisions()
@@ -216,6 +285,11 @@ bool GameScene::IsCollision(const AABB& aabb1, const AABB& aabb2)
 	}
 
 	return false;
+}
+
+void GameScene::ChangePhase()
+{
+
 }
 
 void GameScene::Draw() {
