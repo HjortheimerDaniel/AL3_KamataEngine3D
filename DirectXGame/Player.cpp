@@ -18,6 +18,7 @@ Player::~Player()
 }
 
 void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position) {
+	
 	assert(model);
 	model_ = model;
 	//textureHandle_ = textureHandle; 
@@ -653,7 +654,7 @@ AABB Player::GetAABB()
 void Player::OnCollision(const Enemy* enemy)
 {
 	(void)enemy;
-	velocity_ += Vector3(0, 1, 0);
+	isDead_ = true;
 }
 
 void Player::Draw()

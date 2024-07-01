@@ -31,11 +31,11 @@ void DeathParticles::Initialize(Model* model, ViewProjection* viewProjection, co
 
 void DeathParticles::Update()
 {
-	ImGui::Begin("Window");
+	/*ImGui::Begin("Window");
 	ImGui::Text("isFinished %d", isFinished_);
 	ImGui::Text("counter %f", counter_);
 	ImGui::Text("fade %f", particleFade_);
-	ImGui::End();
+	ImGui::End();*/
 	
 
 	counter_ += 1.0f / 60.0f;

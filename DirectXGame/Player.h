@@ -41,6 +41,8 @@ enum Corner
 
 class Enemy;
 
+class GameScene;
+
 class Player
 {
 	public:
@@ -97,6 +99,7 @@ class Player
 
 		void OnCollision(const Enemy* enemy);
 		
+		bool GetIsDead() const { return isDead_; };
 
 		/// <summary>
 		/// 描画
@@ -144,6 +147,7 @@ class Player
 
 		bool hitRightWall = false;
 		bool hitLeftWall = false;
+		bool isDead_ = false;
 
 };
 

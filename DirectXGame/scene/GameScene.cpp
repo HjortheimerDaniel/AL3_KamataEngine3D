@@ -22,6 +22,7 @@ GameScene::~GameScene() {
 	delete cameraController_;
 	delete enemy_;
 	delete deathParticles_;
+	delete viewProjection_;
 
 	for ( Enemy* enemy : enemies_)
 	{
@@ -43,7 +44,7 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	//textureHandle_ = TextureManager::Load("emil.jpg");
-	//model_->Create();
+	//model_->Create();5
 	viewProjection_ = new ViewProjection();
 	//worldTransform_.Initialize();
 	viewProjection_->Initialize();
@@ -124,7 +125,7 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-
+	
 	switch (phase_)	
 	{
 
@@ -136,7 +137,7 @@ void GameScene::Update() {
 		skydome_->Update();
 
 		cameraController_->Update();
-
+		ChangePhase();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
 		}
@@ -243,14 +244,6 @@ void GameScene::Update() {
 	default:
 		break;
 	}
-
-	
-
-
-	
-	
-
-
 }
 
 void GameScene::CheckAllCollisions()
@@ -289,7 +282,22 @@ bool GameScene::IsCollision(const AABB& aabb1, const AABB& aabb2)
 
 void GameScene::ChangePhase()
 {
+	switch (phase_)
+	{
+	case Phase::kPlay:
+		if (player_->GetIsDead()) 
+		{
+			phase_ = Phase::kDeath;
+			const Vector3& deathParticlePosition = player_->GetWorldPosition();
+			deathParticles_->Initialize(deathparticleModel_, viewProjection_, deathParticlePosition);
 
+		}
+		break;
+	case Phase::kDeath:
+		break;
+	default:
+		break;
+	}
 }
 
 void GameScene::Draw() {
@@ -319,26 +327,49 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	
-	player_->Draw();
-	for (Enemy* enemy : enemies_) {
-		enemy->Draw();
-	}
+	switch (phase_)
+	{
+	case Phase::kPlay:
+		player_->Draw();
+		for (Enemy* enemy : enemies_) {
+			enemy->Draw();
+		}
+		skydome_->Draw();
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
+				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+			}
+		}
+		break;
 
+	case Phase::kDeath:
+		for (Enemy* enemy : enemies_) {
+			enemy->Draw();
+		}
 		deathParticles_->Draw();
+		skydome_->Draw();
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
+				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+			}
+		}
+		break;
+	default:
+		break;
+	}
+	
+
+		
 	//if (deathParticles_)
 	//{
 	//}
 
 	//enemy_->Draw();
-	skydome_->Draw();
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-			if (!worldTransformBlock)
-				continue;
-			modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
-		}
-	}
+	
 	
 	
 

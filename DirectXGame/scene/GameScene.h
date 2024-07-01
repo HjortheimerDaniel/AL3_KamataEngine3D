@@ -67,6 +67,7 @@ public: // メンバ関数
 	void Draw();
 
 	void GenerateBlocks();
+	bool GetIsDead() const { return isDead_; };
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -92,6 +93,9 @@ private: // メンバ変数
 	std::list<Enemy*> enemies_;
 	DeathParticles* deathParticles_ = nullptr;
 	Phase phase_;
+	bool isDead_ = false;
+	
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
