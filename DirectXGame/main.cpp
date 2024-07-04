@@ -29,6 +29,7 @@ Scene scene = Scene::kUnknown;
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+	
 	WinApp* win = nullptr;
 	DirectXCommon* dxCommon = nullptr;
 	// 汎用機能
@@ -81,7 +82,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	gameScene = new GameScene();
 	gameScene->Initialize();
 
-	Scene scene = Scene::kTitle;
+	scene = Scene::kTitle;
 	titleScene = new TitleScene();
 	titleScene->Initialize();
 

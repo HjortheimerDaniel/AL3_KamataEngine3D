@@ -125,7 +125,7 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	
+	ChangePhase();
 	switch (phase_)	
 	{
 
@@ -137,7 +137,6 @@ void GameScene::Update() {
 		skydome_->Update();
 
 		cameraController_->Update();
-		ChangePhase();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
 		}
@@ -293,7 +292,13 @@ void GameScene::ChangePhase()
 
 		}
 		break;
+
 	case Phase::kDeath:
+		if(deathParticles_ && deathParticles_->GetIsFinished())
+		{
+			finished_ = true;
+		}
+		
 		break;
 	default:
 		break;

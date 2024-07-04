@@ -24,7 +24,7 @@ public:
 
 	void Draw();
 
-	bool GetIsFinished() const {return finished_}
+	bool GetIsFinished() const { return finished_; };
 
 private:
 	DirectXCommon* dxCommon_ = nullptr;

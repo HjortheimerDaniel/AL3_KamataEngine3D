@@ -25,7 +25,7 @@ public:
 
 	void ParticleFade();
 
-	bool GetIsFinished() const { return finished_; };
+	bool GetIsFinished() const { return isFinished_; };
 
 	void Draw();
 
