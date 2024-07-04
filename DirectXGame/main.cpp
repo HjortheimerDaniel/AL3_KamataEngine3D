@@ -8,6 +8,25 @@
 #include "WinApp.h"
 #include "TitleScene.h"
 
+GameScene* gameScene = nullptr;
+TitleScene* titleScene = nullptr;
+
+void ChangeScene();
+
+void UpdateScene();
+
+void DrawScene();
+
+enum class Scene
+{
+	kUnknown = 0,
+	kTitle,
+	kGame,
+};
+
+Scene scene = Scene::kUnknown;
+
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	WinApp* win = nullptr;
@@ -17,8 +36,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Audio* audio = nullptr;
 	AxisIndicator* axisIndicator = nullptr;
 	PrimitiveDrawer* primitiveDrawer = nullptr;
-	GameScene* gameScene = nullptr;
-	TitleScene* titleScene = nullptr;
+
+	
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
 	win->CreateGameWindow(L"GC2A_05_ジュットハイマー_ダニエル_AL3");
@@ -62,6 +81,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	gameScene = new GameScene();
 	gameScene->Initialize();
 
+	Scene scene = Scene::kTitle;
 	titleScene = new TitleScene();
 	titleScene->Initialize();
 
@@ -79,7 +99,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// ゲームシーンの毎フレーム処理
 		//gameScene->Update();
 		// ゲームタイトルの毎フレーム処理
-		titleScene->Update();
+		//titleScene->Update();
+
+		ChangeScene();
+
+		UpdateScene();
 		// 軸表示の更新
 		axisIndicator->Update();
 		// ImGui受付終了
@@ -90,7 +114,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// ゲームシーンの描画
 		//gameScene->Draw();
 		// ゲームタイトルの描画
-		titleScene->Draw();
+		//titleScene->Draw();
+		
+		DrawScene();
+
 		// 軸表示の描画
 		axisIndicator->Draw();
 		// プリミティブ描画のリセット
@@ -114,4 +141,70 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	win->TerminateGameWindow();
 
 	return 0;
+}
+
+void ChangeScene()
+{
+	switch (scene)
+	{
+	case Scene::kUnknown:
+		break;
+	case Scene::kTitle:
+		if (titleScene->GetIsFinished()) 
+		{
+			scene = Scene::kGame;
+			delete titleScene;
+			titleScene = nullptr;
+			gameScene = new GameScene;
+			gameScene->Initialize();
+		}
+		break;
+	case Scene::kGame:
+		if (gameScene->GetIsFinished()) 
+		{
+			scene = Scene::kTitle;
+			delete gameScene;
+			gameScene = nullptr;
+			titleScene = new TitleScene;
+			titleScene->Initialize();
+		}
+
+		break;
+	default:
+		break;
+	}
+}
+
+void UpdateScene()
+{
+	switch (scene)
+	{
+	case Scene::kUnknown:
+		break;
+	case Scene::kTitle:
+		titleScene->Update();
+		break;
+	case Scene::kGame:
+		gameScene->Update();
+		break;
+	default:
+		break;
+	}
+}
+
+void DrawScene()
+{
+	switch (scene)
+	{
+	case Scene::kUnknown:
+		break;
+	case Scene::kTitle:
+		titleScene->Draw();
+		break;
+	case Scene::kGame:
+		gameScene->Draw();
+		break;
+	default:
+		break;
+	}
 }

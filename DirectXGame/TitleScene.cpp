@@ -29,14 +29,18 @@ void TitleScene::Initialize()
 
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	titlePlayer_ = new TitlePlayer();
-	Vector3 playerPosition = { 1.0f, 1.0f, 1.0f };
+	Vector3 playerPosition = { 1.0f, -5.0f, 1.0f };
 	titlePlayer_->Initialize(playerModel_, viewProjection_, playerPosition);
 
-	textModel_ = Model::CreateFromOBJ("title", true);
+	textModel_ = Model::CreateFromOBJ("titleMapchip", true);
 	titleText_ = new TitleText();
-	Vector3 textPosition = { 0.0f, 1.0f, 1.0f };
-	titleText_->Initialize(textModel_, viewProjection_, playerPosition);
-
+	Vector3 textPosition = { -30.0f, 60.0f, 1.0f };
+	titleText_->Initialize(textModel_, viewProjection_, textPosition);
+	
+	textModel2_ = Model::CreateFromOBJ("title3DLand", true);
+	titleText2_ = new TitleText();
+	Vector3 textPosition2 = { 0.0f, 100.0f, 1.0f };
+	titleText2_->Initialize(textModel2_, viewProjection_, textPosition2);
 
 }
 
@@ -44,6 +48,12 @@ void TitleScene::Update()
 {
 	titlePlayer_->Update();
 	titleText_->Update();
+	titleText2_->Update();
+
+	if (Input::GetInstance()->PushKey(DIK_SPACE)) 
+	{
+		finished_ = true;
+	}
 }
 
 void TitleScene::Draw()
@@ -73,8 +83,9 @@ void TitleScene::Draw()
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	//titlePlayer_->Draw();
+	titlePlayer_->Draw();
 	titleText_->Draw();
+	titleText2_->Draw();
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion

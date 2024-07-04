@@ -24,7 +24,7 @@ void TitlePlayer::Update()
 {
 	worldTransform_.translation_.x += 1;
 	
-	if (worldTransform_.translation_.x >= 100.0f) 
+	if (worldTransform_.translation_.x >= 150.0f) 
 	{
 		worldTransform_.translation_.x = -100.0f;
 	}

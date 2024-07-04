@@ -24,6 +24,8 @@ public:
 
 	void Draw();
 
+	bool GetIsFinished() const {return finished_}
+
 private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -31,9 +33,12 @@ private:
 	WorldTransform worldTransform_;
 	Model* playerModel_ = nullptr;
 	Model* textModel_ = nullptr;
+	Model* textModel2_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	TitlePlayer* titlePlayer_ = nullptr;
 	TitleText* titleText_ = nullptr;
+	TitleText* titleText2_ = nullptr;
+	bool finished_ = false;
 
 };
 

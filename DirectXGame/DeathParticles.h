@@ -25,6 +25,8 @@ public:
 
 	void ParticleFade();
 
+	bool GetIsFinished() const { return finished_; };
+
 	void Draw();
 
 private:
@@ -44,5 +46,6 @@ private:
 	ObjectColor objectColor_;
 	Vector4 color_;
 	float particleFade_;
+	bool finished_ = false;
 };
 

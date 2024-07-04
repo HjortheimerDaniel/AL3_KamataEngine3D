@@ -16,12 +16,17 @@ public:
 
 	void Draw();
 
+	float EaseIn(float x);
+
 private:
 
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
-	static inline const float titleSize = 6.0f;
+	static inline const float titleSize = 8.0f;
+
+
+
 
 };
 

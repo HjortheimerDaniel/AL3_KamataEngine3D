@@ -16,19 +16,31 @@ void TitleText::Initialize(Model* model, ViewProjection* viewProjection, const V
 	viewProjection_ = viewProjection;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-	//worldTransform_.rotation_.y = 3.14159265359f;
+	worldTransform_.scale_ = { titleSize, titleSize, titleSize };
 
 }
 
 void TitleText::Update()
 {
-	worldTransform_.translation_.x = -50.0f;
-
+	if (worldTransform_.translation_.y >= 1.0f) 
+	{
+		worldTransform_.translation_.y--;
+	}
 	worldTransform_.UpdateMatrix();
-
 }
 
 void TitleText::Draw()
 {
+
 	model_->Draw(worldTransform_, *viewProjection_);
 }
+
+float TitleText::EaseIn(float x)
+{
+	float pi = 3.1419f;
+	return 1.0f - cosf((x * pi / 2.0f));
+
+}
+
+
+
