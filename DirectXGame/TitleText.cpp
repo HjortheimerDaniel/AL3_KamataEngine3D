@@ -1,4 +1,6 @@
 #include "TitleText.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 TitleText::TitleText()
 {
@@ -17,15 +19,19 @@ void TitleText::Initialize(Model* model, ViewProjection* viewProjection, const V
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
 	worldTransform_.scale_ = { titleSize, titleSize, titleSize };
-
+	theta = 0.0f;
+	amplitude = 2.0f;
 }
 
 void TitleText::Update()
 {
-	if (worldTransform_.translation_.y >= 1.0f) 
+	theta += float(M_PI) / 150.0f;
+	worldTransform_.translation_.y = sinf(theta) * amplitude + 3.0f;
+
+	/*if (worldTransform_.translation_.y >= 1.0f) 
 	{
 		worldTransform_.translation_.y--;
-	}
+	}*/
 	worldTransform_.UpdateMatrix();
 }
 

@@ -24,7 +24,7 @@ private:
 	Model* model_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	static inline const float titleSize = 8.0f;
-
+	float theta, amplitude;
 
 
 
