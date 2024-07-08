@@ -3,6 +3,7 @@
 
 void Fade::Initialize()
 {
+	//dxCommon_ = DirectXCommon::GetInstance();
 	textureHandle_ = TextureManager::Load("fader.png");
 	sprite_ = Sprite::Create(textureHandle_, { 500, 50 });
 	sprite_->SetSize({ 1280.0f, 720.0f });

@@ -72,7 +72,8 @@ void TitleScene::Draw()
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-	fade_->Draw(commandList);
+
+	fade_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
