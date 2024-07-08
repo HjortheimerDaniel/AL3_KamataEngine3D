@@ -8,6 +8,7 @@
 #include "WorldTransform.h"
 #include "TitlePlayer.h"
 #include "TitleText.h"
+#include "Fade.h"
 
 
 class TitleScene
@@ -39,6 +40,7 @@ private:
 	TitleText* titleText_ = nullptr;
 	TitleText* titleText2_ = nullptr;
 	bool finished_ = false;
+	Fade* fade_ = nullptr;
 
 };
 

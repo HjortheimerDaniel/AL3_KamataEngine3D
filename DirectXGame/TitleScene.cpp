@@ -11,6 +11,7 @@ TitleScene::~TitleScene()
 	delete titlePlayer_;
 	delete viewProjection_;
 	delete titleText_;
+	delete fade_;
 }
 
 void TitleScene::Initialize()
@@ -42,6 +43,8 @@ void TitleScene::Initialize()
 	Vector3 textPosition2 = { 0.0f, 3.0f, 1.0f };
 	titleText2_->Initialize(textModel2_, viewProjection_, textPosition2);
 
+	fade_ = new Fade();
+	fade_->Initialize();
 }
 
 void TitleScene::Update()
@@ -49,6 +52,7 @@ void TitleScene::Update()
 	titlePlayer_->Update();
 	titleText_->Update();
 	titleText2_->Update();
+	fade_->Update();
 
 	if (Input::GetInstance()->PushKey(DIK_SPACE)) 
 	{
@@ -68,7 +72,7 @@ void TitleScene::Draw()
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-
+	fade_->Draw(commandList);
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
