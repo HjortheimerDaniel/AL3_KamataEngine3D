@@ -45,17 +45,24 @@ void TitleScene::Initialize()
 
 	fade_ = new Fade();
 	fade_->Initialize();
+	fade_->Start(Status::FadeIn, duration_);
 }
 
 void TitleScene::Update()
 {
+
+	fade_->Update();
 	titlePlayer_->Update();
 	titleText_->Update();
 	titleText2_->Update();
-	fade_->Update();
-
-	if (Input::GetInstance()->PushKey(DIK_SPACE)) 
+	
+	if (Input::GetInstance()->PushKey(DIK_SPACE) && fade_->IsFinished()) 
 	{
+		clicks_ = 1;
+		fade_->Start(Status::FadeOut, duration_);
+	}
+
+	if (fade_->IsFinished() && clicks_ != 0) {
 		finished_ = true;
 	}
 }
@@ -73,7 +80,7 @@ void TitleScene::Draw()
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
-	fade_->Draw();
+	
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -91,8 +98,11 @@ void TitleScene::Draw()
 	titlePlayer_->Draw();
 	titleText_->Draw();
 	titleText2_->Draw();
+	
 	// 3Dオブジェクト描画後処理
+	fade_->Draw();
 	Model::PostDraw();
+
 #pragma endregion
 
 #pragma region 前景スプライト描画
@@ -102,7 +112,7 @@ void TitleScene::Draw()
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-
+	
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	

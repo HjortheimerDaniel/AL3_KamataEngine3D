@@ -49,7 +49,7 @@ void GameScene::Initialize() {
 	//worldTransform_.Initialize();
 	viewProjection_->Initialize();
 	modelBlock_ = Model::Create();
-	phase_ = Phase::kPlay;
+	phase_ = Phase::kFadeIn;
 	
 #pragma region skydome
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
@@ -122,16 +122,23 @@ void GameScene::Initialize() {
 	
 #pragma endregion
 
+
+
 }
 
 void GameScene::Update() {
 	ChangePhase();
 	switch (phase_)	
-	{
+	
+	case Phase::kFadeIn:
+
+
+
 
 	#pragma region Play
 
 	case Phase::kPlay:
+
 		player_->Update();
 
 		skydome_->Update();

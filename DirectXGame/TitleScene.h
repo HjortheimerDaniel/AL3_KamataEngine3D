@@ -11,6 +11,7 @@
 #include "Fade.h"
 
 
+
 class TitleScene
 {
 public:
@@ -41,6 +42,16 @@ private:
 	TitleText* titleText2_ = nullptr;
 	bool finished_ = false;
 	Fade* fade_ = nullptr;
+	float duration_ = 1.0f;
+	int clicks_ = 0;
+	enum class Phase
+	{
+		kFadeIn,
+		kMain,
+		kFadeOut,
+	};
+
+	Phase phase_ = Phase::kFadeIn;
 
 };
 

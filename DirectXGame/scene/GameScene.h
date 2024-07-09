@@ -16,14 +16,17 @@
 #include "CameraController.h"
 #include "Enemy.h"
 #include "DeathParticles.h"
+#include "Fade.h"
 #define NOMINMAX
 #define MAXENEMIES 3
 
 
 enum class Phase 
 {
+	kFadeIn,
 	kPlay,
 	kDeath,
+	kFadeOut,
 };
 
 /// <summary>
@@ -98,6 +101,8 @@ private: // メンバ変数
 	Phase phase_;
 	bool isDead_ = false;
 	bool finished_ = false;
+	Fade* fade_ = nullptr;
+	float duration_ = 1.0f;
 	
 
 	/// <summary>
