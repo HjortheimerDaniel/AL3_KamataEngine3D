@@ -49,7 +49,6 @@ void GameScene::Initialize() {
 	//worldTransform_.Initialize();
 	viewProjection_->Initialize();
 	modelBlock_ = Model::Create();
-	phase_ = Phase::kFadeIn;
 	
 #pragma region skydome
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
@@ -122,27 +121,58 @@ void GameScene::Initialize() {
 	
 #pragma endregion
 
+#pragma region Fade
 
+	phase_ = Phase::kFadeIn;
+	fade_ = new Fade();
+	fade_->Initialize();
+	fade_->Start(Status::FadeIn, duration_);
+
+#pragma endregion
 
 }
 
 void GameScene::Update() {
+
 	ChangePhase();
-	switch (phase_)	
-	
+
+	switch (phase_)
+	{
 	case Phase::kFadeIn:
 
+		fade_->Update();
+		player_->Update();
 
+		skydome_->Update();
 
+		cameraController_->Update();
+		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
+			enemy->Update();
+		}
 
-	#pragma region Play
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+
+				if (!worldTransformBlock) { //if there is a block here
+					continue; //keep going
+				}
+				worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+				worldTransformBlock->TransferMatrix();
+			}
+		}
+		viewProjection_->matView = cameraController_->GetViewProjection().matView;
+		viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
+		viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
+		break;
+
+#pragma region Play
 
 	case Phase::kPlay:
 
 		player_->Update();
 
 		skydome_->Update();
-
+		//fade_->SetCounter_(0.0f);
 		cameraController_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
@@ -198,10 +228,8 @@ void GameScene::Update() {
 		break;
 
 #pragma endregion
-
-	#pragma region Death
+#pragma region Death
 	case Phase::kDeath:
-
 		skydome_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
@@ -211,13 +239,13 @@ void GameScene::Update() {
 			deathParticles_->Update();
 		}
 
-		#ifdef _DEBUG
-		
+#ifdef _DEBUG
+
 		if (input_->TriggerKey(DIK_BACK))
 		{
 			isDebugCameraActive_ ^= true; //same as above
 		}
-		#endif // _DEBUG
+#endif // _DEBUG
 
 
 		if (isDebugCameraActive_) {
@@ -242,14 +270,28 @@ void GameScene::Update() {
 				worldTransformBlock->TransferMatrix();
 			}
 		}
+		//fade_->Update();
 
 		break;
 
-		#pragma endregion
+#pragma endregion
 
+	case Phase::kFadeOut:
+		fade_->Update();
+		skydome_->Update();
+		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
+			enemy->Update();
+		}
+			viewProjection_->matView = cameraController_->GetViewProjection().matView;
+			viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
+			viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
+
+		break;
 	default:
 		break;
 	}
+
+
 }
 
 void GameScene::CheckAllCollisions()
@@ -260,7 +302,7 @@ void GameScene::CheckAllCollisions()
 
 	aabb1 = player_->GetAABB();
 
-	for (Enemy* enemy: enemies_)
+	for (Enemy* enemy : enemies_)
 	{
 		aabb2 = enemy->GetAABB();
 
@@ -290,8 +332,14 @@ void GameScene::ChangePhase()
 {
 	switch (phase_)
 	{
+	case Phase::kFadeIn:
+		if (fade_->IsFinished())
+		{
+			phase_ = Phase::kPlay;
+		}
+		break;
 	case Phase::kPlay:
-		if (player_->GetIsDead()) 
+		if (player_->GetIsDead())
 		{
 			phase_ = Phase::kDeath;
 			const Vector3& deathParticlePosition = player_->GetWorldPosition();
@@ -299,17 +347,26 @@ void GameScene::ChangePhase()
 
 		}
 		break;
-
 	case Phase::kDeath:
-		if(deathParticles_ && deathParticles_->GetIsFinished())
+		if (deathParticles_ && deathParticles_->GetIsFinished())
+		{
+			//finished_ = true;
+			fade_->Start(Status::FadeOut, duration_);
+			phase_ = Phase::kFadeOut;
+			
+
+		}
+		break;
+	case Phase::kFadeOut:
+		if (fade_->IsFinished()) 
 		{
 			finished_ = true;
 		}
-		
 		break;
 	default:
 		break;
 	}
+	
 }
 
 void GameScene::Draw() {
@@ -339,8 +396,25 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+	
 	switch (phase_)
 	{
+	case Phase::kFadeIn:
+		player_->Draw();
+		for (Enemy* enemy : enemies_) {
+			enemy->Draw();
+		}
+		skydome_->Draw();
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
+				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+			}
+		}
+		fade_->Draw();
+
+		break;
 	case Phase::kPlay:
 		player_->Draw();
 		for (Enemy* enemy : enemies_) {
@@ -355,7 +429,6 @@ void GameScene::Draw() {
 			}
 		}
 		break;
-
 	case Phase::kDeath:
 		for (Enemy* enemy : enemies_) {
 			enemy->Draw();
@@ -369,6 +442,21 @@ void GameScene::Draw() {
 				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 			}
 		}
+		break;
+	case Phase::kFadeOut:
+		for (Enemy* enemy : enemies_) {
+			enemy->Draw();
+		}
+		skydome_->Draw();
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
+				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+			}
+		}
+		fade_->Draw();
+		
 		break;
 	default:
 		break;

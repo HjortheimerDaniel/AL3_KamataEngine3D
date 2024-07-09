@@ -26,9 +26,11 @@ public:
 
 	void Stop();
 
-	bool IsFinished() const;
+	bool IsFinished();
 
-	float GetCounter_() { return counter_; };
+	void ResetCounter();
+
+	void SetCounter_(float counter) {counter_ = counter; };
 	
 	void Draw();
 

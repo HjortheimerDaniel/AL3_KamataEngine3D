@@ -57,7 +57,7 @@ void Fade::Stop()
 	counter_ = 0.0f;
 }
 
-bool Fade::IsFinished() const
+bool Fade::IsFinished()
 {
 	switch (status_)
 	{
@@ -76,6 +76,14 @@ bool Fade::IsFinished() const
 		}
 	}
 	return false;
+}
+
+void Fade::ResetCounter()
+{
+	if (counter_ >= 0.0f) 
+	{
+		counter_ = 0.0f;
+	}
 }
 
 void Fade::Draw()
