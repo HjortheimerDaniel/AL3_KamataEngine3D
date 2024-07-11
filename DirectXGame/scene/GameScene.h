@@ -62,6 +62,8 @@ public: // メンバ関数
 
 	bool IsCollision(const AABB& aabb1, const AABB& aabb2);
 
+	bool IsStompCollision(const AABB& aabb1, const AABB& aabb2);
+
 	void ChangePhase();
 
 	/// <summary>
@@ -103,6 +105,7 @@ private: // メンバ変数
 	bool finished_ = false;
 	Fade* fade_ = nullptr;
 	float duration_ = 1.0f;
+	float stompDistance = 0.7f;
 	
 
 	/// <summary>

@@ -99,6 +99,8 @@ class Player
 
 		void OnCollision(const Enemy* enemy);
 		
+		void StompCollision(const Enemy* enemy);
+
 		bool GetIsDead() const { return isDead_; };
 
 		/// <summary>
@@ -148,6 +150,7 @@ class Player
 		bool hitRightWall = false;
 		bool hitLeftWall = false;
 		bool isDead_ = false;
+
 
 };
 

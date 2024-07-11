@@ -311,6 +311,11 @@ void GameScene::CheckAllCollisions()
 			player_->OnCollision(enemy_);
 			enemy_->OnCollision(player_);
 		}
+
+		if (IsStompCollision(aabb1, aabb2)) 
+		{
+			player_->StompCollision(enemy_);
+		}
 	}
 #pragma endregion
 
@@ -320,6 +325,18 @@ bool GameScene::IsCollision(const AABB& aabb1, const AABB& aabb2)
 {
 	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
 		(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&
+		(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool GameScene::IsStompCollision(const AABB& aabb1, const AABB& aabb2)
+{
+	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
+		(aabb1.min.y - aabb2.max.y <= stompDistance && aabb1.max.y >= aabb2.min.y) &&
 		(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z))
 	{
 		return true;

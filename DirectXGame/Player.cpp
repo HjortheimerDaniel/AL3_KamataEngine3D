@@ -657,6 +657,13 @@ void Player::OnCollision(const Enemy* enemy)
 	isDead_ = true;
 }
 
+void Player::StompCollision(const Enemy* enemy)
+{
+	(void)enemy;
+	velocity_ += Vector3(0, kJumpAcceleration, 0);
+	onGround_ = false;
+}
+
 void Player::Draw()
 {
 	model_->Draw(worldTransform_, *viewProjection_);
