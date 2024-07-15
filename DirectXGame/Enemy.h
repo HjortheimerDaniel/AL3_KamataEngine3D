@@ -69,7 +69,6 @@ private:
 	static inline const float kWalkMotionAngleEnd = 0.3f; //movement for frame
 	static inline const float kWalkMotionTime = 0.3f; //movement for frame
 	float walkTimer_ = 0.0f;
-
 	static inline const float kWidth = 1.8f;
 	static inline const float kHeight = 1.8f;
 	bool isDead = false;
