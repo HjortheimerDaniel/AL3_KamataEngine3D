@@ -13,31 +13,7 @@
 
 class MapChipField;
 
-enum class LRDirection 
-{
-	kRight,
-	kLeft
-};
 
-struct CollisionMapInfo
-{
-	bool isHittingCeiling = false;
-	bool isOnFloor = false;
-	bool isHittingLeftWall = false;
-	bool isHittingRightWall = false;
-	Vector3 movement;
-};
-
-
-
-enum Corner
-{
-	kRightBottom,
-	kLeftBottom,
-	kRightTop,
-	kLeftTop,
-	kNumCorner
-};
 
 class Enemy;
 
@@ -67,10 +43,6 @@ class Player
 		void Movement();
 
 		void Rotation();
-
-		float EaseInOut(float x);
-
-		float EaseInSine(float frameX, float startX, float endX, float endFrameX);
 
 		WorldTransform& GetWorldTransform() { return worldTransform_; };
 

@@ -2,7 +2,7 @@
 #include "MapChipField.h"
 #include "ImGuiManager.h"
 #include "imgui.h"
-
+#include "functions.h"
 
 
 
@@ -338,18 +338,6 @@ void Player::Rotation()
 #pragma endregion
 }
 
-float Player::EaseInOut(float x)
-{
-	float pi = std::numbers::pi_v<float>;
-	return -(cosf(pi * x) - 1) / 2;
-}
-
-float Player::EaseInSine(float frameX, float startX, float endX, float endFrameX)
-{
-	float t = frameX / endFrameX; // Normalize the frameX to [0, 1]
-	float easedT = EaseInOut(t);
-	return startX + easedT * (endX - startX);
-}
 
 void Player::CollisionCeiling(CollisionMapInfo& info)
 {

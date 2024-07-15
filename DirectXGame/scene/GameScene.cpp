@@ -92,6 +92,7 @@ void GameScene::Initialize() {
 		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20 + (5 * i) , 18 /*- i*/);
 		newEnemy->Initialize(enemyModel_, viewProjection_, enemyPosition);
 		enemies_.push_back(newEnemy);
+		newEnemy->SetMapChipField(mapChipField_);
 		
 	}
 

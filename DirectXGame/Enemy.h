@@ -35,6 +35,18 @@ public:
 
 	void Dead();
 
+	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; };
+
+	void CollisionLeft(CollisionMapInfo& info);
+
+	void CollisionRight(CollisionMapInfo& info);
+
+	void MapChipCollision();
+
+	void Rotation();
+
+	Vector3 CornerPositon(const Vector3& center, Corner corner);
+
 	void OnCollision(const Player* player);
 
 	void StompCollision(const Player* player);
@@ -49,6 +61,7 @@ private:
 
 	//MOVEMENT
 	static inline const float kWalkspeed = 0.05f; //movement for frame
+	float reverseWalk = 1.0f; //movement for frame
 	Vector3 velocity_ = {};
 
 	//ANIMATION
@@ -60,7 +73,17 @@ private:
 	static inline const float kWidth = 1.8f;
 	static inline const float kHeight = 1.8f;
 	bool isDead = false;
-	
+	bool hitLeftWall = false;
+	bool hitRightWall = false;
+	MapChipField* mapChipField_ = nullptr;
+	static inline const float kAdjustWall = 0.4f;
+
+	//rotation
+	float turnFirstRotationY_ = 0.0f;
+	float turnTimer_ = 0.0f;
+	static inline const float kTimeTurn = 0.3f;
+	LRDirection lrDirection_ = LRDirection::kLeft; //which way are we facing
+
 
 };
 
