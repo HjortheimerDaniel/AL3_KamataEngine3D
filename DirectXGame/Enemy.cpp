@@ -18,17 +18,21 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vecto
 
 	velocity_ = { -kWalkspeed, 0,0 };
 	walkTimer_ = 0.0f;
+	isDead = false;
 
 }
 
 void Enemy::Update()
 {
-	worldTransform_.translation_ += velocity_;
-	walkTimer_ += 6.0f / 60.0f; //the speed it rotates
-	float param = std::sin(walkTimer_);
-	float radian = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param + 1.0f) / 2.0f; //make it less aggresive
-	worldTransform_.rotation_.z = std::sin(radian);
+	if(!isDead)
+	{
+		Walk();
+	} 
 
+	if (isDead) 
+	{
+		Dead();
+	}
 	worldTransform_.UpdateMatrix();
 }
 
@@ -55,9 +59,36 @@ AABB Enemy::GetAABB()
 	return aabb;
 }
 
+void Enemy::Walk()
+{
+	worldTransform_.translation_ += velocity_;
+	walkTimer_ += 6.0f / 60.0f; //the speed it rotates
+	float param = std::sin(walkTimer_);
+	float radian = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param + 1.0f) / 2.0f; //make it less aggresive
+	worldTransform_.rotation_.z = std::sin(radian);
+}
+
+void Enemy::Dead()
+{
+	if (worldTransform_.scale_.y >= 0.0f) 
+	{
+		worldTransform_.scale_.y -= 0.05f;
+		worldTransform_.scale_.z -= 0.05f;
+		worldTransform_.translation_.y -= 0.07f;
+
+	}
+}
+
 void Enemy::OnCollision(const Player* player)
 {
 	(void)player;
+}
+
+void Enemy::StompCollision(const Player* player)
+{
+	(void)player;
+	isDead = true;
+
 }
 
 void Enemy::Draw()

@@ -103,6 +103,8 @@ class Player
 
 		bool GetIsDead() const { return isDead_; };
 
+		bool GetOnGround() { return onGround_; };
+
 		/// <summary>
 		/// 描画
 		/// </summary>
@@ -122,8 +124,8 @@ class Player
 
 		//rotate the character when we face a new direction
 		static inline const float kAcceleration = 0.1f; //movement for frame
-		static inline const float kAttenuation = 0.7f; 
-		static inline const float kLimitRunSpeed = 0.4f; 
+		static inline const float kAttenuation = 0.3f; 
+		static inline const float kLimitRunSpeed = 0.25f; 
 		LRDirection lrDirection_ = LRDirection::kRight; //which way are we facing
 
 		//rotation
@@ -136,6 +138,7 @@ class Player
 		static inline const float kGravityAcceleration = 0.2f;
 		static inline const float kLimitFallSpeed = 0.3f;
 		static inline const float kJumpAcceleration = 1.3f;
+		static inline const float kStompAcceleration = 1.5f;
 
 		//player collision
 
@@ -143,8 +146,8 @@ class Player
 		static inline const float kHeight = 1.8f;
 		static inline const float kBlank = -0.1f;
 		static inline const float kAttenuationLanding = 1.0f;
-		static inline const float kAdjustLanding = 1.8f;
-		static inline const float kAdjustWall = 0.3f;
+		static inline const float kAdjustLanding = 1.7f;
+		static inline const float kAdjustWall = 0.4f;
 		static inline const float kAttenuationWall = 0.3f;
 
 		bool hitRightWall = false;

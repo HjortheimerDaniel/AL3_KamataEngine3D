@@ -7,6 +7,8 @@
 #include "struct.h"
 
 class Player;
+class MapChipField;
+
 
 
 class Enemy
@@ -25,9 +27,17 @@ public:
 
 	Vector3 GetWorldPosition();
 
+	bool GetIsDead() { return isDead; };
+
 	AABB GetAABB();
 
+	void Walk();
+
+	void Dead();
+
 	void OnCollision(const Player* player);
+
+	void StompCollision(const Player* player);
 
 	void Draw();
 
@@ -49,6 +59,8 @@ private:
 
 	static inline const float kWidth = 1.8f;
 	static inline const float kHeight = 1.8f;
+	bool isDead = false;
+	
 
 };
 

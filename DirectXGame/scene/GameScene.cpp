@@ -89,7 +89,7 @@ void GameScene::Initialize() {
 	for (int32_t i = 0; i < MAXENEMIES; i++)
 	{
 		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20 + (5 * i) , 18 - i);
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20 + (5 * i) , 18 /*- i*/);
 		newEnemy->Initialize(enemyModel_, viewProjection_, enemyPosition);
 		enemies_.push_back(newEnemy);
 		
@@ -304,17 +304,21 @@ void GameScene::CheckAllCollisions()
 
 	for (Enemy* enemy : enemies_)
 	{
-		aabb2 = enemy->GetAABB();
-
-		if (IsCollision(aabb1, aabb2))
+		if (!enemy->GetIsDead())
 		{
-			player_->OnCollision(enemy_);
-			enemy_->OnCollision(player_);
-		}
+			aabb2 = enemy->GetAABB();
 
-		if (IsStompCollision(aabb1, aabb2)) 
-		{
-			player_->StompCollision(enemy_);
+			if (IsCollision(aabb1, aabb2))
+			{
+				player_->OnCollision(enemy_);
+				enemy_->OnCollision(player_);
+			}
+
+			if (IsStompCollision(aabb1, aabb2) && !player_->GetOnGround())
+			{
+				player_->StompCollision(enemy_);
+				enemy->StompCollision(player_);
+			}
 		}
 	}
 #pragma endregion

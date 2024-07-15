@@ -660,7 +660,7 @@ void Player::OnCollision(const Enemy* enemy)
 void Player::StompCollision(const Enemy* enemy)
 {
 	(void)enemy;
-	velocity_ += Vector3(0, kJumpAcceleration, 0);
+	velocity_ += Vector3(0, kStompAcceleration, 0);
 	onGround_ = false;
 }
 

@@ -82,7 +82,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	gameScene = new GameScene();
 	gameScene->Initialize();
 
-	scene = Scene::kTitle;
+	scene = Scene::kGame;
 	titleScene = new TitleScene();
 	titleScene->Initialize();
 
