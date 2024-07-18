@@ -26,8 +26,6 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vecto
 
 void Enemy::Update()
 {
-
-
 	if(!isDead)
 	{
 		Walk();
@@ -67,11 +65,14 @@ AABB Enemy::GetAABB()
 
 void Enemy::Walk()
 {
-	worldTransform_.translation_ += velocity_;
-	walkTimer_ += 6.0f / 60.0f; //the speed it rotates
-	float param = std::sin(walkTimer_);
-	float radian = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param + 1.0f) / 2.0f; //make it less aggresive
-	worldTransform_.rotation_.z = std::sin(radian);
+	if (canMove_)
+	{
+		worldTransform_.translation_ += velocity_;
+		walkTimer_ += 6.0f / 60.0f; //the speed it rotates
+		float param = std::sin(walkTimer_);
+		float radian = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param + 1.0f) / 2.0f; //make it less aggresive
+		worldTransform_.rotation_.z = std::sin(radian);
+	}
 }
 
 void Enemy::Dead()
@@ -134,20 +135,6 @@ void Enemy::CollisionLeft(CollisionMapInfo& info)
 	{
 		info.isHittingLeftWall = false;
 	}
-
-	if (hitLeftWall) 
-	{
-		velocity_.x = kWalkspeed;
-
-		if (lrDirection_ != LRDirection::kRight) // if were moving right and were not facing right
-		{
-			turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
-			turnTimer_ = kTimeTurn; // reset the timer
-			lrDirection_ = LRDirection::kRight; // face right
-		}
-	}
-
-	
 }
 
 void Enemy::CollisionRight(CollisionMapInfo& info)
@@ -196,19 +183,6 @@ void Enemy::CollisionRight(CollisionMapInfo& info)
 	{
 		info.isHittingRightWall = false;
 	}
-
-	if (hitRightWall)
-	{
-		velocity_.x = -kWalkspeed;
-		if (lrDirection_ != LRDirection::kLeft) // if were moving left and were not facing left
-		{
-			turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
-			turnTimer_ = kTimeTurn; // reset the timer
-			lrDirection_ = LRDirection::kLeft; // face left
-		}
-	}
-
-
 }
 
 void Enemy::MapChipCollision()
@@ -243,6 +217,30 @@ void Enemy::Rotation()
 		// Interpolate the rotation using easing
 		worldTransform_.rotation_.y = EaseInSine(kTimeTurn - turnTimer_, turnFirstRotationY_, turnFirstRotationY_ + angleDiff, kTimeTurn);
 	}
+
+	if (hitRightWall)
+	{
+		velocity_.x = -kWalkspeed;
+		if (lrDirection_ != LRDirection::kLeft) // if were moving left and were not facing left
+		{
+			turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
+			turnTimer_ = kTimeTurn; // reset the timer
+			lrDirection_ = LRDirection::kLeft; // face left
+		}
+	}
+
+	if (hitLeftWall)
+	{
+		velocity_.x = kWalkspeed;
+
+		if (lrDirection_ != LRDirection::kRight) // if were moving right and were not facing right
+		{
+			turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
+			turnTimer_ = kTimeTurn; // reset the timer
+			lrDirection_ = LRDirection::kRight; // face right
+		}
+	}
+
 }
 
 Vector3 Enemy::CornerPositon(const Vector3& center, Corner corner)

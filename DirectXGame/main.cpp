@@ -163,11 +163,14 @@ void ChangeScene()
 	case Scene::kGame:
 		if (gameScene->GetIsFinished()) 
 		{
-			scene = Scene::kTitle;
+			
+			scene = Scene::kGame;
 			delete gameScene;
 			gameScene = nullptr;
-			titleScene = new TitleScene;
-			titleScene->Initialize();
+			gameScene = new GameScene;
+			gameScene->Initialize();
+			//titleScene = new TitleScene;
+			//titleScene->Initialize();
 		}
 
 		break;

@@ -94,6 +94,7 @@ void GameScene::Initialize() {
 		enemies_.push_back(newEnemy);
 		newEnemy->SetMapChipField(mapChipField_);
 		
+		
 	}
 
 #pragma endregion
@@ -136,20 +137,23 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 
 	ChangePhase();
-
 	switch (phase_)
 	{
+
+	#pragma region FadeIn
+
 	case Phase::kFadeIn:
 
 		fade_->Update();
 		player_->Update();
-
 		skydome_->Update();
-
 		cameraController_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
+			
 		}
+		IsEnemyCloseToPlayer();
+
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -165,8 +169,9 @@ void GameScene::Update() {
 		viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
 		viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
 		break;
+#pragma endregion
 
-#pragma region Play
+	#pragma region Play
 
 	case Phase::kPlay:
 
@@ -180,6 +185,7 @@ void GameScene::Update() {
 		}
 
 		CheckAllCollisions();
+		IsEnemyCloseToPlayer();
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -229,7 +235,8 @@ void GameScene::Update() {
 		break;
 
 #pragma endregion
-#pragma region Death
+
+	#pragma region Death
 	case Phase::kDeath:
 		skydome_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
@@ -239,6 +246,7 @@ void GameScene::Update() {
 		{
 			deathParticles_->Update();
 		}
+
 
 #ifdef _DEBUG
 
@@ -277,6 +285,8 @@ void GameScene::Update() {
 
 #pragma endregion
 
+	#pragma region FadeOut
+
 	case Phase::kFadeOut:
 		fade_->Update();
 		skydome_->Update();
@@ -288,6 +298,9 @@ void GameScene::Update() {
 			viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
 
 		break;
+
+#pragma endregion
+
 	default:
 		break;
 	}
@@ -297,7 +310,7 @@ void GameScene::Update() {
 
 void GameScene::CheckAllCollisions()
 {
-#pragma region player enemy
+	#pragma region player enemy
 
 	AABB aabb1, aabb2;
 
@@ -322,7 +335,24 @@ void GameScene::CheckAllCollisions()
 			}
 		}
 	}
-#pragma endregion
+	#pragma endregion
+
+	#pragma region enemy enemy
+
+	//AABB enemyAABB[MAXENEMIES];
+	///*for (int i = 0; i < MAXENEMIES; i++)
+	//{
+	//	enemyAABB[i] = enemy_[i].GetAABB();
+	//}*/
+
+	//if (IsCollision(enemy_[1].GetAABB(), enemy_[2].GetAABB()))
+	//{
+	//	enemy_[1].SetIsCollidingLeft(true);
+	//}
+	
+
+
+	#pragma endregion
 
 }
 
@@ -348,6 +378,17 @@ bool GameScene::IsStompCollision(const AABB& aabb1, const AABB& aabb2)
 	}
 
 	return false;
+}
+
+void GameScene::IsEnemyCloseToPlayer()
+{
+	for (Enemy* enemy : enemies_) 
+	{
+		if (enemy->GetWorldPosition().x - player_->GetWorldPosition().x <= activateEnemyDistance)
+		{
+			enemy->SetCanMove(true);
+		}
+	}
 }
 
 void GameScene::ChangePhase()

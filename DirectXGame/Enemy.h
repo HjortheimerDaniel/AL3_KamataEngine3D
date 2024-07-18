@@ -37,6 +37,12 @@ public:
 
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; };
 
+	void SetCanMove(bool canMove) { canMove_ = canMove; };
+
+	//void SetIsCollidingLeft(bool isCollidingLeft) {isCollidingLeft_ = isCollidingLeft; };
+
+	//void SetIsCollidingRight(bool isCollidingRight) {isCollidingRight_ = isCollidingRight; };
+
 	void CollisionLeft(CollisionMapInfo& info);
 
 	void CollisionRight(CollisionMapInfo& info);
@@ -69,6 +75,8 @@ private:
 	static inline const float kWalkMotionAngleEnd = 0.3f; //movement for frame
 	static inline const float kWalkMotionTime = 0.3f; //movement for frame
 	float walkTimer_ = 0.0f;
+
+
 	static inline const float kWidth = 1.8f;
 	static inline const float kHeight = 1.8f;
 	bool isDead = false;
@@ -82,6 +90,13 @@ private:
 	float turnTimer_ = 0.0f;
 	static inline const float kTimeTurn = 0.3f;
 	LRDirection lrDirection_ = LRDirection::kLeft; //which way are we facing
+
+	//make enemy start moving
+	bool canMove_ = false;
+
+	//collided with another enemy
+	//bool isCollidingLeft_ = false;
+	//bool isCollidingRight_ = false;
 
 
 };

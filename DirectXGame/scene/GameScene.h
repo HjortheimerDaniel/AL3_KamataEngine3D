@@ -64,6 +64,8 @@ public: // メンバ関数
 
 	bool IsStompCollision(const AABB& aabb1, const AABB& aabb2);
 
+	void IsEnemyCloseToPlayer();
+
 	void ChangePhase();
 
 	/// <summary>
@@ -105,7 +107,8 @@ private: // メンバ変数
 	bool finished_ = false;
 	Fade* fade_ = nullptr;
 	float duration_ = 1.0f;
-	float stompDistance = 0.7f;
+	float stompDistance = 0.9f;
+	float activateEnemyDistance = 48.0f;
 	
 
 	/// <summary>
