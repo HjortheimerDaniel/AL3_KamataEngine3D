@@ -39,9 +39,9 @@ public:
 
 	void SetCanMove(bool canMove) { canMove_ = canMove; };
 
-	//void SetIsCollidingLeft(bool isCollidingLeft) {isCollidingLeft_ = isCollidingLeft; };
+	void SetIsCollidingLeft(bool isCollidingLeft) {isCollidingLeft_ = isCollidingLeft; };
 
-	//void SetIsCollidingRight(bool isCollidingRight) {isCollidingRight_ = isCollidingRight; };
+	void SetIsCollidingRight(bool isCollidingRight) {isCollidingRight_ = isCollidingRight; };
 
 	void CollisionLeft(CollisionMapInfo& info);
 
@@ -95,8 +95,8 @@ private:
 	bool canMove_ = false;
 
 	//collided with another enemy
-	//bool isCollidingLeft_ = false;
-	//bool isCollidingRight_ = false;
+	bool isCollidingLeft_ = false;
+	bool isCollidingRight_ = false;
 
 
 };
