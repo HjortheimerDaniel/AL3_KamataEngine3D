@@ -56,7 +56,7 @@ void GameScene::Initialize() {
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_, viewProjection_);
 
-
+	
 #pragma endregion
 
 #pragma region MapChipField
