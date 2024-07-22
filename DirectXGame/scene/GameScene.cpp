@@ -337,22 +337,6 @@ void GameScene::CheckAllCollisions()
 	}
 	#pragma endregion
 
-	#pragma region enemy enemy
-
-	//AABB enemyAABB[MAXENEMIES];
-	///*for (int i = 0; i < MAXENEMIES; i++)
-	//{
-	//	enemyAABB[i] = enemy_[i].GetAABB();
-	//}*/
-
-	//if (IsCollision(enemy_[1].GetAABB(), enemy_[2].GetAABB()))
-	//{
-	//	enemy_[1].SetIsCollidingLeft(true);
-	//}
-	
-
-
-	#pragma endregion
 
 }
 
