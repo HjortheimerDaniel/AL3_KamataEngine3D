@@ -185,6 +185,77 @@ void Enemy::CollisionRight(CollisionMapInfo& info)
 	}
 }
 
+void Enemy::NoBlockAheadLeft(CollisionMapInfo& info)
+{
+	std::array<Vector3, kNumCorner> positionsNew;
+
+	for (uint32_t i = 0; i < positionsNew.size(); i++)
+	{
+		positionsNew[i] = CornerPositon(worldTransform_.translation_ + info.movement, static_cast<Corner>(i));
+	}
+
+	// Initialize the hitRightWall flag to false at the beginning
+	isNothingLeft_ = false;
+
+	// Always perform the collision check, regardless of movement direction
+	MapChipType mapChipType;
+	bool nothingLeft = false;
+	IndexSet indexSet;
+
+	//indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop] + Vector3(kAdjustWall, 0, 0));
+	//mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex +1);
+	//if (mapChipType == MapChipType::kBlank)
+	//{
+	//	nothingLeft = true;
+	//}
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlank)
+	{
+		nothingLeft = true;
+	}
+
+	if (nothingLeft)
+	{
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(info.movement.y);
+		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+		isNothingLeft_ = true;
+	}
+}
+
+void Enemy::NoBlockAheadRight(CollisionMapInfo& info)
+{
+	std::array<Vector3, kNumCorner> positionsNew;
+
+	for (uint32_t i = 0; i < positionsNew.size(); i++)
+	{
+		positionsNew[i] = CornerPositon(worldTransform_.translation_ + info.movement, static_cast<Corner>(i));
+	}
+
+	// Initialize the hitRightWall flag to false at the beginning
+	isNothingRight_ = false;
+
+	// Always perform the collision check, regardless of movement direction
+	MapChipType mapChipType;
+	bool nothingRight = false;
+	IndexSet indexSet;
+
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlank)
+	{
+		nothingRight = true;
+	}
+
+	if (nothingRight)
+	{
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(info.movement.y);
+		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+		isNothingRight_ = true;
+	}
+}
+
 void Enemy::MapChipCollision()
 {
 	CollisionMapInfo collisionMapInfo;
@@ -192,6 +263,8 @@ void Enemy::MapChipCollision()
 
 	CollisionLeft(collisionMapInfo);
 	CollisionRight(collisionMapInfo);
+	NoBlockAheadLeft(collisionMapInfo);
+	NoBlockAheadRight(collisionMapInfo);
 }
 
 void Enemy::Rotation()
@@ -218,7 +291,7 @@ void Enemy::Rotation()
 		worldTransform_.rotation_.y = EaseInSine(kTimeTurn - turnTimer_, turnFirstRotationY_, turnFirstRotationY_ + angleDiff, kTimeTurn);
 	}
 
-	if (hitRightWall)
+	if (hitRightWall || isNothingRight_)
 	{
 		velocity_.x = -kWalkspeed;
 		if (lrDirection_ != LRDirection::kLeft) // if were moving left and were not facing left
@@ -229,7 +302,7 @@ void Enemy::Rotation()
 		}
 	}
 
-	if (hitLeftWall)
+	if (hitLeftWall || isNothingLeft_)
 	{
 		velocity_.x = kWalkspeed;
 

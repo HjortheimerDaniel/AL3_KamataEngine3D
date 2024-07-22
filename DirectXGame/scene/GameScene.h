@@ -109,6 +109,10 @@ private: // メンバ変数
 	float duration_ = 1.0f;
 	float stompDistance = 0.9f;
 	float activateEnemyDistance = 48.0f;
+
+	//Enemy spawn position
+	uint32_t spawnX[MAXENEMIES] = { 20,30,60 };
+	uint32_t spawnY[MAXENEMIES] = { 18,14,12 };
 	
 
 	/// <summary>

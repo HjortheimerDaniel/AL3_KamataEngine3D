@@ -47,6 +47,10 @@ public:
 
 	void CollisionRight(CollisionMapInfo& info);
 
+	void NoBlockAheadLeft(CollisionMapInfo& info);
+
+	void NoBlockAheadRight(CollisionMapInfo& info);
+
 	void MapChipCollision();
 
 	void Rotation();
@@ -94,9 +98,9 @@ private:
 	//make enemy start moving
 	bool canMove_ = false;
 
-	//collided with another enemy
-	//bool isCollidingLeft_ = false;
-	//bool isCollidingRight_ = false;
+	//no block ahead
+	bool isNothingLeft_ = false;
+	bool isNothingRight_ = false;
 
 
 };

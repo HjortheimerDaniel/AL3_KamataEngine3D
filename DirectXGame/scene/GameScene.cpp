@@ -89,13 +89,13 @@ void GameScene::Initialize() {
 	for (int32_t i = 0; i < MAXENEMIES; i++)
 	{
 		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20 + (5 * i) , 18 /*- i*/);
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(spawnX[i],spawnY[i]);
 		newEnemy->Initialize(enemyModel_, viewProjection_, enemyPosition);
 		enemies_.push_back(newEnemy);
 		newEnemy->SetMapChipField(mapChipField_);
-		
-		
 	}
+
+
 
 #pragma endregion
 
