@@ -17,6 +17,7 @@
 #include "Enemy.h"
 #include "DeathParticles.h"
 #include "Fade.h"
+#include "Goal.h"
 #define NOMINMAX
 #define MAXENEMIES 3
 
@@ -87,6 +88,7 @@ private: // メンバ変数
 	Model* playerModel_ = nullptr;
 	Model* enemyModel_ = nullptr;
 	Model* deathparticleModel_ = nullptr;
+	Model* goalModel_ = nullptr;
 	ViewProjection *viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
@@ -109,6 +111,8 @@ private: // メンバ変数
 	float duration_ = 1.0f;
 	float stompDistance = 0.9f;
 	float activateEnemyDistance = 48.0f;
+	Goal* goal_ = nullptr;
+
 
 	//Enemy spawn position
 	uint32_t spawnX[MAXENEMIES] = { 20,30,60 };

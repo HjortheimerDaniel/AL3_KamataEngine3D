@@ -13,11 +13,11 @@
 
 class MapChipField;
 
-
-
 class Enemy;
 
 class GameScene;
+
+class Goal;
 
 class Player
 {
@@ -70,6 +70,8 @@ class Player
 		AABB GetAABB();
 
 		void OnCollision(const Enemy* enemy);
+
+		void OnCollisionGoal(const Goal* goal);
 		
 		void StompCollision(const Enemy* enemy);
 

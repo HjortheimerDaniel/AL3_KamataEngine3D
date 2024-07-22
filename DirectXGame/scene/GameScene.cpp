@@ -23,6 +23,7 @@ GameScene::~GameScene() {
 	delete enemy_;
 	delete deathParticles_;
 	delete viewProjection_;
+	delete goal_;
 
 	for ( Enemy* enemy : enemies_)
 	{
@@ -44,7 +45,7 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	//textureHandle_ = TextureManager::Load("emil.jpg");
-	//model_->Create();5
+	//model_->Create();
 	viewProjection_ = new ViewProjection();
 	//worldTransform_.Initialize();
 	viewProjection_->Initialize();
@@ -132,6 +133,16 @@ void GameScene::Initialize() {
 
 #pragma endregion
 
+#pragma region goal
+
+	goalModel_ = Model::CreateFromOBJ("goal", true);
+	goal_ = new Goal();
+	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(10, 17);
+	goal_->Initialize(goalModel_, viewProjection_, doorPosition);
+	goal_->SetMapChipField(mapChipField_);
+
+#pragma endregion
+
 }
 
 void GameScene::Update() {
@@ -148,6 +159,7 @@ void GameScene::Update() {
 		player_->Update();
 		skydome_->Update();
 		cameraController_->Update();
+		goal_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
 			
@@ -180,6 +192,7 @@ void GameScene::Update() {
 		skydome_->Update();
 		//fade_->SetCounter_(0.0f);
 		cameraController_->Update();
+		goal_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
 		}
@@ -239,6 +252,7 @@ void GameScene::Update() {
 	#pragma region Death
 	case Phase::kDeath:
 		skydome_->Update();
+		goal_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
 		}
@@ -290,6 +304,7 @@ void GameScene::Update() {
 	case Phase::kFadeOut:
 		fade_->Update();
 		skydome_->Update();
+		goal_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
 		}
@@ -335,6 +350,18 @@ void GameScene::CheckAllCollisions()
 			}
 		}
 	}
+	#pragma endregion
+
+	#pragma region player goal
+	
+	AABB aabb3 = goal_->GetAABB();
+
+	if (IsCollision(aabb1, aabb3)) 
+	{
+		player_->OnCollisionGoal(goal_);
+		goal_->OnCollision(player_);
+	}
+
 	#pragma endregion
 
 
@@ -459,6 +486,7 @@ void GameScene::Draw() {
 				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 			}
 		}
+		goal_->Draw();
 		fade_->Draw();
 
 		break;
@@ -468,6 +496,7 @@ void GameScene::Draw() {
 			enemy->Draw();
 		}
 		skydome_->Draw();
+		goal_->Draw();
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)
@@ -482,6 +511,7 @@ void GameScene::Draw() {
 		}
 		deathParticles_->Draw();
 		skydome_->Draw();
+		goal_->Draw();
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)
@@ -495,6 +525,7 @@ void GameScene::Draw() {
 			enemy->Draw();
 		}
 		skydome_->Draw();
+		goal_->Draw();
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)
