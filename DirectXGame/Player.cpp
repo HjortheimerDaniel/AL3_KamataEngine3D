@@ -35,7 +35,6 @@ void Player::Update()
 	CollisionMapInfo collisionMapInfo;
 	//copy the velocity
 	collisionMapInfo.movement = velocity_;
-
 	CollisionCeiling(collisionMapInfo);
 	CollisionFalling(collisionMapInfo);
 	AfterCollision(collisionMapInfo);
@@ -560,32 +559,13 @@ void Player::CollisionLeft(CollisionMapInfo& info)
 Vector3 Player::CornerPositon(const Vector3& center, Corner corner)
 
 {
-	
-	/*if (corner == kRightBottom)
-	{
-		return center + kWidth / 2.0f, -kHeight / 2.0f, 0;
-	} 
-	else if (corner == kLeftBottom)
-	{
-		return center + -kWidth / 2.0f, -kHeight / 2.0f, 0;
-	} 
-	else if(corner == kRightTop)
-	{
-		return center + kWidth / 2.0f, kHeight / 2.0f, 0;
-	}
-	else
-	{
-		return center + -kWidth / 2.0f, kHeight / 2.0f, 0;
-	}*/
-
-	//SAME AS ABOVE
 
 	Vector3 offsetTable[kNumCorner] =
 	{
 		{kWidth / 2.0f, -kHeight / 2.0f, 0}, //Right bottom
 		{-kWidth / 2.0f, -kHeight / 2.0f, 0}, //Left bottom
 		{kWidth / 2.0f, +kHeight / 2.0f, 0}, //Right top
-		{-kWidth / 2.0f, +kHeight / 2.0f, 0}, //Right bottom
+		{-kWidth / 2.0f, +kHeight / 2.0f, 0}, //Right top
 
 	};
 	return center + offsetTable[static_cast<uint32_t>(corner)];
