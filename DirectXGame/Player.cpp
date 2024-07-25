@@ -557,7 +557,6 @@ void Player::CollisionLeft(CollisionMapInfo& info)
 }
 
 Vector3 Player::CornerPositon(const Vector3& center, Corner corner)
-
 {
 
 	Vector3 offsetTable[kNumCorner] =

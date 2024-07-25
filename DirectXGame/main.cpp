@@ -7,8 +7,10 @@
 #include "TextureManager.h"
 #include "WinApp.h"
 #include "TitleScene.h"
+#include "GameScene2.h"
 
 GameScene* gameScene = nullptr;
+GameScene2* gameScene2 = nullptr;
 TitleScene* titleScene = nullptr;
 
 void ChangeScene();
@@ -22,6 +24,7 @@ enum class Scene
 	kUnknown = 0,
 	kTitle,
 	kGame,
+	kGame2,
 };
 
 Scene scene = Scene::kUnknown;
@@ -79,10 +82,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion
 
 	// ゲームシーンの初期化
+	scene = Scene::kGame2;
+
 	gameScene = new GameScene();
 	gameScene->Initialize();
 
-	scene = Scene::kGame;
+	gameScene2 = new GameScene2();
+	gameScene2->Initialize();
+	
 	titleScene = new TitleScene();
 	titleScene->Initialize();
 
@@ -131,6 +138,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// 各種解放
 	delete gameScene;
+	delete gameScene2;
 	delete titleScene;
 	// 3Dモデル解放
 	Model::StaticFinalize();
@@ -174,6 +182,19 @@ void ChangeScene()
 		}
 
 		break;
+
+	case Scene::kGame2:
+		if (gameScene2->GetIsFinished())
+		{
+
+			scene = Scene::kGame2;
+			delete gameScene2;
+			gameScene2 = nullptr;
+			gameScene2 = new GameScene2;
+			gameScene2->Initialize();
+		}
+
+		break;
 	default:
 		break;
 	}
@@ -190,6 +211,9 @@ void UpdateScene()
 		break;
 	case Scene::kGame:
 		gameScene->Update();
+		break;
+	case Scene::kGame2:
+		gameScene2->Update();
 		break;
 	default:
 		break;
@@ -208,6 +232,8 @@ void DrawScene()
 	case Scene::kGame:
 		gameScene->Draw();
 		break;
+	case Scene::kGame2:
+		gameScene2->Draw();
 	default:
 		break;
 	}

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Audio.h"
 #include "DirectXCommon.h"
 #include "Input.h"
@@ -18,25 +17,20 @@
 #include "DeathParticles.h"
 #include "Fade.h"
 #include "Goal.h"
-#include "struct.h"
-#define NOMINMAX
 
-
-/// <summary>
-/// ゲームシーン
-/// </summary>
-class GameScene {
+class GameScene2
+{
 
 public: // メンバ関数
 	/// <summary>
 	/// コンストクラタ
 	/// </summary>
-	GameScene();
+	GameScene2();
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~GameScene();
+	~GameScene2();
 
 	/// <summary>
 	/// 初期化
@@ -72,7 +66,7 @@ public: // メンバ関数
 
 	bool GetIsFinished() const { return finished_; };
 
-private: // メンバ変数
+private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
@@ -81,7 +75,7 @@ private: // メンバ変数
 	Model* enemyModel_ = nullptr;
 	Model* deathparticleModel_ = nullptr;
 	Model* goalModel_ = nullptr;
-	ViewProjection *viewProjection_ = nullptr;
+	ViewProjection* viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
 	bool isDebugCameraActive_ = false;
@@ -109,10 +103,5 @@ private: // メンバ変数
 	//Enemy spawn position
 	uint32_t spawnX[MAXENEMIES] = { 20,30,60 };
 	uint32_t spawnY[MAXENEMIES] = { 18,14,12 };
-	
-
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
-	
 };
+

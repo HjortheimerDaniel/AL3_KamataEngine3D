@@ -1,9 +1,18 @@
 #pragma once
 #include "Vector3.h"
+#define MAXENEMIES 3
 
 struct AABB {
 	Vector3 min;
 	Vector3 max;
+};
+
+enum class Phase
+{
+	kFadeIn,
+	kPlay,
+	kDeath,
+	kFadeOut,
 };
 
 enum class LRDirection

@@ -1,11 +1,12 @@
-#include "GameScene.h"
-#include "TextureManager.h"
-#include <cassert>
+#include "GameScene2.h"
+#include "imgui.h"
 
-GameScene::GameScene() {}
+GameScene2::GameScene2()
+{
+}
 
-GameScene::~GameScene() {
-
+GameScene2::~GameScene2()
+{
 	delete playerModel_;
 	delete player_;
 	delete skydome_;
@@ -25,38 +26,29 @@ GameScene::~GameScene() {
 	delete viewProjection_;
 	delete goal_;
 
-	for ( Enemy* enemy : enemies_)
+	for (Enemy* enemy : enemies_)
 	{
 		delete enemy;
 	}
 	enemies_.clear();
 
-	
-	//for (DeathParticles* deathParticles : deathP_)
-	//{
-	//	delete deathParticles;
-	//}
-	//deathP_.clear();
 }
 
-void GameScene::Initialize() {
-
+void GameScene2::Initialize()
+{
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	//textureHandle_ = TextureManager::Load("emil.jpg");
-	//model_->Create();
 	viewProjection_ = new ViewProjection();
-	//worldTransform_.Initialize();
 	viewProjection_->Initialize();
 	modelBlock_ = Model::Create();
-	
+
 #pragma region skydome
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_, viewProjection_);
 
-	
+
 #pragma endregion
 
 #pragma region MapChipField
@@ -78,29 +70,21 @@ void GameScene::Initialize() {
 	player_->SetMapChipField(mapChipField_);
 
 #pragma endregion
-	
+
 #pragma region Enemy
 
 	enemyModel_ = Model::CreateFromOBJ("enemycolor", true);
-	//enemy_ = new Enemy();
-	//Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
-	//enemy_->Initialize(enemyModel_, viewProjection_, enemyPosition);
-	//enemy_->SetMapChipField(mapChipField_);
-
 	for (int32_t i = 0; i < MAXENEMIES; i++)
 	{
 		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(spawnX[i],spawnY[i]);
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(spawnX[i], spawnY[i]);
 		newEnemy->Initialize(enemyModel_, viewProjection_, enemyPosition);
 		enemies_.push_back(newEnemy);
 		newEnemy->SetMapChipField(mapChipField_);
 	}
+	#pragma endregion
 
-
-
-#pragma endregion
-
-#pragma region CameraController
+	#pragma region CameraController
 
 	cameraController_ = new CameraController();
 	cameraController_->Initialize();
@@ -121,7 +105,7 @@ void GameScene::Initialize() {
 	deathparticleModel_ = Model::CreateFromOBJ("deathparticle", true);
 	deathParticles_ = new DeathParticles();
 	deathParticles_->Initialize(deathparticleModel_, viewProjection_, playerPosition);
-	
+
 #pragma endregion
 
 #pragma region Fade
@@ -145,8 +129,8 @@ void GameScene::Initialize() {
 
 }
 
-void GameScene::Update() {
-
+void GameScene2::Update()
+{
 	ChangePhase();
 	switch (phase_)
 	{
@@ -162,10 +146,9 @@ void GameScene::Update() {
 		goal_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
-			
+
 		}
 		IsEnemyCloseToPlayer();
-
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -183,10 +166,10 @@ void GameScene::Update() {
 		break;
 #pragma endregion
 
-	#pragma region Play
+#pragma region Play
 
 	case Phase::kPlay:
-
+		ImGui::Text("Stage2");
 		player_->Update();
 
 		skydome_->Update();
@@ -211,18 +194,7 @@ void GameScene::Update() {
 			}
 		}
 
-
-
-		//debugCamera_->Update();
-
 #ifdef _DEBUG
-	/*if (input_->TriggerKey(DIK_SPACE) && !isDebugCameraActive_) {
-		isDebugCameraActive_ = true;
-	}
-	else if (input_->TriggerKey(DIK_SPACE) && isDebugCameraActive_) {
-		isDebugCameraActive_ = false;
-
-	}*/
 		if (input_->TriggerKey(DIK_BACK))
 		{
 			isDebugCameraActive_ ^= true; //same as above
@@ -249,7 +221,7 @@ void GameScene::Update() {
 
 #pragma endregion
 
-	#pragma region Death
+#pragma region Death
 	case Phase::kDeath:
 		skydome_->Update();
 		goal_->Update();
@@ -299,7 +271,7 @@ void GameScene::Update() {
 
 #pragma endregion
 
-	#pragma region FadeOut
+#pragma region FadeOut
 
 	case Phase::kFadeOut:
 		fade_->Update();
@@ -308,9 +280,9 @@ void GameScene::Update() {
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
 		}
-			viewProjection_->matView = cameraController_->GetViewProjection().matView;
-			viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
-			viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
+		viewProjection_->matView = cameraController_->GetViewProjection().matView;
+		viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
+		viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
 
 		break;
 
@@ -323,9 +295,9 @@ void GameScene::Update() {
 
 }
 
-void GameScene::CheckAllCollisions()
+void GameScene2::CheckAllCollisions()
 {
-	#pragma region player enemy
+#pragma region player enemy
 
 	AABB aabb1, aabb2;
 
@@ -350,24 +322,24 @@ void GameScene::CheckAllCollisions()
 			}
 		}
 	}
-	#pragma endregion
+#pragma endregion
 
-	#pragma region player goal
-	
+#pragma region player goal
+
 	AABB aabb3 = goal_->GetAABB();
 
-	if (IsCollision(aabb1, aabb3)) 
+	if (IsCollision(aabb1, aabb3))
 	{
 		player_->OnCollisionGoal(goal_);
 		goal_->OnCollision(player_);
 	}
 
-	#pragma endregion
+#pragma endregion
 
 
 }
 
-bool GameScene::IsCollision(const AABB& aabb1, const AABB& aabb2)
+bool GameScene2::IsCollision(const AABB& aabb1, const AABB& aabb2)
 {
 	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
 		(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&
@@ -379,7 +351,7 @@ bool GameScene::IsCollision(const AABB& aabb1, const AABB& aabb2)
 	return false;
 }
 
-bool GameScene::IsStompCollision(const AABB& aabb1, const AABB& aabb2)
+bool GameScene2::IsStompCollision(const AABB& aabb1, const AABB& aabb2)
 {
 	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
 		(aabb1.min.y - aabb2.max.y <= stompDistance && aabb1.max.y >= aabb2.min.y) &&
@@ -391,9 +363,9 @@ bool GameScene::IsStompCollision(const AABB& aabb1, const AABB& aabb2)
 	return false;
 }
 
-void GameScene::IsEnemyCloseToPlayer()
+void GameScene2::IsEnemyCloseToPlayer()
 {
-	for (Enemy* enemy : enemies_) 
+	for (Enemy* enemy : enemies_)
 	{
 		if (enemy->GetWorldPosition().x - player_->GetWorldPosition().x <= activateEnemyDistance)
 		{
@@ -402,7 +374,7 @@ void GameScene::IsEnemyCloseToPlayer()
 	}
 }
 
-void GameScene::ChangePhase()
+void GameScene2::ChangePhase()
 {
 	switch (phase_)
 	{
@@ -429,7 +401,7 @@ void GameScene::ChangePhase()
 		}
 		break;
 	case Phase::kFadeOut:
-		if (fade_->IsFinished()) 
+		if (fade_->IsFinished())
 		{
 			finished_ = true;
 		}
@@ -437,10 +409,10 @@ void GameScene::ChangePhase()
 	default:
 		break;
 	}
-	
+
 }
 
-void GameScene::Draw() {
+void GameScene2::Draw() {
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
@@ -452,8 +424,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-	
-	
+
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -467,7 +439,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	
+
 	switch (phase_)
 	{
 	case Phase::kFadeIn:
@@ -531,22 +503,22 @@ void GameScene::Draw() {
 			}
 		}
 		fade_->Draw();
-		
+
 		break;
 	default:
 		break;
 	}
-	
 
-		
+
+
 	//if (deathParticles_)
 	//{
 	//}
 
 	//enemy_->Draw();
-	
-	
-	
+
+
+
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -566,23 +538,23 @@ void GameScene::Draw() {
 #pragma endregion
 }
 
-void GameScene::GenerateBlocks()
+void GameScene2::GenerateBlocks()
 {
 	uint32_t numBlockVertical = mapChipField_->GetNumBlockVertical();
 	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
 
 	worldTransformBlocks_.resize(numBlockVertical);
-	
+
 	for (uint32_t i = 0; i < numBlockVertical; i++) {
 		worldTransformBlocks_[i].resize(numBlockHorizontal);
 
 		for (uint32_t j = 0; j < numBlockHorizontal; j++)
 		{
-			if (mapChipField_->GetMapChipTypeByIndex(j,i) == MapChipType::kBlock) { //if there is a block here
+			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) { //if there is a block here
 				WorldTransform* worldTransform = new WorldTransform();
 				worldTransform->Initialize();
 				worldTransformBlocks_[i][j] = worldTransform;
-				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j,i);
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
 			}
 		}
 	}
