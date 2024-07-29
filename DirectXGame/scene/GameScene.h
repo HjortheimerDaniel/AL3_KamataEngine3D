@@ -96,7 +96,7 @@ private: // メンバ変数
 	Model* modelSkydome_ = nullptr;
 	MapChipField* mapChipField_ = nullptr;
 	CameraController* cameraController_ = nullptr;
-	Rect cameraRange = { 168.0f,28.5f,0,16 };
+	Rect cameraRange = { 168.0f,28.5f,0.0f,16.0f};
 	Enemy* enemy_ = nullptr;
 	std::list<Enemy*> enemies_;
 	DeathParticles* deathParticles_ = nullptr;
@@ -110,7 +110,7 @@ private: // メンバ変数
 	Goal* goal_ = nullptr;
 	bool stageClear_ = false;
 	bool goToNextStage_ = false;
-
+	Vector3 goalCameraPos = {0,0,-40.0f};
 
 	//Enemy spawn position
 	uint32_t spawnX[MAXENEMIES] = { 20,30,60 };

@@ -183,11 +183,16 @@ void ChangeScene()
 
 		if (gameScene->GetGoToNextStage()) 
 		{
-			scene = Scene::kGame2;
+			scene = Scene::kGame;
+			delete gameScene;
+			gameScene = nullptr;
+			gameScene = new GameScene;
+			gameScene->Initialize();
+			/*scene = Scene::kGame2;
 			delete gameScene;
 			gameScene = nullptr;
 			gameScene2 = new GameScene2;
-			gameScene2->Initialize();
+			gameScene2->Initialize();*/
 		}
 
 		break;

@@ -30,6 +30,12 @@ class CameraController
 
 		Vector3 Lerp(const Vector3& a, const Vector3& b, float t);
 
+		void SetFarZ(float value) { viewProjection_.farZ = value; }
+
+		void SetTargetOffset(Vector3 offset) { targetOffset_ = offset; };
+
+		void SetStageClearCamera(bool clear) { stageClearCamera_ = clear; };
+
 
 	private:
 
@@ -41,6 +47,7 @@ class CameraController
 		static inline const float kInterpolationRate = 0.1f;
 		static inline const float kVelocityBias = 20.0f;
 		static inline const Rect margin = { -400.0f, 400.0f, -200.0f, 200.0f };
+		bool stageClearCamera_ = false;
 
 };
 

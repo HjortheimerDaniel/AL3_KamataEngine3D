@@ -22,10 +22,13 @@ void CameraController::Update()
 	viewProjection_.translation_.y = max(viewProjection_.translation_.y, targetWorldTransform.translation_.y + margin.bottom);
 	viewProjection_.translation_.y = min(viewProjection_.translation_.y, targetWorldTransform.translation_.y + margin.top);
 
-	viewProjection_.translation_.x = min(viewProjection_.translation_.x, moveableArea_.left);
-	viewProjection_.translation_.x = max(viewProjection_.translation_.x, moveableArea_.right);
-	viewProjection_.translation_.y = min(viewProjection_.translation_.y, moveableArea_.bottom);
-	viewProjection_.translation_.y = max(viewProjection_.translation_.y, moveableArea_.top);
+	if (!stageClearCamera_)
+	{
+		viewProjection_.translation_.x = min(viewProjection_.translation_.x, moveableArea_.left);
+		viewProjection_.translation_.x = max(viewProjection_.translation_.x, moveableArea_.right);
+		viewProjection_.translation_.y = min(viewProjection_.translation_.y, moveableArea_.bottom);
+		viewProjection_.translation_.y = max(viewProjection_.translation_.y, moveableArea_.top);
+	}
 	viewProjection_.UpdateMatrix();
 }
 

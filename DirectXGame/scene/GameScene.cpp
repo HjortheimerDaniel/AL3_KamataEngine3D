@@ -108,6 +108,7 @@ void GameScene::Initialize() {
 	cameraController_->Reset();
 	cameraController_->SetMoveableArea(cameraRange);
 
+
 #pragma endregion
 
 #pragma region DebugCamera
@@ -137,7 +138,7 @@ void GameScene::Initialize() {
 
 	goalModel_ = Model::CreateFromOBJ("goal", true);
 	goal_ = new Goal();
-	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(10, 17);
+	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(50, 17);
 	goal_->Initialize(goalModel_, viewProjection_, doorPosition);
 	goal_->SetMapChipField(mapChipField_);
 
@@ -302,6 +303,23 @@ void GameScene::Update() {
 	#pragma region StageClear
 
 	case Phase::kStageClear:
+
+		if (goalCameraPos.x > -3.0f) 
+		{
+			goalCameraPos.x -= 0.05f;
+		}
+		
+		if (goalCameraPos.z < -20.0f)
+		{
+			goalCameraPos.z += 0.2f;
+		}
+
+		goalCameraPos.y = player_->GetWorldPosition().y / 3.0f;
+
+		cameraController_->SetStageClearCamera(true);
+		cameraController_->SetTargetOffset({ goalCameraPos.x,goalCameraPos.y,goalCameraPos.z });
+		cameraController_->Update();
+
 		fade_->Update();
 		skydome_->Update();
 		goal_->Update();
