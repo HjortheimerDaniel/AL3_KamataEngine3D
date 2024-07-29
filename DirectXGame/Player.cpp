@@ -239,11 +239,14 @@ if (!onGround_)
 	velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 }
 
-if (Input::GetInstance()->PushKey(DIK_UP) && onGround_)
+if (Input::GetInstance()->TriggerKey(DIK_UP) && onGround_ /*&& !holdingSpace*/)
 {
+	//holdingSpace = true;
 	velocity_ += Vector3(0, kJumpAcceleration, 0);
 	onGround_ = false;
 }
+
+
 
 // Update position
 worldTransform_.translation_.y += velocity_.y; // update Y pos before checking landing

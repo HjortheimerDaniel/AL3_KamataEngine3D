@@ -31,12 +31,6 @@ GameScene::~GameScene() {
 	}
 	enemies_.clear();
 
-	
-	//for (DeathParticles* deathParticles : deathP_)
-	//{
-	//	delete deathParticles;
-	//}
-	//deathP_.clear();
 }
 
 void GameScene::Initialize() {
@@ -44,10 +38,7 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	//textureHandle_ = TextureManager::Load("emil.jpg");
-	//model_->Create();
 	viewProjection_ = new ViewProjection();
-	//worldTransform_.Initialize();
 	viewProjection_->Initialize();
 	modelBlock_ = Model::Create();
 	

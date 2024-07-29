@@ -127,6 +127,7 @@ class Player
 		bool hitRightWall = false;
 		bool hitLeftWall = false;
 		bool isDead_ = false;
+		bool holdingSpace = false;
 
 
 };
