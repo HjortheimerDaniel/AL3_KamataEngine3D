@@ -627,7 +627,7 @@ void Player::OnCollision(const Enemy* enemy)
 void Player::OnCollisionGoal(const Goal* goal)
 {
 	(void)goal;
-	isDead_ = true;
+	//isDead_ = true;
 }
 
 void Player::StompCollision(const Enemy* enemy)

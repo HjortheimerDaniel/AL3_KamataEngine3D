@@ -299,15 +299,31 @@ void GameScene::Update() {
 
 #pragma endregion
 
-	#pragma region FadeOut
+	#pragma region StageClear
 
-	case Phase::kFadeOut:
+	case Phase::kStageClear:
 		fade_->Update();
 		skydome_->Update();
 		goal_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
 		}
+		viewProjection_->matView = cameraController_->GetViewProjection().matView;
+		viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
+		viewProjection_->TransferMatrix();
+		break;
+
+	#pragma endregion
+
+	#pragma region FadeOut
+
+	case Phase::kFadeOut:
+		fade_->Update();
+		skydome_->Update();
+		goal_->Update();
+		//for (Enemy* enemy : enemies_) { //create new Enemy enemy 
+		//	enemy->Update();
+		//}
 			viewProjection_->matView = cameraController_->GetViewProjection().matView;
 			viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
 			viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
@@ -360,6 +376,7 @@ void GameScene::CheckAllCollisions()
 	{
 		player_->OnCollisionGoal(goal_);
 		goal_->OnCollision(player_);
+		stageClear_ = true;
 	}
 
 	#pragma endregion
@@ -420,6 +437,12 @@ void GameScene::ChangePhase()
 			deathParticles_->Initialize(deathparticleModel_, viewProjection_, deathParticlePosition);
 
 		}
+
+		if(stageClear_)
+		{
+			phase_ = Phase::kStageClear;
+		}
+
 		break;
 	case Phase::kDeath:
 		if (deathParticles_ && deathParticles_->GetIsFinished())
@@ -428,11 +451,25 @@ void GameScene::ChangePhase()
 			phase_ = Phase::kFadeOut;
 		}
 		break;
+	case Phase::kStageClear:
+		if (Input::GetInstance()->PushKey(DIK_SPACE)) 
+		{
+			fade_->Start(Status::FadeOut, duration_);
+			phase_ = Phase::kFadeOut;
+		}
+		break;
+
 	case Phase::kFadeOut:
-		if (fade_->IsFinished()) 
+		if (fade_->IsFinished() && !stageClear_)
 		{
 			finished_ = true;
 		}
+
+		if (fade_->IsFinished() && stageClear_) 
+		{
+			goToNextStage_ = true;
+		}
+
 		break;
 	default:
 		break;
@@ -517,6 +554,21 @@ void GameScene::Draw() {
 			}
 		}
 		break;
+	case Phase::kStageClear:
+
+		player_->Draw();
+		skydome_->Draw();
+		goal_->Draw();
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
+				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+			}
+		}
+		fade_->Draw();
+		break;
+
 	case Phase::kFadeOut:
 		for (Enemy* enemy : enemies_) {
 			enemy->Draw();

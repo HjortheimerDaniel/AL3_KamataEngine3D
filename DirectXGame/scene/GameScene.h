@@ -72,6 +72,10 @@ public: // メンバ関数
 
 	bool GetIsFinished() const { return finished_; };
 
+	bool GetStageClear() const { return stageClear_; };
+
+	bool GetGoToNextStage() const {return goToNextStage_;};
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -104,6 +108,8 @@ private: // メンバ変数
 	float stompDistance = 0.9f;
 	float activateEnemyDistance = 48.0f;
 	Goal* goal_ = nullptr;
+	bool stageClear_ = false;
+	bool goToNextStage_ = false;
 
 
 	//Enemy spawn position

@@ -12,6 +12,7 @@ enum class Phase
 	kFadeIn,
 	kPlay,
 	kDeath,
+	kStageClear,
 	kFadeOut,
 };
 

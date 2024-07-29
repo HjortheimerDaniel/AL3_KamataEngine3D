@@ -82,7 +82,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion
 
 	// ゲームシーンの初期化
-	scene = Scene::kGame2;
+	scene = Scene::kGame;
 
 	gameScene = new GameScene();
 	gameScene->Initialize();
@@ -179,6 +179,15 @@ void ChangeScene()
 			gameScene->Initialize();
 			//titleScene = new TitleScene;
 			//titleScene->Initialize();
+		}
+
+		if (gameScene->GetGoToNextStage()) 
+		{
+			scene = Scene::kGame2;
+			delete gameScene;
+			gameScene = nullptr;
+			gameScene2 = new GameScene2;
+			gameScene2->Initialize();
 		}
 
 		break;
