@@ -87,8 +87,6 @@ void GameScene::Initialize() {
 		newEnemy->SetMapChipField(mapChipField_);
 	}
 
-
-
 #pragma endregion
 
 #pragma region CameraController

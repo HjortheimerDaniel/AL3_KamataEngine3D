@@ -250,20 +250,18 @@ if (Input::GetInstance()->TriggerKey(DIK_UP) && onGround_ /*&& !holdingSpace*/)
 
 // Update position
 worldTransform_.translation_.y += velocity_.y; // update Y pos before checking landing
-//if (!(worldTransform_.translation_.x >= 70 && velocity_.x > 0
-	//|| worldTransform_.translation_.x <= 20 && velocity_.x < 0)) {
-		worldTransform_.translation_.x += velocity_.x;
+worldTransform_.translation_.x += velocity_.x;
 //}
 
 // Check for landing
-bool landing = false;
-if (velocity_.y < 0)  // if were falling
-{
-	if (worldTransform_.translation_.y <= 2.0f) // if were on the mapchip that is on pos 1.0f or below weve hit the ground
-	{
-		landing = true;
-	}
-}
+//bool landing = false;
+//if (velocity_.y < 0)  // if were falling
+//{
+//	if (worldTransform_.translation_.y <= 2.0f) // if were on the mapchip that is on pos 1.0f or below weve hit the ground
+//	{
+//		landing = true;
+//	}
+//}
 
 if (onGround_)
 {
@@ -272,15 +270,15 @@ if (onGround_)
 		onGround_ = false; // we are not on the ground
 	}
 }
-else 
-{
-	if (landing) // if were landing
-	{
-		worldTransform_.translation_.y = 2.0f;
-		velocity_.y = 0.0f;
-		onGround_ = true;
-	}
-}
+//else 
+//{
+//	if (landing) // if were landing
+//	{
+//		worldTransform_.translation_.y = 2.0f;
+//		velocity_.y = 0.0f;
+//		onGround_ = true;
+//	}
+//}
 
 }
 
@@ -340,7 +338,6 @@ void Player::Rotation()
 #pragma endregion
 }
 
-
 void Player::CollisionCeiling(CollisionMapInfo& info)
 {
 	std::array<Vector3, kNumCorner> positionsNew;
@@ -359,14 +356,14 @@ void Player::CollisionCeiling(CollisionMapInfo& info)
 	bool hit = false;
 	IndexSet indexSet;
 	
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop] + Vector3(0,1.2f,0));
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) 
 	{
 		hit = true;
 	}
 
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop] + Vector3(0, 1.2f, 0));
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock)
 	{
