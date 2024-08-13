@@ -133,6 +133,18 @@ void GameScene::Initialize() {
 
 #pragma endregion
 
+#pragma region StageClearText
+
+	clearTextModel_ = Model::CreateFromOBJ("ClearTextobj", true);
+	stageClearText_ = new StageClearText();
+	Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex(50, 17);
+	stageClearText_->Initialize(clearTextModel_, viewProjection_, clearPosition);
+	stageClearText_->SetMapChipField(mapChipField_);
+	
+
+#pragma endregion
+
+
 }
 
 void GameScene::Update() {
@@ -186,6 +198,7 @@ void GameScene::Update() {
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
 		}
+		stageClearText_->Update();
 
 		CheckAllCollisions();
 		IsEnemyCloseToPlayer();
@@ -538,6 +551,7 @@ void GameScene::Draw() {
 		}
 		skydome_->Draw();
 		goal_->Draw();
+		stageClearText_->Draw();
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)

@@ -19,6 +19,8 @@
 #include "Fade.h"
 #include "Goal.h"
 #include "struct.h"
+#include "StageClearText.h"
+
 #define NOMINMAX
 
 
@@ -85,6 +87,7 @@ private: // メンバ変数
 	Model* enemyModel_ = nullptr;
 	Model* deathparticleModel_ = nullptr;
 	Model* goalModel_ = nullptr;
+	Model* clearTextModel_ = nullptr;
 	ViewProjection *viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
@@ -111,6 +114,7 @@ private: // メンバ変数
 	bool stageClear_ = false;
 	bool goToNextStage_ = false;
 	Vector3 goalCameraPos = {0,0,-40.0f};
+	StageClearText* stageClearText_ = nullptr;
 
 	//Enemy spawn position
 	uint32_t spawnX[MAXENEMIES] = { 20,30,60 };
