@@ -6,7 +6,6 @@ Skydome::Skydome()
 
 Skydome::~Skydome()
 {
-//	delete model_;
 }
 
 void Skydome::Initialize(Model* model, ViewProjection* viewProjection)
