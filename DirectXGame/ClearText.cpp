@@ -21,6 +21,7 @@ void ClearText::Initialize(Model* model, ViewProjection* viewProjection, const V
 void ClearText::Update()
 {
 	timer++;
+
 	if(timer <= 60)
 	{
 		worldTransform_.translation_.z -= 0.05f;

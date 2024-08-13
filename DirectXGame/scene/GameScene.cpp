@@ -311,16 +311,16 @@ void GameScene::Update() {
 		{
 			goalCameraPos.x -= 0.05f;
 		}
+
 		
 		if (goalCameraPos.z < -20.0f)
 		{
 			goalCameraPos.z += 0.2f;
 		}
 
-		goalCameraPos.y = player_->GetWorldPosition().y / 3.0f;
-
+		goalCameraPos.y = goal_->GetWorldPosition().y / 3.0f;
 		cameraController_->SetStageClearCamera(true);
-		cameraController_->SetTargetOffset({ goalCameraPos.x,goalCameraPos.y,goalCameraPos.z });
+		cameraController_->SetTargetOffset({ -2,goalCameraPos.y,goalCameraPos.z });
 		cameraController_->Update();
 
 		fade_->Update();
