@@ -19,7 +19,7 @@
 #include "Fade.h"
 #include "Goal.h"
 #include "struct.h"
-#include "StageClearText.h"
+#include "ClearText.h"
 
 #define NOMINMAX
 
@@ -114,7 +114,7 @@ private: // メンバ変数
 	bool stageClear_ = false;
 	bool goToNextStage_ = false;
 	Vector3 goalCameraPos = {0,0,-40.0f};
-	StageClearText* stageClearText_ = nullptr;
+	ClearText* stageClearText_ = nullptr;
 
 	//Enemy spawn position
 	uint32_t spawnX[MAXENEMIES] = { 20,30,60 };

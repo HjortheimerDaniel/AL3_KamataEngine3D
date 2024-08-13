@@ -1,15 +1,17 @@
 #pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "MapChipField.h"
 #include "cassert"
 
-class StageClearText
+class ClearText
 {
 public:
 
-	StageClearText();
 
-	~StageClearText();
+	ClearText();
+
+	~ClearText();
 
 	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position);
 
@@ -26,7 +28,8 @@ private:
 	MapChipField* mapChipField_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	static inline const float titleSize = 1.0f;
-	//float theta, amplitude;
+	int timer = 0;
+
 
 };
 

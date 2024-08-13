@@ -1,6 +1,6 @@
 # Blender 4.1.1
 # www.blender.org
-mtllib ClearTextobj.mtl
+mtllib cleartext.mtl
 o テキスト.001
 v -0.384546 0.544951 -0.070000
 v -0.370204 0.556357 -0.070000

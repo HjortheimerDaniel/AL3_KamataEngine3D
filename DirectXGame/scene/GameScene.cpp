@@ -135,10 +135,12 @@ void GameScene::Initialize() {
 
 #pragma region StageClearText
 
-	clearTextModel_ = Model::CreateFromOBJ("ClearTextobj", true);
-	stageClearText_ = new StageClearText();
-	Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex(50, 17);
-	stageClearText_->Initialize(clearTextModel_, viewProjection_, clearPosition);
+	clearTextModel_ = Model::CreateFromOBJ("cleartext", true);
+	stageClearText_ = new ClearText();
+	Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)doorPosition.x, (uint32_t)doorPosition.y);
+	//Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
+	stageClearText_->Initialize(clearTextModel_, viewProjection_, doorPosition + Vector3((int) - 3, (int)4, 0));
+	//stageClearText_->Initialize(clearTextModel_, viewProjection_, clearPosition);
 	stageClearText_->SetMapChipField(mapChipField_);
 	
 
@@ -198,8 +200,7 @@ void GameScene::Update() {
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
 		}
-		stageClearText_->Update();
-
+		//stageClearText_->Update();
 		CheckAllCollisions();
 		IsEnemyCloseToPlayer();
 
@@ -328,6 +329,8 @@ void GameScene::Update() {
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
 		}
+		stageClearText_->Update();
+
 		viewProjection_->matView = cameraController_->GetViewProjection().matView;
 		viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
 		viewProjection_->TransferMatrix();
@@ -551,7 +554,6 @@ void GameScene::Draw() {
 		}
 		skydome_->Draw();
 		goal_->Draw();
-		stageClearText_->Draw();
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)
@@ -559,6 +561,7 @@ void GameScene::Draw() {
 				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 			}
 		}
+		//stageClearText_->Draw();
 		break;
 	case Phase::kDeath:
 		for (Enemy* enemy : enemies_) {
@@ -587,6 +590,7 @@ void GameScene::Draw() {
 				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 			}
 		}
+		stageClearText_->Draw();
 		fade_->Draw();
 		break;
 
