@@ -195,7 +195,7 @@ void GameScene::Update() {
 
 		skydome_->Update();
 		//fade_->SetCounter_(0.0f);
-		cameraController_->Update();
+		MoveCameraHorizontally();
 		goal_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
@@ -498,6 +498,27 @@ void GameScene::ChangePhase()
 		break;
 	}
 	
+}
+
+void GameScene::MoveCameraHorizontally()
+{
+	if (player_->GetWorldPosition().y > 18 && cameraRange.top <= maxCameraRangeTop)
+	{
+		cameraRange.top += 0.1f;
+
+	}
+	else if (player_->GetWorldPosition().y < 18 && cameraRange.top >= minCameraRangeTop)
+	{
+		cameraRange.top -= 0.2f;
+
+	}
+
+	if (cameraRange.top <= minCameraRangeTop)
+	{
+		cameraRange.top = minCameraRangeTop;
+	}
+	cameraController_->SetMoveableArea(cameraRange);
+	cameraController_->Update();
 }
 
 void GameScene::Draw() {

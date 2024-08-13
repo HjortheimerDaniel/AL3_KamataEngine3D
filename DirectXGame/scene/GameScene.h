@@ -63,6 +63,8 @@ public: // メンバ関数
 
 	void ChangePhase();
 
+	void MoveCameraHorizontally();
+
 	/// <summary>
 	/// 描画
 	/// </summary>
@@ -115,6 +117,8 @@ private: // メンバ変数
 	bool goToNextStage_ = false;
 	Vector3 goalCameraPos = {0,0,-40.0f};
 	ClearText* stageClearText_ = nullptr;
+	static inline const float maxCameraRangeTop = 22.0f;
+	static inline const float minCameraRangeTop = 16.0f;
 
 	//Enemy spawn position
 	uint32_t spawnX[MAXENEMIES] = { 20,30,60 };
