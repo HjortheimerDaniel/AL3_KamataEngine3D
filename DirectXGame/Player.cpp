@@ -44,6 +44,7 @@ void Player::Update()
 	Movement();
 	ImGui::Begin("Window");
 	ImGui::Text("velocity %f", velocity_.x);
+	ImGui::Text("leeway %d", leewayTimer);
 	ImGui::Text("wall Right %d", hitRightWall);
 	ImGui::Text("wall left %d", hitLeftWall);
 	ImGui::End();
@@ -239,8 +240,10 @@ if (!onGround_)
 	velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 }
 
-if (Input::GetInstance()->TriggerKey(DIK_UP) && onGround_ /*&& !holdingSpace*/)
+if (Input::GetInstance()->TriggerKey(DIK_UP) && onGround_ || Input::GetInstance()->TriggerKey(DIK_UP) && !hasJumped && leewayTimer < 10 /*&& !holdingSpace*/)
 {
+	hasJumped = true;
+	velocity_.y = 0.0f;
 	//holdingSpace = true;
 	velocity_ += Vector3(0, kJumpAcceleration, 0);
 	onGround_ = false;
@@ -265,7 +268,6 @@ worldTransform_.translation_.x += velocity_.x;
 
 if (onGround_)
 {
-
 	if (velocity_.y > 0.0f) // if were moving upwards
 	{
 		onGround_ = false; // we are not on the ground
@@ -417,21 +419,26 @@ void Player::CollisionFalling(CollisionMapInfo& info)
 
 	if (!hit)
 	{
-		jumpLeeway = true;
-		
+		leewayTimer++;
+		onGround_ = false;
+		/*if (leewayTimer == 0) 
+		{
+			jumpLeeway = true;
+
+		}*/
+
 	}
 
-	if (jumpLeeway) 
+	/*if (jumpLeeway) 
 	{
 		leewayTimer++;
 	}
 
-	if (leewayTimer >= 5) 
+	if (leewayTimer == 30) 
 	{
 		jumpLeeway = false;
-		leewayTimer = 0;
-		onGround_ = false;
-	}
+	}*/
+	
 
 	if (hit)
 	{
@@ -440,6 +447,9 @@ void Player::CollisionFalling(CollisionMapInfo& info)
 		info.isOnFloor = true;
 		info.movement.y = 0; //TEMPORARY FIX FOR NOT FALLING OF CLIFFS
 		//info.movement.y = std::min(0.0f, kBlank);
+		//leewayTimer = 0;
+		hasJumped = false;
+		leewayTimer = 0;
 		
 	}
 	else {

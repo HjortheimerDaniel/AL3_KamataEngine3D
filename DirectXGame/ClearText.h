@@ -27,7 +27,7 @@ private:
 	Model* model_ = nullptr;
 	MapChipField* mapChipField_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
-	static inline const float titleSize = 1.0f;
+	static inline const float titleSize = 2.0f;
 	int timer = 0;
 
 

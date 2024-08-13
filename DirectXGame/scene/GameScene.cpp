@@ -64,7 +64,8 @@ void GameScene::Initialize() {
 
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
+	//Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(9, 7);
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -127,7 +128,7 @@ void GameScene::Initialize() {
 
 	goalModel_ = Model::CreateFromOBJ("goal", true);
 	goal_ = new Goal();
-	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(50, 17);
+	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(8, 7);
 	goal_->Initialize(goalModel_, viewProjection_, doorPosition);
 	goal_->SetMapChipField(mapChipField_);
 
@@ -139,8 +140,7 @@ void GameScene::Initialize() {
 	stageClearText_ = new ClearText();
 	Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)doorPosition.x, (uint32_t)doorPosition.y);
 	//Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	stageClearText_->Initialize(clearTextModel_, viewProjection_, doorPosition + Vector3((int) - 3, (int)4, 0));
-	//stageClearText_->Initialize(clearTextModel_, viewProjection_, clearPosition);
+	stageClearText_->Initialize(clearTextModel_, viewProjection_, doorPosition + Vector3((int) - 5, (int)4, 0));
 	stageClearText_->SetMapChipField(mapChipField_);
 	
 
@@ -307,21 +307,7 @@ void GameScene::Update() {
 
 	case Phase::kStageClear:
 
-		if (goalCameraPos.x > -3.0f) 
-		{
-			goalCameraPos.x -= 0.05f;
-		}
-
-		
-		if (goalCameraPos.z < -20.0f)
-		{
-			goalCameraPos.z += 0.2f;
-		}
-
-		goalCameraPos.y = goal_->GetWorldPosition().y / 3.0f;
-		cameraController_->SetStageClearCamera(true);
-		cameraController_->SetTargetOffset({ -2,goalCameraPos.y,goalCameraPos.z });
-		cameraController_->Update();
+		StageClearCamera();
 
 		fade_->Update();
 		skydome_->Update();
@@ -518,6 +504,19 @@ void GameScene::MoveCameraHorizontally()
 		cameraRange.top = minCameraRangeTop;
 	}
 	cameraController_->SetMoveableArea(cameraRange);
+	cameraController_->Update();
+}
+
+void GameScene::StageClearCamera()
+{
+	if (goalCameraPos.z < -20.0f)
+	{
+		goalCameraPos.z += 0.2f;
+	}
+
+	goalCameraPos.y = goal_->GetWorldPosition().y / 4.0f;
+	cameraController_->SetStageClearCamera(true);
+	cameraController_->SetTargetOffset({ 1,goalCameraPos.y,goalCameraPos.z });
 	cameraController_->Update();
 }
 

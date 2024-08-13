@@ -65,6 +65,8 @@ public: // メンバ関数
 
 	void MoveCameraHorizontally();
 
+	void StageClearCamera();
+
 	/// <summary>
 	/// 描画
 	/// </summary>

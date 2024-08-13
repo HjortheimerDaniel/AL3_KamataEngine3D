@@ -131,6 +131,7 @@ class Player
 
 		bool jumpLeeway = false;
 		int leewayTimer = 0;
+		bool hasJumped = false;
 
 
 };
