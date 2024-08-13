@@ -109,10 +109,10 @@ class Player
 
 		//are we on the ground
 		bool onGround_ = true;
-		static inline const float kGravityAcceleration = 0.2f;
+		static inline const float kGravityAcceleration = 0.1f;
 		static inline const float kLimitFallSpeed = 0.3f;
-		static inline const float kJumpAcceleration = 1.3f;
-		static inline const float kStompAcceleration = 1.5f;
+		static inline const float kJumpAcceleration = 0.9f;
+		static inline const float kStompAcceleration = 1.1f;
 
 		//player collision
 
@@ -128,6 +128,9 @@ class Player
 		bool hitLeftWall = false;
 		bool isDead_ = false;
 		bool holdingSpace = false;
+
+		bool jumpLeeway = false;
+		int leewayTimer = 0;
 
 
 };

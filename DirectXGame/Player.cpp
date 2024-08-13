@@ -265,6 +265,7 @@ worldTransform_.translation_.x += velocity_.x;
 
 if (onGround_)
 {
+
 	if (velocity_.y > 0.0f) // if were moving upwards
 	{
 		onGround_ = false; // we are not on the ground
@@ -416,6 +417,19 @@ void Player::CollisionFalling(CollisionMapInfo& info)
 
 	if (!hit)
 	{
+		jumpLeeway = true;
+		
+	}
+
+	if (jumpLeeway) 
+	{
+		leewayTimer++;
+	}
+
+	if (leewayTimer >= 5) 
+	{
+		jumpLeeway = false;
+		leewayTimer = 0;
 		onGround_ = false;
 	}
 
