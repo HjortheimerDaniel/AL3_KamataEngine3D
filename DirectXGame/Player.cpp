@@ -649,6 +649,12 @@ void Player::OnCollision(const Enemy* enemy)
 	isDead_ = true;
 }
 
+void Player::OnCollision(const Spikes* spike)
+{
+	(void)spike;
+	isDead_ = true;
+}
+
 void Player::OnCollisionGoal(const Goal* goal)
 {
 	(void)goal;

@@ -19,6 +19,8 @@ class GameScene;
 
 class Goal;
 
+class Spikes;
+
 class Player
 {
 	public:
@@ -70,6 +72,8 @@ class Player
 		AABB GetAABB();
 
 		void OnCollision(const Enemy* enemy);
+
+		void OnCollision(const Spikes* spike);
 
 		void OnCollisionGoal(const Goal* goal);
 		

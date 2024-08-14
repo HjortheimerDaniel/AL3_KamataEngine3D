@@ -132,7 +132,7 @@ private: // メンバ変数
 
 	//Spike spawn position
 	uint32_t spikeSpawnX[MAXENEMIES] = { 45,48,51 };
-	uint32_t spikeSpawnY[MAXENEMIES] = { 5,5,5 };
+	uint32_t spikeSpawnY[MAXENEMIES] = { 6,6,6 };
 
 	
 

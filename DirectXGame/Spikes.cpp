@@ -28,37 +28,37 @@ void Spikes::Update()
 
 void Spikes::SpikeMovement()
 {
-	switch (spikeStruct)
+	switch (spikeStruct_)
 	{
 	case SpikesStruct::Inactive:
-		if (spikeTimer >= 100) 
+		if (spikeTimer >= spikeMaxTimer)
 		{
 			spikeTimer = 0;
-			spikeStruct = SpikesStruct::Awake;
+			spikeStruct_ = SpikesStruct::Awake;
 		}
 		break;
 	case SpikesStruct::Awake:
 		if (spikeTimer == 1) 
 		{
-			worldTransform_.translation_.y = worldTransform_.translation_.y + 0.3f;
+			worldTransform_.translation_.y = worldTransform_.translation_.y + 0.5f;
 		}
-		if (spikeTimer >= 100)
+		if (spikeTimer >= spikeMaxTimer)
 		{
 			spikeTimer = 0;
-			spikeStruct = SpikesStruct::Active;
+			spikeStruct_ = SpikesStruct::Active;
 		}
 
 		break;
 	case SpikesStruct::Active:
 		if (spikeTimer == 1) 
 		{
-			worldTransform_.translation_.y = worldTransform_.translation_.y + 0.8f;
+			worldTransform_.translation_.y = worldTransform_.translation_.y + 1.3f;
 
 		}
-		if (spikeTimer >= 100)
+		if (spikeTimer >= spikeMaxTimer)
 		{
 			spikeTimer = 0;
-			spikeStruct = SpikesStruct::Return;
+			spikeStruct_ = SpikesStruct::Return;
 		}
 
 		break;
@@ -73,10 +73,10 @@ void Spikes::SpikeMovement()
 		{
 			worldTransform_.translation_.y -= 0.1f;
 		}*/
-		if (spikeTimer >= 100)
+		if (spikeTimer >= spikeMaxTimer)
 		{
 			spikeTimer = 0;
-			spikeStruct = SpikesStruct::Inactive;
+			spikeStruct_ = SpikesStruct::Inactive;
 		}
 		break;
 
@@ -104,8 +104,10 @@ AABB Spikes::GetAABB()
 
 	aabb.min = { worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f };
 	aabb.max = { worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f };
-
+	
 	return aabb;
+	
+	
 }
 
 void Spikes::Draw()

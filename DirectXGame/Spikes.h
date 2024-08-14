@@ -26,6 +26,10 @@ public:
 
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; };
 
+	void SetStruct(SpikesStruct spikeStruct) { spikeStruct_ = spikeStruct; };
+
+	SpikesStruct GetStruct() { return spikeStruct_; };
+
 	void Draw();
 
 private:
@@ -36,8 +40,9 @@ private:
 	MapChipField* mapChipField_ = nullptr;
 	static inline const float kWidth = 1.8f;
 	static inline const float kHeight = 1.8f;
-	SpikesStruct spikeStruct;
+	SpikesStruct spikeStruct_;
 	int spikeTimer = 0;
+	int spikeMaxTimer = 50;
 	Vector3 startPos;
 
 };

@@ -78,7 +78,7 @@ void GameScene::Initialize() {
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
 	//Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(9, 7);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(45, 5);
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -99,6 +99,7 @@ void GameScene::Initialize() {
 		newEnemy->Initialize(enemyModel_, viewProjection_, enemyPosition);
 		enemies_.push_back(newEnemy);
 		newEnemy->SetMapChipField(mapChipField_);
+		
 	}
 
 #pragma endregion
@@ -169,7 +170,20 @@ void GameScene::Initialize() {
 		newSpike->Initialize(spikeModel_, viewProjection_, spikePosition);
 		spikes_.push_back(newSpike);
 		newSpike->SetMapChipField(mapChipField_);
-
+		switch (i)
+		{
+		case 0:
+			newSpike->SetStruct(SpikesStruct::Active);
+			break;
+		case 1:
+			newSpike->SetStruct(SpikesStruct::Inactive);
+			break;
+		case 2:
+			newSpike->SetStruct(SpikesStruct::Active);
+			break;
+		default:
+			break;
+		}
 	}
 	
 	
@@ -419,6 +433,21 @@ void GameScene::CheckAllCollisions()
 		player_->OnCollisionGoal(goal_);
 		goal_->OnCollision(player_);
 		stageClear_ = true;
+	}
+
+	#pragma endregion
+
+
+	#pragma region player spike
+
+	for (Spikes* spike : spikes_)
+	{
+		AABB aabb4 = spike->GetAABB();
+
+		if (IsCollision(aabb1, aabb4) && spike->GetStruct() == SpikesStruct::Active)
+		{
+			player_->OnCollision(enemy_);
+		}
 	}
 
 	#pragma endregion
