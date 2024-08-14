@@ -1,6 +1,7 @@
 #pragma once
 #include "Vector3.h"
 #define MAXENEMIES 3
+#define MAXSPIKES 3
 
 struct AABB {
 	Vector3 min;
@@ -29,6 +30,14 @@ struct CollisionMapInfo
 	bool isHittingLeftWall = false;
 	bool isHittingRightWall = false;
 	Vector3 movement;
+};
+
+enum class SpikesStruct
+{
+	Inactive,
+	Awake,
+	Active,
+	Return,
 };
 
 

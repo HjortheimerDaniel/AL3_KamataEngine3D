@@ -124,6 +124,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="Skydome.cpp" />
+    <ClCompile Include="Spikes.cpp" />
     <ClCompile Include="TitlePlayer.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TitleText.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="Skydome.h" />
+    <ClInclude Include="Spikes.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="TitlePlayer.h" />
     <ClInclude Include="TitleScene.h" />

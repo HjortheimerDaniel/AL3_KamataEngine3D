@@ -24,12 +24,25 @@ GameScene::~GameScene() {
 	delete deathParticles_;
 	delete viewProjection_;
 	delete goal_;
+	delete goalModel_;
+	delete deathparticleModel_;
+	delete clearTextModel_;
+	delete spikeModel_;
+	delete spike_;
+	delete fade_;
+	delete stageClearText_;
 
 	for ( Enemy* enemy : enemies_)
 	{
 		delete enemy;
 	}
 	enemies_.clear();
+
+	for (Spikes* spike : spikes_)
+	{
+		delete spike;
+	}
+	spikes_.clear();
 
 }
 
@@ -82,7 +95,7 @@ void GameScene::Initialize() {
 	for (int32_t i = 0; i < MAXENEMIES; i++)
 	{
 		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(spawnX[i],spawnY[i]);
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(enemySpawnX[i],enemySpawnY[i]);
 		newEnemy->Initialize(enemyModel_, viewProjection_, enemyPosition);
 		enemies_.push_back(newEnemy);
 		newEnemy->SetMapChipField(mapChipField_);
@@ -146,6 +159,22 @@ void GameScene::Initialize() {
 
 #pragma endregion
 
+#pragma region Spikes
+
+	spikeModel_ = Model::CreateFromOBJ("spike", true);
+	for (uint32_t i = 0; i < MAXSPIKES; i++)
+	{
+		Spikes* newSpike = new Spikes();
+		Vector3 spikePosition = mapChipField_->GetMapChipPositionByIndex(spikeSpawnX[i], spikeSpawnY[i]);
+		newSpike->Initialize(spikeModel_, viewProjection_, spikePosition);
+		spikes_.push_back(newSpike);
+		newSpike->SetMapChipField(mapChipField_);
+
+	}
+	
+	
+
+#pragma endregion
 
 }
 
@@ -200,6 +229,10 @@ void GameScene::Update() {
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
 		}
+		for (Spikes* spike : spikes_) { //create new Enemy enemy 
+			spike->Update();
+		}
+
 		//stageClearText_->Update();
 		CheckAllCollisions();
 		IsEnemyCloseToPlayer();
@@ -550,6 +583,9 @@ void GameScene::Draw() {
 	
 	switch (phase_)
 	{
+
+	#pragma region FadeIn
+
 	case Phase::kFadeIn:
 		player_->Draw();
 		for (Enemy* enemy : enemies_) {
@@ -567,11 +603,20 @@ void GameScene::Draw() {
 		fade_->Draw();
 
 		break;
+
+	#pragma endregion
+
+	#pragma region Play
 	case Phase::kPlay:
 		player_->Draw();
 		for (Enemy* enemy : enemies_) {
 			enemy->Draw();
 		}
+		for (Spikes* spike : spikes_)
+		{
+			spike->Draw();
+		}
+
 		skydome_->Draw();
 		goal_->Draw();
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -581,8 +626,13 @@ void GameScene::Draw() {
 				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 			}
 		}
+		
 		//stageClearText_->Draw();
 		break;
+	#pragma endregion
+
+	#pragma region Death
+
 	case Phase::kDeath:
 		for (Enemy* enemy : enemies_) {
 			enemy->Draw();
@@ -598,6 +648,11 @@ void GameScene::Draw() {
 			}
 		}
 		break;
+
+	#pragma endregion
+
+	#pragma region StageClear
+
 	case Phase::kStageClear:
 
 		player_->Draw();
@@ -613,6 +668,10 @@ void GameScene::Draw() {
 		stageClearText_->Draw();
 		fade_->Draw();
 		break;
+
+	#pragma endregion
+
+	#pragma region FadeOut
 
 	case Phase::kFadeOut:
 		for (Enemy* enemy : enemies_) {
@@ -630,6 +689,9 @@ void GameScene::Draw() {
 		fade_->Draw();
 		
 		break;
+
+	#pragma endregion
+
 	default:
 		break;
 	}

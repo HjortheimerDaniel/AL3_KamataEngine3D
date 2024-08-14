@@ -53,6 +53,7 @@ void Player::Update()
 	//worldTransform_.TransferMatrix();
 	
 }
+
 void Player::Movement()
 {
  #pragma region old movement

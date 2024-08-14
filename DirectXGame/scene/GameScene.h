@@ -20,6 +20,7 @@
 #include "Goal.h"
 #include "struct.h"
 #include "ClearText.h"
+#include "Spikes.h"
 
 #define NOMINMAX
 
@@ -92,6 +93,7 @@ private: // メンバ変数
 	Model* deathparticleModel_ = nullptr;
 	Model* goalModel_ = nullptr;
 	Model* clearTextModel_ = nullptr;
+	Model* spikeModel_ = nullptr;
 	ViewProjection *viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
@@ -106,6 +108,7 @@ private: // メンバ変数
 	Rect cameraRange = { 168.0f,28.5f,0.0f,16.0f};
 	Enemy* enemy_ = nullptr;
 	std::list<Enemy*> enemies_;
+	std::list<Spikes*> spikes_;
 	DeathParticles* deathParticles_ = nullptr;
 	Phase phase_;
 	bool isDead_ = false;
@@ -121,10 +124,16 @@ private: // メンバ変数
 	ClearText* stageClearText_ = nullptr;
 	static inline const float maxCameraRangeTop = 22.0f;
 	static inline const float minCameraRangeTop = 16.0f;
+	Spikes* spike_ = nullptr;
 
 	//Enemy spawn position
-	uint32_t spawnX[MAXENEMIES] = { 20,30,60 };
-	uint32_t spawnY[MAXENEMIES] = { 18,14,12 };
+	uint32_t enemySpawnX[MAXENEMIES] = { 20,30,60 };
+	uint32_t enemySpawnY[MAXENEMIES] = { 18,14,12 };
+
+	//Spike spawn position
+	uint32_t spikeSpawnX[MAXENEMIES] = { 45,48,51 };
+	uint32_t spikeSpawnY[MAXENEMIES] = { 5,5,5 };
+
 	
 
 	/// <summary>
