@@ -1,6 +1,6 @@
 #pragma once
 #include "Vector3.h"
-#define MAXENEMIES 3
+#define MAXENEMIES 4
 #define MAXSPIKES 3
 
 struct AABB {

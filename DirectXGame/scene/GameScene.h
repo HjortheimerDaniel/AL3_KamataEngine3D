@@ -127,12 +127,12 @@ private: // メンバ変数
 	Spikes* spike_ = nullptr;
 
 	//Enemy spawn position
-	uint32_t enemySpawnX[MAXENEMIES] = { 20,30,60 };
-	uint32_t enemySpawnY[MAXENEMIES] = { 18,14,12 };
+	uint32_t enemySpawnX[MAXENEMIES] = { 20 , 30, 60, 40 };
+	uint32_t enemySpawnY[MAXENEMIES] = { 18, 14, 12, 5 };
 
 	//Spike spawn position
-	uint32_t spikeSpawnX[MAXENEMIES] = { 45,48,51 };
-	uint32_t spikeSpawnY[MAXENEMIES] = { 6,6,6 };
+	uint32_t spikeSpawnX[MAXENEMIES] = { 45, 48, 51 };
+	uint32_t spikeSpawnY[MAXENEMIES] = { 6, 6, 6 };
 
 	
 
