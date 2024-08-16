@@ -31,6 +31,8 @@ GameScene2::~GameScene2() {
 	delete spike_;
 	delete fade_;
 	delete stageClearText_;
+	delete parachuteModel_;
+	delete parachute_;
 
 	for (Enemy* enemy : enemies_)
 	{
@@ -78,7 +80,7 @@ void GameScene2::Initialize() {
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
 	//Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 3);
+	playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 3);
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -183,9 +185,16 @@ void GameScene2::Initialize() {
 		}
 	}
 
-
-
 #pragma endregion
+
+#pragma region Parachute
+
+	parachuteModel_ = Model::CreateFromOBJ("parachute", true);
+	parachute_ = new Parachute();
+	parachutePosition = playerPosition;
+	parachute_->Initialize(parachuteModel_, viewProjection_, parachutePosition);
+
+#pragma endregion 
 
 }
 
@@ -243,10 +252,13 @@ void GameScene2::Update() {
 		for (Spikes* spike : spikes_) { //create new Enemy enemy 
 			spike->Update();
 		}
-
+		//parachute_->Update();
 		//stageClearText_->Update();
 		CheckAllCollisions();
 		IsEnemyCloseToPlayer();
+
+		
+		UsingParachute();
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -590,6 +602,22 @@ void GameScene2::StageClearCamera()
 	cameraController_->Update();
 }
 
+void GameScene2::UsingParachute()
+{
+	if (Input::GetInstance()->PushKey(DIK_SPACE))
+	{
+		player_->SetFallSpeed(0.05f);
+		parachutePosition = player_->GetWorldPosition() + Vector3(0.0f, 1.5f, 0.0f);
+		parachute_->Initialize(parachuteModel_, viewProjection_, parachutePosition);
+		parachute_->Update();
+	}
+	else 
+	{
+		player_->SetFallSpeed(0.3f);
+
+	}
+}
+
 void GameScene2::Draw() {
 
 	// コマンドリストの取得
@@ -653,7 +681,10 @@ void GameScene2::Draw() {
 		{
 			spike->Draw();
 		}
-
+		if (Input::GetInstance()->PushKey(DIK_SPACE))
+		{
+			parachute_->Draw();
+		}
 		skydome_->Draw();
 		goal_->Draw();
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {

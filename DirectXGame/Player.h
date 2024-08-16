@@ -83,6 +83,8 @@ class Player
 
 		bool GetOnGround() { return onGround_; };
 
+		void SetFallSpeed(float fallSpeed) { kLimitFallSpeed = fallSpeed; };
+
 		/// <summary>
 		/// 描画
 		/// </summary>
@@ -114,7 +116,7 @@ class Player
 		//are we on the ground
 		bool onGround_ = true;
 		static inline const float kGravityAcceleration = 0.1f;
-		static inline const float kLimitFallSpeed = 0.3f; //change this with the parachute
+		float kLimitFallSpeed = 0.3f; //change this with the parachute
 		static inline const float kJumpAcceleration = 0.9f;
 		static inline const float kStompAcceleration = 1.1f;
 

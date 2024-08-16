@@ -21,6 +21,7 @@
 #include "struct.h"
 #include "ClearText.h"
 #include "Spikes.h"
+#include "Parachute.h"
 
 #define NOMINMAX
 
@@ -68,6 +69,8 @@ public: // メンバ関数
 
 	void StageClearCamera();
 
+	void UsingParachute();
+
 	/// <summary>
 	/// 描画
 	/// </summary>
@@ -94,6 +97,7 @@ private: // メンバ変数
 	Model* goalModel_ = nullptr;
 	Model* clearTextModel_ = nullptr;
 	Model* spikeModel_ = nullptr;
+	Model* parachuteModel_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
@@ -125,6 +129,7 @@ private: // メンバ変数
 	static inline const float maxCameraRangeTop = 22.0f + 160.0f;
 	static inline const float minCameraRangeTop = 0.0f;
 	Spikes* spike_ = nullptr;
+	Parachute* parachute_ = nullptr;
 
 	//Enemy spawn position
 	uint32_t enemySpawnX[MAXENEMIES] = { 20 , 30, 60, 40 };
@@ -137,7 +142,8 @@ private: // メンバ変数
 	//get new range of camera max/min every time we touch ground
 	float newLandPositionY = 0.0f;
 
-
+	Vector3 parachutePosition;
+	Vector3 playerPosition;
 
 	/// <summary>
 	/// ゲームシーン用
