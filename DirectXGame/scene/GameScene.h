@@ -105,7 +105,7 @@ private: // メンバ変数
 	Model* modelSkydome_ = nullptr;
 	MapChipField* mapChipField_ = nullptr;
 	CameraController* cameraController_ = nullptr;
-	Rect cameraRange = { 168.0f,28.5f,0.0f,16.0f};
+	Rect cameraRange = { 1.0f,1.5f,0.0f,1.0f};
 	Enemy* enemy_ = nullptr;
 	std::list<Enemy*> enemies_;
 	std::list<Spikes*> spikes_;
