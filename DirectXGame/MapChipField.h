@@ -29,7 +29,7 @@ class MapChipField
 
 	~MapChipField();
 
-	void Initialize();
+	void Initialize(uint32_t numBlockHorizontal, uint32_t numBlockVertical);
 
 	void ResetMapChipData();
 
@@ -39,9 +39,9 @@ class MapChipField
 
 	Vector3 GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex);
 
-	uint32_t GetNumBlockVertical() { return kNumBlockVertical; };
+	uint32_t GetNumBlockVertical() { return kNumBlockVertical_; };
 
-	uint32_t GetNumBlockHorizontal() { return kNumBlockHorizontal; };
+	uint32_t GetNumBlockHorizontal() { return kNumBlockHorizontal_; };
 
 	IndexSet GetMapChipIndexSetByPosition(const Vector3& position);
 
@@ -60,8 +60,8 @@ class MapChipField
 		static inline const float kBlockHeight = 2.0f;
 
 		//amount of blocks
-		static inline const uint32_t kNumBlockVertical = 20;
-		static inline const uint32_t kNumBlockHorizontal = 100;
+		static inline uint32_t kNumBlockVertical_ = 100;
+		static inline uint32_t kNumBlockHorizontal_ = 100;
 
 		MapChipData mapChipData_;
 };

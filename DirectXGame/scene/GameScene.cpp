@@ -66,7 +66,7 @@ void GameScene::Initialize() {
 #pragma region MapChipField
 
 	mapChipField_ = new MapChipField;
-	mapChipField_->Initialize(); //HERE
+	mapChipField_->Initialize(100,20); //HERE
 	mapChipField_->ResetMapChipData();
 	mapChipField_->LoadMapChipCsv("Resources/mapchip/blocks.csv");
 	GenerateBlocks();
@@ -87,10 +87,6 @@ void GameScene::Initialize() {
 #pragma region Enemy
 
 	enemyModel_ = Model::CreateFromOBJ("enemycolor", true);
-	//enemy_ = new Enemy();
-	//Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
-	//enemy_->Initialize(enemyModel_, viewProjection_, enemyPosition);
-	//enemy_->SetMapChipField(mapChipField_);
 
 	for (int32_t i = 0; i < MAXENEMIES; i++)
 	{

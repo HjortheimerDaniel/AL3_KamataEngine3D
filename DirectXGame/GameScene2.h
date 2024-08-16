@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Audio.h"
 #include "DirectXCommon.h"
 #include "Input.h"
@@ -17,9 +18,17 @@
 #include "DeathParticles.h"
 #include "Fade.h"
 #include "Goal.h"
+#include "struct.h"
+#include "ClearText.h"
+#include "Spikes.h"
 
-class GameScene2
-{
+#define NOMINMAX
+
+
+/// <summary>
+/// ゲームシーン
+/// </summary>
+class GameScene2 {
 
 public: // メンバ関数
 	/// <summary>
@@ -55,6 +64,10 @@ public: // メンバ関数
 
 	void ChangePhase();
 
+	void MoveCameraHorizontally();
+
+	void StageClearCamera();
+
 	/// <summary>
 	/// 描画
 	/// </summary>
@@ -66,7 +79,11 @@ public: // メンバ関数
 
 	bool GetIsFinished() const { return finished_; };
 
-private:
+	bool GetStageClear() const { return stageClear_; };
+
+	bool GetGoToNextStage() const { return goToNextStage_; };
+
+private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
@@ -75,6 +92,8 @@ private:
 	Model* enemyModel_ = nullptr;
 	Model* deathparticleModel_ = nullptr;
 	Model* goalModel_ = nullptr;
+	Model* clearTextModel_ = nullptr;
+	Model* spikeModel_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
@@ -86,9 +105,10 @@ private:
 	Model* modelSkydome_ = nullptr;
 	MapChipField* mapChipField_ = nullptr;
 	CameraController* cameraController_ = nullptr;
-	Rect cameraRange = { 168.0f,28.5f,0,16 };
+	Rect cameraRange = { 168.0f,28.5f,0.0f,16.0f };
 	Enemy* enemy_ = nullptr;
 	std::list<Enemy*> enemies_;
+	std::list<Spikes*> spikes_;
 	DeathParticles* deathParticles_ = nullptr;
 	Phase phase_;
 	bool isDead_ = false;
@@ -98,10 +118,26 @@ private:
 	float stompDistance = 0.9f;
 	float activateEnemyDistance = 48.0f;
 	Goal* goal_ = nullptr;
-
+	bool stageClear_ = false;
+	bool goToNextStage_ = false;
+	Vector3 goalCameraPos = { 0,0,-40.0f };
+	ClearText* stageClearText_ = nullptr;
+	static inline const float maxCameraRangeTop = 22.0f;
+	static inline const float minCameraRangeTop = 16.0f;
+	Spikes* spike_ = nullptr;
 
 	//Enemy spawn position
-	uint32_t spawnX[MAXENEMIES] = { 20,30,60 };
-	uint32_t spawnY[MAXENEMIES] = { 18,14,12 };
-};
+	uint32_t enemySpawnX[MAXENEMIES] = { 20 , 30, 60, 40 };
+	uint32_t enemySpawnY[MAXENEMIES] = { 18, 14, 12, 5 };
 
+	//Spike spawn position
+	uint32_t spikeSpawnX[MAXENEMIES] = { 45, 48, 51 };
+	uint32_t spikeSpawnY[MAXENEMIES] = { 6, 6, 6 };
+
+
+
+	/// <summary>
+	/// ゲームシーン用
+	/// </summary>
+
+};
