@@ -1,7 +1,6 @@
 #include "GameScene2.h"
 #include "TextureManager.h"
 #include <cassert>
-#include <imgui.h>
 
 GameScene2::GameScene2() {}
 
@@ -69,7 +68,7 @@ void GameScene2::Initialize() {
 	mapChipField_ = new MapChipField;
 	mapChipField_->Initialize(100, 100); //HERE
 	mapChipField_->ResetMapChipData();
-	mapChipField_->LoadMapChipCsv("Resources/mapchip/blocks3.csv");
+	mapChipField_->LoadMapChipCsv("Resources/mapchip/blocks2.csv");
 	GenerateBlocks();
 
 #pragma endregion
@@ -79,7 +78,7 @@ void GameScene2::Initialize() {
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
 	//Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(9, 7);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 3);
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -88,10 +87,6 @@ void GameScene2::Initialize() {
 #pragma region Enemy
 
 	enemyModel_ = Model::CreateFromOBJ("enemycolor", true);
-	//enemy_ = new Enemy();
-	//Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
-	//enemy_->Initialize(enemyModel_, viewProjection_, enemyPosition);
-	//enemy_->SetMapChipField(mapChipField_);
 
 	for (int32_t i = 0; i < MAXENEMIES; i++)
 	{
@@ -144,7 +139,7 @@ void GameScene2::Initialize() {
 
 	goalModel_ = Model::CreateFromOBJ("goal", true);
 	goal_ = new Goal();
-	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(8, 7);
+	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(8, 80);
 	goal_->Initialize(goalModel_, viewProjection_, doorPosition);
 	goal_->SetMapChipField(mapChipField_);
 
@@ -156,7 +151,7 @@ void GameScene2::Initialize() {
 	stageClearText_ = new ClearText();
 	Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)doorPosition.x, (uint32_t)doorPosition.y);
 	//Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	stageClearText_->Initialize(clearTextModel_, viewProjection_, doorPosition + Vector3((int)-5, (int)4, 0));
+	stageClearText_->Initialize(clearTextModel_, viewProjection_, doorPosition + Vector3((int)-7, (int)6, 0));
 	stageClearText_->SetMapChipField(mapChipField_);
 
 
@@ -194,8 +189,7 @@ void GameScene2::Initialize() {
 
 }
 
-void GameScene2::Update() 
-{
+void GameScene2::Update() {
 
 	ChangePhase();
 	switch (phase_)
@@ -265,9 +259,7 @@ void GameScene2::Update()
 			}
 		}
 
-		ImGui::Begin("Stage2");
-		ImGui::Text("TEST");
-		ImGui::End();
+
 
 		//debugCamera_->Update();
 
@@ -555,14 +547,19 @@ void GameScene2::ChangePhase()
 
 void GameScene2::MoveCameraHorizontally()
 {
-	if (player_->GetWorldPosition().y > 18 && cameraRange.top <= maxCameraRangeTop)
+
+	if (player_->GetOnGround()) 
 	{
-		cameraRange.top += 0.1f;
+		newLandPositionY = player_->GetWorldPosition().y;
+	}
+	if (player_->GetWorldPosition().y > newLandPositionY && cameraRange.top <= maxCameraRangeTop)
+	{
+		cameraRange.top += 0.4f;
 
 	}
-	else if (player_->GetWorldPosition().y < 18 && cameraRange.top >= minCameraRangeTop)
+	 if (player_->GetWorldPosition().y +3.0f < newLandPositionY)
 	{
-		cameraRange.top -= 0.2f;
+		cameraRange.top -= 0.4f;
 
 	}
 
@@ -578,12 +575,18 @@ void GameScene2::StageClearCamera()
 {
 	if (goalCameraPos.z < -20.0f)
 	{
-		goalCameraPos.z += 0.2f;
+		goalCameraPos.z += 3.2f;
 	}
+	if (!player_->GetOnGround()) {
+		goalCameraPos.y = goal_->GetWorldPosition().y / 75.0f;
+	}
+	else
+	{
+		goalCameraPos.y = goal_->GetWorldPosition().y / 35.0f;
 
-	goalCameraPos.y = goal_->GetWorldPosition().y / 4.0f;
+	}
 	cameraController_->SetStageClearCamera(true);
-	cameraController_->SetTargetOffset({ 1,goalCameraPos.y,goalCameraPos.z });
+	cameraController_->SetTargetOffset({ 2,goalCameraPos.y,goalCameraPos.z });
 	cameraController_->Update();
 }
 

@@ -151,7 +151,7 @@ void GameScene::Initialize() {
 	stageClearText_ = new ClearText();
 	Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)doorPosition.x, (uint32_t)doorPosition.y);
 	//Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	stageClearText_->Initialize(clearTextModel_, viewProjection_, doorPosition + Vector3((int) - 7, (int)4, 0));
+	stageClearText_->Initialize(clearTextModel_, viewProjection_, doorPosition + Vector3((int) - 7, (int)6, 0));
 	stageClearText_->SetMapChipField(mapChipField_);
 	
 
@@ -572,8 +572,14 @@ void GameScene::StageClearCamera()
 	{
 		goalCameraPos.z += 3.2f;
 	}
+	if (!player_->GetOnGround()) {
+		goalCameraPos.y = goal_->GetWorldPosition().y / 75.0f;
+	}
+	else 
+	{
+		goalCameraPos.y = goal_->GetWorldPosition().y / 35.0f;
 
-	goalCameraPos.y = goal_->GetWorldPosition().y / 30.0f;
+	}
 	cameraController_->SetStageClearCamera(true);
 	cameraController_->SetTargetOffset({ 2,goalCameraPos.y,goalCameraPos.z });
 	cameraController_->Update();
