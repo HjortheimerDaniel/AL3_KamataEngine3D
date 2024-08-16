@@ -105,7 +105,7 @@ private: // メンバ変数
 	Model* modelSkydome_ = nullptr;
 	MapChipField* mapChipField_ = nullptr;
 	CameraController* cameraController_ = nullptr;
-	Rect cameraRange = { 1.0f,1.5f,0.0f,1.0f};
+	Rect cameraRange = { 168.0f,28.5f,0.0f,16.0f + 160.0f };
 	Enemy* enemy_ = nullptr;
 	std::list<Enemy*> enemies_;
 	std::list<Spikes*> spikes_;
@@ -120,10 +120,10 @@ private: // メンバ変数
 	Goal* goal_ = nullptr;
 	bool stageClear_ = false;
 	bool goToNextStage_ = false;
-	Vector3 goalCameraPos = {0,0,-40.0f};
+	Vector3 goalCameraPos = {0,0,-40.0f - 160.0f };
 	ClearText* stageClearText_ = nullptr;
-	static inline const float maxCameraRangeTop = 22.0f;
-	static inline const float minCameraRangeTop = 16.0f;
+	static inline const float maxCameraRangeTop = 22.0f + 160.0f;
+	static inline const float minCameraRangeTop = 16.0f + 160.0f;
 	Spikes* spike_ = nullptr;
 
 	//Enemy spawn position
