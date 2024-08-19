@@ -681,7 +681,7 @@ void GameScene2::Draw() {
 		{
 			spike->Draw();
 		}
-		if (Input::GetInstance()->PushKey(DIK_SPACE))
+		if (Input::GetInstance()->PushKey(DIK_SPACE) && !player_->GetOnGround())
 		{
 			parachute_->Draw();
 		}
