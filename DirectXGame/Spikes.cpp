@@ -1,4 +1,6 @@
 #include "Spikes.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 Spikes::Spikes()
 {
@@ -22,8 +24,12 @@ void Spikes::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 
 void Spikes::Update()
 {
-	
-	SpikeMovement();
+	if(move_)
+	{
+		MovingSpikes();
+
+	}
+	SpikeState();
 	worldTransform_.UpdateMatrix();
 }
 
@@ -32,7 +38,7 @@ void Spikes::SpikeTimer()
 	spikeTimer++; //Add this for movement
 }
 
-void Spikes::SpikeMovement()
+void Spikes::SpikeState()
 {
 	switch (spikeStruct_)
 	{
@@ -89,6 +95,17 @@ void Spikes::SpikeMovement()
 	default:
 		break;
 	}
+}
+
+void Spikes::RotateSpike()
+{
+}
+
+void Spikes::MovingSpikes()
+{
+	theta += float(M_PI) / 250.0f;
+	worldTransform_.translation_.x = cosf(theta) * amplitude;
+
 }
 
 Vector3 Spikes::GetWorldPosition()

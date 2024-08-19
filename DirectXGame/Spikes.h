@@ -20,7 +20,11 @@ public:
 
 	void SpikeTimer();
 
-	void SpikeMovement();
+	void SpikeState();
+
+	void RotateSpike();
+
+	void MovingSpikes();
 
 	Vector3 GetWorldPosition();
 
@@ -31,6 +35,10 @@ public:
 	void SetStruct(SpikesStruct spikeStruct) { spikeStruct_ = spikeStruct; };
 
 	SpikesStruct GetStruct() { return spikeStruct_; };
+
+	void SetMove(bool move) { move_ = move; };
+
+	bool GetMove() { return move_; };
 
 	void Draw();
 
@@ -46,6 +54,8 @@ private:
 	int spikeTimer = 0;
 	int spikeMaxTimer = 50;
 	Vector3 startPos;
-
+	float theta = 0.0f;
+	float amplitude = 50.0f;
+	bool move_ = false;
 };
 

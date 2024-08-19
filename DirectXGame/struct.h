@@ -2,7 +2,7 @@
 #include "Vector3.h"
 #define MAXENEMIES 4
 #define MAXSPIKES 3
-#define MAXSPIKES2 23
+#define MAXSPIKES2 60
 
 struct AABB {
 	Vector3 min;

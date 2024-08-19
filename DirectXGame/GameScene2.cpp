@@ -161,15 +161,57 @@ void GameScene2::Initialize() {
 
 #pragma region Spikes
 
+
+
+
 	for (int i = 0; i < 8; i++)
 	{
 		spikeSpawnX[i] = 8 + i;
 		spikeSpawnY[i] = 9 + i;
 	}
-	for (int i = 8; i < MAXSPIKES2; i++)
+	for (int i = 8; i < 23; i++)
 	{
 		spikeSpawnX[i] = 26 - i;
-		spikeSpawnY[i] = 10 + i;
+		spikeSpawnY[i] = 11 + i;
+	}
+	for (int i = 23; i < MAXSPIKES2; i++)
+	{
+		if (i < 27) 
+		{
+			spikeSpawnX[i] = 1 + (i - 23);
+			spikeSpawnY[i] = 38;
+		}
+		if (i >= 27 && i < 31)
+		{
+			spikeSpawnX[i] = 5 + (i - 27);
+			spikeSpawnY[i] = 42;
+		}
+		if (i >= 31 && i < 35)
+		{
+			spikeSpawnX[i] = 15 + (i - 31);
+			spikeSpawnY[i] = 42;
+		}
+		if (i >= 35 && i < 39)
+		{
+			spikeSpawnX[i] = 1 + (i - 35);
+			spikeSpawnY[i] = 47;
+		}
+		if (i >= 39 && i < 43)
+		{
+			spikeSpawnX[i] = 9 + (i - 39);
+			spikeSpawnY[i] = 47;
+		}
+		if (i >= 43 && i < 47)
+		{
+			spikeSpawnX[i] = 5 + (i - 43);
+			spikeSpawnY[i] = 52;
+		}
+		if (i >= 47 && i < 51)
+		{
+			spikeSpawnX[i] = 15 + (i - 47);
+			spikeSpawnY[i] = 52;
+		}
+		
 	}
 
 	spikeModel_ = Model::CreateFromOBJ("spike", true);
@@ -268,6 +310,7 @@ void GameScene2::Update() {
 				}
 				worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 				worldTransformBlock->TransferMatrix();
+
 			}
 		}
 
@@ -816,6 +859,7 @@ void GameScene2::GenerateBlocks()
 				worldTransform->Initialize();
 				worldTransformBlocks_[i][j] = worldTransform;
 				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+				
 			}
 		}
 	}
