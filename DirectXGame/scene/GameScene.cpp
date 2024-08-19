@@ -242,6 +242,7 @@ void GameScene::Update() {
 		}
 		for (Spikes* spike : spikes_) { //create new Enemy enemy 
 			spike->Update();
+			spike->SpikeTimer();
 		}
 
 		//stageClearText_->Update();

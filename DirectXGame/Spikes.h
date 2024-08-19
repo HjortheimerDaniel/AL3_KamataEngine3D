@@ -18,6 +18,8 @@ public:
 
 	void Update();
 
+	void SpikeTimer();
+
 	void SpikeMovement();
 
 	Vector3 GetWorldPosition();

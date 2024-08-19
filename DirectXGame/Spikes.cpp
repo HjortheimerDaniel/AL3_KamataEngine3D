@@ -16,14 +16,20 @@ void Spikes::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
 	startPos = worldTransform_.translation_;
+	spikeStruct_ = SpikesStruct::Active;
 
 }
 
 void Spikes::Update()
 {
-	spikeTimer++;
+	
 	SpikeMovement();
 	worldTransform_.UpdateMatrix();
+}
+
+void Spikes::SpikeTimer()
+{
+	spikeTimer++; //Add this for movement
 }
 
 void Spikes::SpikeMovement()

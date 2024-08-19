@@ -70,7 +70,7 @@ void GameScene2::Initialize() {
 	mapChipField_ = new MapChipField;
 	mapChipField_->Initialize(100, 100); //HERE
 	mapChipField_->ResetMapChipData();
-	mapChipField_->LoadMapChipCsv("Resources/mapchip/blocks2.csv");
+	mapChipField_->LoadMapChipCsv("Resources/mapchip/blocks3.csv");
 	GenerateBlocks();
 
 #pragma endregion
@@ -161,29 +161,29 @@ void GameScene2::Initialize() {
 
 #pragma region Spikes
 
+	for (int i = 0; i < 8; i++)
+	{
+		spikeSpawnX[i] = 8 + i;
+		spikeSpawnY[i] = 9 + i;
+	}
+	for (int i = 8; i < MAXSPIKES2; i++)
+	{
+		spikeSpawnX[i] = 26 - i;
+		spikeSpawnY[i] = 10 + i;
+	}
+
 	spikeModel_ = Model::CreateFromOBJ("spike", true);
-	for (uint32_t i = 0; i < MAXSPIKES; i++)
+	for (uint32_t i = 0; i < MAXSPIKES2; i++)
 	{
 		Spikes* newSpike = new Spikes();
 		Vector3 spikePosition = mapChipField_->GetMapChipPositionByIndex(spikeSpawnX[i], spikeSpawnY[i]);
 		newSpike->Initialize(spikeModel_, viewProjection_, spikePosition);
 		spikes_.push_back(newSpike);
 		newSpike->SetMapChipField(mapChipField_);
-		switch (i)
-		{
-		case 0:
-			newSpike->SetStruct(SpikesStruct::Active);
-			break;
-		case 1:
-			newSpike->SetStruct(SpikesStruct::Inactive);
-			break;
-		case 2:
-			newSpike->SetStruct(SpikesStruct::Active);
-			break;
-		default:
-			break;
-		}
+		
 	}
+
+	
 
 #pragma endregion
 
@@ -559,27 +559,33 @@ void GameScene2::ChangePhase()
 
 void GameScene2::MoveCameraHorizontally()
 {
+	
+	//if (player_->GetOnGround()) 
+	//{
+	//	newLandPositionY = player_->GetWorldPosition().y;
+	//}
+	//if (player_->GetWorldPosition().y > newLandPositionY && cameraRange.top <= maxCameraRangeTop)
+	//{
+	//	cameraRange.top += 0.4f;
 
-	if (player_->GetOnGround()) 
-	{
-		newLandPositionY = player_->GetWorldPosition().y;
-	}
-	if (player_->GetWorldPosition().y > newLandPositionY && cameraRange.top <= maxCameraRangeTop)
-	{
-		cameraRange.top += 0.4f;
+	//}
+	// if (player_->GetWorldPosition().y +1.5f < newLandPositionY /*&& player_->GetWorldPosition().y > cameraRange.top*/)
+	//{
+	//	cameraRange.top += player_->GetVelocity().y - player_->GetLimitFallSpeed() - 0.02f;
 
-	}
-	 if (player_->GetWorldPosition().y +1.5f < newLandPositionY)
-	{
-		cameraRange.top += player_->GetVelocity().y - player_->GetLimitFallSpeed();
+	//}
 
-	}
+	//if (cameraRange.top <= minCameraRangeTop)
+	//{
+	//	cameraRange.top = minCameraRangeTop;
+	//}
+	
+	cameraRange.top = player_->GetWorldPosition().y - 9.0f;
 
-	if (cameraRange.top <= minCameraRangeTop)
-	{
-		cameraRange.top = minCameraRangeTop;
-	}
+	
+
 	cameraController_->SetMoveableArea(cameraRange);
+
 	cameraController_->Update();
 }
 
@@ -606,7 +612,7 @@ void GameScene2::UsingParachute()
 {
 	if (Input::GetInstance()->PushKey(DIK_SPACE))
 	{
-		player_->SetFallSpeed(0.05f);
+		player_->SetFallSpeed(0.09f);
 		parachutePosition = player_->GetWorldPosition() + Vector3(0.0f, 1.5f, 0.0f);
 		parachute_->Initialize(parachuteModel_, viewProjection_, parachutePosition);
 		parachute_->Update();

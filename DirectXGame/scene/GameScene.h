@@ -131,8 +131,8 @@ private: // メンバ変数
 	uint32_t enemySpawnY[MAXENEMIES] = { 18, 14, 12, 5 };
 
 	//Spike spawn position
-	uint32_t spikeSpawnX[MAXENEMIES] = { 45, 48, 51 };
-	uint32_t spikeSpawnY[MAXENEMIES] = { 6, 6, 6 };
+	uint32_t spikeSpawnX[MAXSPIKES] = { 45, 48, 51 };
+	uint32_t spikeSpawnY[MAXSPIKES] = { 6, 6, 6 };
 
 	
 

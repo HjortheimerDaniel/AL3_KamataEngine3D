@@ -26,6 +26,8 @@
 #define NOMINMAX
 
 
+
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -110,6 +112,7 @@ private: // メンバ変数
 	MapChipField* mapChipField_ = nullptr;
 	CameraController* cameraController_ = nullptr;
 	Rect cameraRange = { 168.0f,28.5f,0.0f,16.0f + 167.0f };
+	float topStartCameraPos = 16.0f + 167.0f;
 	Enemy* enemy_ = nullptr;
 	std::list<Enemy*> enemies_;
 	std::list<Spikes*> spikes_;
@@ -126,7 +129,7 @@ private: // メンバ変数
 	bool goToNextStage_ = false;
 	Vector3 goalCameraPos = { 0,0,-40.0f - 160.0f };
 	ClearText* stageClearText_ = nullptr;
-	static inline const float maxCameraRangeTop = 22.0f + 160.0f;
+	static inline const float maxCameraRangeTop = 22.0f + 161.0f;
 	static inline const float minCameraRangeTop = 0.0f;
 	Spikes* spike_ = nullptr;
 	Parachute* parachute_ = nullptr;
@@ -136,8 +139,8 @@ private: // メンバ変数
 	uint32_t enemySpawnY[MAXENEMIES] = { 18, 14, 12, 5 };
 
 	//Spike spawn position
-	uint32_t spikeSpawnX[MAXENEMIES] = { 45, 48, 51 };
-	uint32_t spikeSpawnY[MAXENEMIES] = { 6, 6, 6 };
+	uint32_t spikeSpawnX[MAXSPIKES2] = {};
+	uint32_t spikeSpawnY[MAXSPIKES2] = {};
 
 	//get new range of camera max/min every time we touch ground
 	float newLandPositionY = 0.0f;
