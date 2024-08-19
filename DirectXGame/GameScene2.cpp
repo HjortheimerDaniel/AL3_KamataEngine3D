@@ -569,9 +569,9 @@ void GameScene2::MoveCameraHorizontally()
 		cameraRange.top += 0.4f;
 
 	}
-	 if (player_->GetWorldPosition().y +3.0f < newLandPositionY)
+	 if (player_->GetWorldPosition().y +1.5f < newLandPositionY)
 	{
-		cameraRange.top -= 0.4f;
+		cameraRange.top += player_->GetVelocity().y - player_->GetLimitFallSpeed();
 
 	}
 

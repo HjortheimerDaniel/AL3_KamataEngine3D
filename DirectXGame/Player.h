@@ -85,6 +85,8 @@ class Player
 
 		void SetFallSpeed(float fallSpeed) { kLimitFallSpeed = fallSpeed; };
 
+		float GetLimitFallSpeed() { return kLimitFallSpeed; };
+
 		/// <summary>
 		/// 描画
 		/// </summary>
