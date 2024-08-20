@@ -647,7 +647,6 @@ void Player::FellBelowStage()
 	if (worldTransform_.translation_.y < -2)
 	{
 		isDead_ = true;
-		
 	}
 }
 

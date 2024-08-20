@@ -9,8 +9,7 @@
 #include <iostream>
 #include "Windows.h"
 #include "struct.h"
-#include "TextureManager.h"
-#include "Sprite.h"
+
 
 
 class MapChipField;
@@ -104,8 +103,6 @@ class Player
 		//uint32_t textureHandle_ = 0u;
 		ViewProjection* viewProjection_ = nullptr;
 		MapChipField* mapChipField_ = nullptr;
-		TextureManager* tManager;
-		Sprite* sprite_;
 		Vector3 velocity_ = {};
 
 

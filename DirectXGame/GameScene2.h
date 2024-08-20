@@ -22,6 +22,7 @@
 #include "ClearText.h"
 #include "Spikes.h"
 #include "Parachute.h"
+#include "Wind.h"
 
 #define NOMINMAX
 
@@ -100,6 +101,7 @@ private: // メンバ変数
 	Model* clearTextModel_ = nullptr;
 	Model* spikeModel_ = nullptr;
 	Model* parachuteModel_ = nullptr;
+	Model* windModel_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
@@ -133,7 +135,7 @@ private: // メンバ変数
 	static inline const float minCameraRangeTop = 0.0f;
 	Spikes* spike_ = nullptr;
 	Parachute* parachute_ = nullptr;
-
+	Wind* wind_ = nullptr;
 	//Enemy spawn position
 	uint32_t enemySpawnX[MAXENEMIES] = { 20 , 30, 60, 40 };
 	uint32_t enemySpawnY[MAXENEMIES] = { 18, 14, 12, 5 };

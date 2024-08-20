@@ -129,6 +129,7 @@
     <ClCompile Include="TitlePlayer.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TitleText.cpp" />
+    <ClCompile Include="Wind.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\ImGuiManager.h" />
@@ -178,6 +179,7 @@
     <ClInclude Include="TitlePlayer.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TitleText.h" />
+    <ClInclude Include="Wind.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\TerrainPS.hlsl">

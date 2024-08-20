@@ -34,7 +34,8 @@ GameScene2::~GameScene2() {
 	delete stageClearText_;
 	delete parachuteModel_;
 	delete parachute_;
-
+	delete windModel_;
+	delete wind_;
 	for (Enemy* enemy : enemies_)
 	{
 		delete enemy;
@@ -46,6 +47,7 @@ GameScene2::~GameScene2() {
 		delete spike;
 	}
 	spikes_.clear();
+
 
 }
 
@@ -81,8 +83,8 @@ void GameScene2::Initialize() {
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
 	//Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	//playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 3);
-	playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 90);
+	playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 3);
+	//playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 90);
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -241,6 +243,16 @@ void GameScene2::Initialize() {
 
 #pragma endregion 
 
+#pragma region Wind
+
+	windModel_ = Model::CreateFromOBJ("wind", true);
+	wind_ = new Wind();
+	Vector3 windPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)3, (uint32_t)10);
+	wind_->Initialize(windModel_, viewProjection_, windPosition);
+
+
+#pragma endregion
+
 }
 
 void GameScene2::Update() {
@@ -301,7 +313,7 @@ void GameScene2::Update() {
 		//stageClearText_->Update();
 		CheckAllCollisions();
 		IsEnemyCloseToPlayer();
-
+		wind_->Update();
 		
 		UsingParachute();
 
@@ -692,7 +704,6 @@ void GameScene2::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
-
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -755,7 +766,7 @@ void GameScene2::Draw() {
 				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 			}
 		}
-
+		wind_->Draw();
 		//stageClearText_->Draw();
 		break;
 #pragma endregion
