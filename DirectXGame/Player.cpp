@@ -30,6 +30,7 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 }
 void Player::Update()
 {
+	
 	Rotation();
 	//initialize collision
 	CollisionMapInfo collisionMapInfo;
@@ -42,6 +43,7 @@ void Player::Update()
 	CollisionLeft(collisionMapInfo);
 	HitCeiling(collisionMapInfo);
 	Movement();
+	FellBelowStage();
 	ImGui::Begin("Window");
 	ImGui::Text("velocity %f", velocity_.x);
 	ImGui::Text("leeway %d", leewayTimer);
@@ -192,9 +194,9 @@ if (Input::GetInstance()->PushKey(DIK_RIGHT))
 	}
 	if (lrDirection_ != LRDirection::kRight) // if were moving right and were not facing right
 	{
-		turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
-		turnTimer_ = kTimeTurn; // reset the timer
 		lrDirection_ = LRDirection::kRight; // face right
+		turnFirstRotationY_ = worldTransform_.rotation_.y; // set to current rotation
+		turnTimer_ = kTimeTurn; // reset the timer
 	}
 }
 else if (Input::GetInstance()->PushKey(DIK_LEFT))
@@ -214,9 +216,9 @@ else if (Input::GetInstance()->PushKey(DIK_LEFT))
 
 	if (lrDirection_ != LRDirection::kLeft) // if were moving left and were not facing left
 	{
-		turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
-		turnTimer_ = kTimeTurn; // reset the timer
 		lrDirection_ = LRDirection::kLeft; // face left
+		turnFirstRotationY_ = worldTransform_.rotation_.y; // set to current rotation
+		turnTimer_ = kTimeTurn; // reset the timer
 	}
 }
 
@@ -292,25 +294,22 @@ void Player::Rotation()
 		turnTimer_ -= 1.0f / 60.0f;
 
 		
-		float destinationRotationYTable[] =
-		{
-			 1.0f, // Facing right
-			std::numbers::pi_v<float> // Facing left
+		// Player's Left & Right angle table
+		float destinationRotationYTable[] = {
+			std::numbers::pi_v<float> / 2.0f,
+			std::numbers::pi_v<float> *3.0f / 2.0f,
 		};
-
 		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
-		if (destinationRotationY - turnFirstRotationY_ > std::numbers::pi_v<float>) {
-			destinationRotationY -= 2.0f * std::numbers::pi_v<float>;
-		}
-		else if (destinationRotationY - turnFirstRotationY_ < -std::numbers::pi_v<float>) {
-			destinationRotationY +=  3.0f / 2.0f * std::numbers::pi_v<float>;
-		}
+		float easing = 1 - turnTimer_ / kTimeTurn;
+		float nowRotationY = std::lerp(turnFirstRotationY_, destinationRotationY, easing);
+		// Get angle from status
+		worldTransform_.rotation_.y = nowRotationY;
 
 		//float easing = 1 - turnTimer_ / kTimeTurn;
 		//float nowRotationY = std::lerp(turnFirstRotationY_, destinationRotationY, easing);
 
 		//worldTransform_.rotation_.y = destinationRotationY;
-		worldTransform_.rotation_.y = EaseInSine(turnTimer_, turnFirstRotationY_, destinationRotationY, kTimeTurn);
+		//worldTransform_.rotation_.y = EaseInSine(turnTimer_, turnFirstRotationY_, destinationRotationY, kTimeTurn);
 	}
 
 #pragma region Better rotation?
@@ -641,6 +640,15 @@ AABB Player::GetAABB()
 	aabb.max = { worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f };
 
 	return aabb;
+}
+
+void Player::FellBelowStage()
+{
+	if (worldTransform_.translation_.y < -2)
+	{
+		isDead_ = true;
+		
+	}
 }
 
 void Player::OnCollision(const Enemy* enemy)

@@ -1,6 +1,7 @@
 #include "GameScene2.h"
 #include "TextureManager.h"
 #include <cassert>
+#include "imgui.h"
 
 GameScene2::GameScene2() {}
 
@@ -80,7 +81,8 @@ void GameScene2::Initialize() {
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
 	//Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 3);
+	//playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 3);
+	playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 90);
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -161,59 +163,13 @@ void GameScene2::Initialize() {
 
 #pragma region Spikes
 
-
-
-
-	for (int i = 0; i < 8; i++)
-	{
-		spikeSpawnX[i] = 8 + i;
-		spikeSpawnY[i] = 9 + i;
+	
+	for (const auto& config : configs) {
+		for (int i = config.loopStartX; i < config.loodEndX; i++) {
+			spikeSpawnX[i] = config.baseX + (i - config.loopStartX) * config.incrementX;
+			spikeSpawnY[i] = config.baseY + (i - config.loopStartX) * config.incrementY;
+		}
 	}
-	for (int i = 8; i < 23; i++)
-	{
-		spikeSpawnX[i] = 26 - i;
-		spikeSpawnY[i] = 11 + i;
-	}
-	for (int i = 23; i < MAXSPIKES2; i++)
-	{
-		if (i < 27) 
-		{
-			spikeSpawnX[i] = 1 + (i - 23);
-			spikeSpawnY[i] = 38;
-		}
-		if (i >= 27 && i < 31)
-		{
-			spikeSpawnX[i] = 5 + (i - 27);
-			spikeSpawnY[i] = 42;
-		}
-		if (i >= 31 && i < 35)
-		{
-			spikeSpawnX[i] = 15 + (i - 31);
-			spikeSpawnY[i] = 42;
-		}
-		if (i >= 35 && i < 39)
-		{
-			spikeSpawnX[i] = 1 + (i - 35);
-			spikeSpawnY[i] = 47;
-		}
-		if (i >= 39 && i < 43)
-		{
-			spikeSpawnX[i] = 9 + (i - 39);
-			spikeSpawnY[i] = 47;
-		}
-		if (i >= 43 && i < 47)
-		{
-			spikeSpawnX[i] = 5 + (i - 43);
-			spikeSpawnY[i] = 52;
-		}
-		if (i >= 47 && i < 51)
-		{
-			spikeSpawnX[i] = 15 + (i - 47);
-			spikeSpawnY[i] = 52;
-		}
-		
-	}
-
 	spikeModel_ = Model::CreateFromOBJ("spike", true);
 	for (uint32_t i = 0; i < MAXSPIKES2; i++)
 	{
@@ -222,7 +178,54 @@ void GameScene2::Initialize() {
 		newSpike->Initialize(spikeModel_, viewProjection_, spikePosition);
 		spikes_.push_back(newSpike);
 		newSpike->SetMapChipField(mapChipField_);
-		
+		if (i >= 51 && i < 54) 
+		{
+			newSpike->SetMove(true);
+			newSpike->SetStartPosition(19.0f + (i -51));
+		}
+		if (i >= 54 && i< 57)
+		{
+			newSpike->SetMove(true);
+			newSpike->SetRotate(true);
+			newSpike->SetStartPosition(19.0f + (i - 54));
+		}
+		if (i >= 57 && i < 60)
+		{
+			newSpike->SetMove(true);
+			newSpike->SetAmplitude(-12.0f);
+			newSpike->SetStartPosition(19.0f + (i - 57));
+		}
+		if (i >= 60 && i < 63)
+		{
+			newSpike->SetMove(true);
+			newSpike->SetRotate(true);
+			newSpike->SetAmplitude(-12.0f);
+			newSpike->SetStartPosition(19.0f + (i - 60));
+		}
+		if (i >= 63 && i < 66)
+		{
+			newSpike->SetMove(true);
+			newSpike->SetStartPosition(19.0f + (i - 63));
+		}
+		if (i >= 66 && i < 69)
+		{
+			newSpike->SetMove(true);
+			newSpike->SetRotate(true);
+			newSpike->SetStartPosition(19.0f + (i - 66));
+		}
+		if (i >= 69 && i < 72)
+		{
+			newSpike->SetMove(true);
+			newSpike->SetAmplitude(-12.0f);
+			newSpike->SetStartPosition(19.0f + (i - 69));
+		}
+		if (i >= 72 && i < 75)
+		{
+			newSpike->SetMove(true);
+			newSpike->SetRotate(true);
+			newSpike->SetAmplitude(-12.0f);
+			newSpike->SetStartPosition(19.0f + (i - 72));
+		}
 	}
 
 	
@@ -622,8 +625,17 @@ void GameScene2::MoveCameraHorizontally()
 	//{
 	//	cameraRange.top = minCameraRangeTop;
 	//}
-	
-	cameraRange.top = player_->GetWorldPosition().y - 9.0f;
+	/*ImGui::Begin("Test");
+	ImGui::Text("top %f", cameraRange.top);
+	ImGui::End();*/
+	if(cameraRange.top > 15)
+	{
+		cameraRange.top = player_->GetWorldPosition().y - 9.0f;
+	}
+	else 
+	{
+		cameraRange.top = 15;
+	}
 
 	
 

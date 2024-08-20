@@ -40,6 +40,14 @@ public:
 
 	bool GetMove() { return move_; };
 
+	void SetRotate(bool rotate) { rotate_ = rotate; };
+
+	bool GetRotate() { return rotate_; };
+
+	void SetStartPosition(float newPos) { movingStartPosition = newPos; };
+
+	void SetAmplitude(float amplitude) { amplitude_ = amplitude; };
+
 	void Draw();
 
 private:
@@ -55,7 +63,10 @@ private:
 	int spikeMaxTimer = 50;
 	Vector3 startPos;
 	float theta = 0.0f;
-	float amplitude = 50.0f;
+	float amplitude_ = 12.0f;
+	float movingStartPosition = 15.0f;
+	float movingStartPositionAdd = {};
 	bool move_ = false;
+	bool rotate_ = false;
 };
 

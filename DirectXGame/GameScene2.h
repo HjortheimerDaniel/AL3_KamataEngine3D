@@ -148,6 +148,28 @@ private: // メンバ変数
 	Vector3 parachutePosition;
 	Vector3 playerPosition;
 
+	SpikeSpawnConfig configs[MAXSPIKES2] = {
+	{0, 8, 8, 9, 1, 1},      // First range: X = 8 + i, Y = 9 + i
+	{8, 23, 18, 19, -1, 1},  // Second range: X = 26 - i, Y = 11 + i
+	{23, 27, 1, 38, 1, 0},   // Third range: X = 1 + (i - 23), Y = 38
+	{27, 31, 5, 42, 1, 0},   // Fourth range: X = 5 + (i - 27), Y = 42
+	{31, 35, 15, 42, 1, 0},  // Fifth range: X = 15 + (i - 31), Y = 42
+	{35, 39, 1, 47, 1, 0},   // Sixth range: X = 1 + (i - 35), Y = 47
+	{39, 43, 9, 47, 1, 0},   // Seventh range: X = 9 + (i - 39), Y = 47
+	{43, 47, 5, 52, 1, 0},   // Eighth range: X = 5 + (i - 43), Y = 52
+	{47, 51, 15, 52, 1, 0},  // Ninth range: X = 15 + (i - 47), Y = 52
+	{51, 54, 3, 65, 1, 0},   // Tenth range: X = 3 + (i - 51), Y = 65
+	{54, 57, 3, 66, 1, 0},   // Eleventh range: X = 3 + (i - 54), Y = 66
+	{57, 60, 3, 71, 1, 0},   // Twelfth range: X = 3 + (i - 57), Y = 71
+	{60, 63, 3, 72, 1, 0},   // Thirteenth range: X = 3 + (i - 60), Y = 72
+	{63, 66, 3, 77, 1, 0},   // Fourteenth range: X = 3 + (i - 63), Y = 77
+	{66, 69, 3, 78, 1, 0},   // Fifteenth range: X = 3 + (i - 66), Y = 78
+	{69, 72, 3, 83, 1, 0},   // Sixteenth range: X = 3 + (i - 69), Y = 83
+	{72, 75, 3, 84, 1, 0}    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	};
+
+
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

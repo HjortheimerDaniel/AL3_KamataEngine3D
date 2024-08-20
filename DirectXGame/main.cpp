@@ -116,7 +116,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		axisIndicator->Update();
 		// ImGui受付終了
 		imguiManager->End();
-
+		
 		// 描画開始
 		dxCommon->PreDraw();
 		// ゲームシーンの描画

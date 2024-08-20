@@ -2,7 +2,7 @@
 #include "Vector3.h"
 #define MAXENEMIES 4
 #define MAXSPIKES 3
-#define MAXSPIKES2 60
+#define MAXSPIKES2 75
 
 struct AABB {
 	Vector3 min;
@@ -50,4 +50,20 @@ enum Corner
 	kRightTop,
 	kLeftTop,
 	kNumCorner
+};
+
+struct SpikeSpawnConfig {
+	int loopStartX; 
+	int loodEndX;
+	int baseX;
+	int baseY;
+	int incrementX;
+	int incrementY;
+};
+
+struct MovingSpikeSettings {
+	bool move;
+	bool rotate;
+	float amplitude;
+	float startPositionOffset;
 };

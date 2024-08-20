@@ -1,6 +1,8 @@
 #include "Spikes.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include "algorithm"
+#include <numbers>
 
 Spikes::Spikes()
 {
@@ -28,6 +30,10 @@ void Spikes::Update()
 	{
 		MovingSpikes();
 
+	}
+	if (rotate_) 
+	{
+		RotateSpike();
 	}
 	SpikeState();
 	worldTransform_.UpdateMatrix();
@@ -99,12 +105,13 @@ void Spikes::SpikeState()
 
 void Spikes::RotateSpike()
 {
+	worldTransform_.rotation_.z = 1.0f * std::numbers::pi_v<float>;
 }
 
 void Spikes::MovingSpikes()
 {
-	theta += float(M_PI) / 250.0f;
-	worldTransform_.translation_.x = cosf(theta) * amplitude;
+	theta += float(M_PI) / 70.0f;
+	worldTransform_.translation_.x = cosf(theta) * amplitude_ + movingStartPosition;
 
 }
 
