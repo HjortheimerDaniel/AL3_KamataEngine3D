@@ -118,6 +118,7 @@ private: // メンバ変数
 	Enemy* enemy_ = nullptr;
 	std::list<Enemy*> enemies_;
 	std::list<Spikes*> spikes_;
+	std::list<Wind*> winds_;
 	DeathParticles* deathParticles_ = nullptr;
 	Phase phase_;
 	bool isDead_ = false;
@@ -144,11 +145,18 @@ private: // メンバ変数
 	uint32_t spikeSpawnX[MAXSPIKES2] = {};
 	uint32_t spikeSpawnY[MAXSPIKES2] = {};
 
+	float windSpawnX[MAXWINDS] = { 95.0f, 95.0f,95.0f,95.0f,95.0f};
+	float windSpawnY[MAXWINDS] = { -45.0f,-4.0f, 50.0f, 100.0f,150.0f};
+
+
+
 	//get new range of camera max/min every time we touch ground
 	float newLandPositionY = 0.0f;
 
 	Vector3 parachutePosition;
 	Vector3 playerPosition;
+	bool inWind = false;
+	bool stopUpCamera = false;
 
 	SpikeSpawnConfig configs[MAXSPIKES2] = {
 	{0, 8, 8, 9, 1, 1},      // First range: X = 8 + i, Y = 9 + i
@@ -167,7 +175,8 @@ private: // メンバ変数
 	{63, 66, 3, 77, 1, 0},   // Fourteenth range: X = 3 + (i - 63), Y = 77
 	{66, 69, 3, 78, 1, 0},   // Fifteenth range: X = 3 + (i - 66), Y = 78
 	{69, 72, 3, 83, 1, 0},   // Sixteenth range: X = 3 + (i - 69), Y = 83
-	{72, 75, 3, 84, 1, 0}    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{72, 75, 3, 84, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{75, 87, 43, 1, 1, 0}    // Seventeenth range: X = 3 + (i - 72), Y = 84
 	};
 
 

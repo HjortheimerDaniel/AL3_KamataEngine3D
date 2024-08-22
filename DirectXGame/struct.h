@@ -2,7 +2,8 @@
 #include "Vector3.h"
 #define MAXENEMIES 4
 #define MAXSPIKES 3
-#define MAXSPIKES2 75
+#define MAXSPIKES2 100
+#define MAXWINDS 5
 
 struct AABB {
 	Vector3 min;
@@ -62,6 +63,7 @@ struct SpikeSpawnConfig {
 };
 
 struct MovingSpikeSettings {
+
 	bool move;
 	bool rotate;
 	float amplitude;

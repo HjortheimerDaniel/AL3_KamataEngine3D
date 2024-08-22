@@ -48,7 +48,11 @@ GameScene2::~GameScene2() {
 	}
 	spikes_.clear();
 
-
+	for (Wind* wind : winds_) 
+	{
+		delete wind;
+	}
+	winds_.clear();
 }
 
 void GameScene2::Initialize() {
@@ -84,7 +88,7 @@ void GameScene2::Initialize() {
 	player_ = new Player();
 	//Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
 	//playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 3);
-	playerPosition = mapChipField_->GetMapChipPositionByIndex(19, 90);
+	playerPosition = mapChipField_->GetMapChipPositionByIndex(39, 90);
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -228,9 +232,11 @@ void GameScene2::Initialize() {
 			newSpike->SetAmplitude(-12.0f);
 			newSpike->SetStartPosition(19.0f + (i - 72));
 		}
+		if (i >= 75 && i < 88) 
+		{
+			newSpike->SetRotate(true);
+		}
 	}
-
-	
 
 #pragma endregion
 
@@ -246,9 +252,15 @@ void GameScene2::Initialize() {
 #pragma region Wind
 
 	windModel_ = Model::CreateFromOBJ("wind", true);
-	wind_ = new Wind();
-	Vector3 windPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)22, (uint32_t)99);
-	wind_->Initialize(windModel_, viewProjection_, windPosition);
+	for (uint32_t i = 0; i < MAXWINDS; i++)
+	{
+		Wind* newWinds = new Wind();
+		Vector3 windPosition = { windSpawnX[i],windSpawnY[i],0.0f};
+		newWinds->Initialize(windModel_, viewProjection_, windPosition);
+		winds_.push_back(newWinds);
+
+	}
+	//Vector3 windPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)47, (uint32_t)99);
 
 
 #pragma endregion
@@ -313,7 +325,10 @@ void GameScene2::Update() {
 		//stageClearText_->Update();
 		CheckAllCollisions();
 		IsEnemyCloseToPlayer();
-		wind_->Update();
+		for (Wind* wind : winds_) 
+		{
+			wind->Update();
+		}
 		
 		UsingParachute();
 
@@ -521,12 +536,18 @@ void GameScene2::CheckAllCollisions()
 
 #pragma region player wind
 
-	AABB aabb5 = wind_->GetAABB();
-
-	if (IsCollision(aabb1, aabb5) && parachute_->GetUsingParachute() && !player_->GetOnGround())
+	for (Wind* wind : winds_)
 	{
-		player_->OnCollision(wind_);
+		AABB aabb5 = wind->GetAABB();
+
+		if (IsCollision(aabb1, aabb5) && parachute_->GetUsingParachute() && !player_->GetOnGround())
+		{
+			player_->OnCollision(wind_);
+			inWind = true;
+
+		}
 	}
+	
 
 #pragma endregion
 
@@ -628,42 +649,53 @@ void GameScene2::ChangePhase()
 void GameScene2::MoveCameraHorizontally()
 {
 	
-	//if (player_->GetOnGround()) 
-	//{
-	//	newLandPositionY = player_->GetWorldPosition().y;
-	//}
-	//if (player_->GetWorldPosition().y > newLandPositionY && cameraRange.top <= maxCameraRangeTop)
-	//{
-	//	cameraRange.top += 0.4f;
-
-	//}
-	// if (player_->GetWorldPosition().y +1.5f < newLandPositionY /*&& player_->GetWorldPosition().y > cameraRange.top*/)
-	//{
-	//	cameraRange.top += player_->GetVelocity().y - player_->GetLimitFallSpeed() - 0.02f;
-
-	//}
-
-	//if (cameraRange.top <= minCameraRangeTop)
-	//{
-	//	cameraRange.top = minCameraRangeTop;
-	//}
 	ImGui::Begin("Test");
 	ImGui::Text("Y %f", player_->GetWorldTransform().translation_.y);
+	ImGui::Text("range %f", cameraRange.top);
 	ImGui::End();
-	
-	if (player_->GetWorldTransform().translation_.y > 23.0f)
+	if (!inWind) 
 	{
-		cameraRange.top = player_->GetWorldPosition().y - 9.0f;
+		if (player_->GetWorldTransform().translation_.y > 23.0f)
+		{
+			cameraRange.top = player_->GetWorldPosition().y - 9.0f;
+		}
+		else
+		{
+			cameraRange.top = 15.0f;
+		}
 	}
 	else 
 	{
-		cameraRange.top = 15.0f;
+		float playerPositionY = player_->GetWorldTransform().translation_.y;
+
+		if (parachute_->GetUsingParachute() && cameraRange.top < maxCameraRangeTop)
+		{
+			if (cameraRange.top < playerPositionY + 10.0f)
+			{
+				cameraRange.top += 0.5f;
+			}
+
+			if (cameraRange.top >= playerPositionY + 10.0f)
+			{
+				stopUpCamera = true;
+			}
+			else
+			{
+				stopUpCamera = false;
+			}
+		}
+
+		if (stopUpCamera)
+		{
+			cameraRange.top = min(playerPositionY + 10.0f, maxCameraRangeTop);
+		}
 	}
 	
+	if (player_->GetOnGround()) 
+	{
+		inWind = false;
+	}
 	
-
-	
-
 	cameraController_->SetMoveableArea(cameraRange);
 
 	cameraController_->Update();
@@ -789,7 +821,10 @@ void GameScene2::Draw() {
 				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 			}
 		}
-		wind_->Draw();
+		for (Wind* wind : winds_)
+		{
+			wind->Draw();
+		}
 		//stageClearText_->Draw();
 		break;
 #pragma endregion

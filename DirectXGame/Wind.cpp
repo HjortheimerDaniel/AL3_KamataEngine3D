@@ -38,19 +38,23 @@ AABB Wind::GetAABB()
 	AABB aabb;
 
 	aabb.min = { worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f };
-	aabb.max = { worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f };
+	aabb.max = { worldPos.x + kWidth2 / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f };
 
 	return aabb;
 }
 
 void Wind::Movement()
 {
-	worldTransform_.translation_.y += 0.2f;
+	worldTransform_.translation_.y += 0.4f;
+	if (worldTransform_.translation_.y >= 200.0f) 
+	{
+		worldTransform_.translation_.y = -45.0f;
+	}
 }
 
 void Wind::Update()
 {
-	//Movement();
+	Movement();
 	worldTransform_.UpdateMatrix();
 }
 

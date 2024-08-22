@@ -37,8 +37,9 @@ private:
 	ViewProjection* viewProjection_ = nullptr;
 	MapChipField* mapChipField_ = nullptr;
 	Vector3 startPos;
-	static inline const float kWidth = 38.8f;
-	static inline const float kHeight = 120.8f;
+	static inline const float kWidth = 18.0f;
+	static inline const float kWidth2 = 28.0f;
+	static inline const float kHeight = 120.0f;
 	float scaleY = 3.0f;
 };
 
