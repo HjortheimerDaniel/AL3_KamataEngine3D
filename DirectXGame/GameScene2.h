@@ -70,6 +70,8 @@ public: // メンバ関数
 
 	void MoveCameraHorizontally();
 
+	void WarningTriangle();
+
 	void StageClearCamera();
 
 	void UsingParachute();
@@ -94,6 +96,7 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	uint32_t textureHandle_ = 0;
+	Sprite* sprite_ = nullptr;
 	Model* playerModel_ = nullptr;
 	Model* enemyModel_ = nullptr;
 	Model* deathparticleModel_ = nullptr;
@@ -157,6 +160,9 @@ private: // メンバ変数
 	Vector3 playerPosition;
 	bool inWind = false;
 	bool stopUpCamera = false;
+	bool warningStart = false;
+	int warningTimer = 1;
+	int warningLoops = 0;
 
 	SpikeSpawnConfig configs[MAXSPIKES2] = {
 	{0, 8, 8, 9, 1, 1},      // First range: X = 8 + i, Y = 9 + i
@@ -183,7 +189,7 @@ private: // メンバ変数
 	{93, 95, 63, 51, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
 	{95, 97, 63, 40, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
 	{97, 99, 63, 41, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
-	{99, 115, 43, 5, 0, 1},    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{99, 115, 43, 6, 0, 1},    // Seventeenth range: X = 3 + (i - 72), Y = 84
 	};
 
 

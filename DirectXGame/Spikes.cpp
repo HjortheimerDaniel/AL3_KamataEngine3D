@@ -39,6 +39,10 @@ void Spikes::Update()
 	{
 		RotateSpike90Degrees();
 	}
+	if (moveRight_ && mayMove_) 
+	{
+		MovingSpikesRight();
+	}
 	SpikeState();
 	worldTransform_.UpdateMatrix();
 }
@@ -123,6 +127,14 @@ void Spikes::MovingSpikes()
 	theta += float(M_PI) / 70.0f;
 	worldTransform_.translation_.x = cosf(theta) * amplitude_ + movingStartPosition;
 
+}
+
+void Spikes::MovingSpikesRight()
+{
+	if(worldTransform_.translation_.x <= 108)
+	{
+		worldTransform_.translation_.x += 0.8f;
+	}
 }
 
 Vector3 Spikes::GetWorldPosition()

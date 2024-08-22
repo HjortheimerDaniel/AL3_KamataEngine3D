@@ -28,6 +28,8 @@ public:
 
 	void MovingSpikes();
 
+	void MovingSpikesRight();
+
 	Vector3 GetWorldPosition();
 
 	AABB GetAABB();
@@ -52,6 +54,9 @@ public:
 
 	void SetRotateRight(bool rotateRight) { rotateRight_ = rotateRight; };
 
+	void SetMoveRight(bool moveRight) { moveRight_ = moveRight; };
+	void SetMayMove(bool mayMove) { mayMove_ = mayMove; };
+
 	bool GetRotateRight() { return rotateRight_; };
 
 	void Draw();
@@ -75,5 +80,7 @@ private:
 	bool move_ = false;
 	bool rotateUpDown_ = false;
 	bool rotateRight_ = false;
+	bool moveRight_ = false;
+	bool mayMove_ = false;
 };
 

@@ -45,7 +45,7 @@ AABB Wind::GetAABB()
 
 void Wind::Movement()
 {
-	worldTransform_.translation_.y += 0.4f;
+	worldTransform_.translation_.y += 1.4f;
 	if (worldTransform_.translation_.y >= 200.0f) 
 	{
 		worldTransform_.translation_.y = -45.0f;

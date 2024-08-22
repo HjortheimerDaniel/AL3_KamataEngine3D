@@ -36,6 +36,7 @@ GameScene2::~GameScene2() {
 	delete parachute_;
 	delete windModel_;
 	delete wind_;
+	delete sprite_;
 	for (Enemy* enemy : enemies_)
 	{
 		delete enemy;
@@ -239,48 +240,49 @@ void GameScene2::Initialize() {
 		if (i >= 87 && i < 89) 
 		{
 			newSpike->SetMove(true);
-			newSpike->SetAmplitude(-8.0f);
-			newSpike->SetStartPosition(96.0f + (i - 87));
+			newSpike->SetAmplitude(-9.5f);
+			newSpike->SetStartPosition(97.0f + (i - 87));
 		}
 		if (i >= 89 && i < 91) 
 		{
 			newSpike->SetMove(true);
 			newSpike->SetRotateUpsideDown(true);
-			newSpike->SetAmplitude(-8.0f);
-			newSpike->SetStartPosition(96.0f + (i - 89));
+			newSpike->SetAmplitude(-9.5f);
+			newSpike->SetStartPosition(97.0f + (i - 89));
 		}
 		if (i >= 91 && i < 93)
 		{
 			newSpike->SetMove(true);
-			newSpike->SetAmplitude(8.0f);
-			newSpike->SetStartPosition(96.0f + (i - 91));
+			newSpike->SetAmplitude(9.5f);
+			newSpike->SetStartPosition(97.0f + (i - 91));
 		}
 		if (i >= 93 && i < 95)
 		{
 			newSpike->SetMove(true);
 			newSpike->SetRotateUpsideDown(true);
-			newSpike->SetAmplitude(8.0f);
-			newSpike->SetStartPosition(96.0f + (i - 93));
+			newSpike->SetAmplitude(9.5f);
+			newSpike->SetStartPosition(97.0f + (i - 93));
 		}
 		if (i >= 95 && i < 97)
 		{
 			newSpike->SetMove(true);
-			newSpike->SetAmplitude(-8.0f);
-			newSpike->SetStartPosition(96.0f + (i - 95));
+			newSpike->SetAmplitude(-9.5f);
+			newSpike->SetStartPosition(97.0f + (i - 95));
 		}
 		if (i >= 97 && i < 99)
 		{
 			newSpike->SetMove(true);
 			newSpike->SetRotateUpsideDown(true);
-			newSpike->SetAmplitude(-8.0f);
-			newSpike->SetStartPosition(96.0f + (i - 97));
+			newSpike->SetAmplitude(-9.5f);
+			newSpike->SetStartPosition(97.0f + (i - 97));
 		}
 		if (i >= 99 && i < 115) 
 		{
 			newSpike->SetRotateRight(true);
+			newSpike->SetMayMove(true);
 		}
 	}
-
+	
 #pragma endregion
 
 #pragma region Parachute
@@ -308,6 +310,14 @@ void GameScene2::Initialize() {
 
 #pragma endregion
 
+#pragma region WarningSprite
+
+	textureHandle_ = TextureManager::Load("warning.png");
+	sprite_ = Sprite::Create(textureHandle_, { 600, 300 });
+	sprite_->SetSize({100,100});
+
+#pragma endregion
+	
 }
 
 void GameScene2::Update() {
@@ -376,6 +386,7 @@ void GameScene2::Update() {
 		}
 		
 		UsingParachute();
+		WarningTriangle();
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -696,7 +707,7 @@ void GameScene2::MoveCameraHorizontally()
 	
 	ImGui::Begin("Test");
 	ImGui::Text("Y %f", player_->GetWorldTransform().translation_.y);
-	ImGui::Text("range %f", cameraRange.top);
+	ImGui::Text("X %f", player_->GetWorldTransform().translation_.x);
 	ImGui::End();
 	if (!inWind) 
 	{
@@ -744,6 +755,31 @@ void GameScene2::MoveCameraHorizontally()
 	cameraController_->SetMoveableArea(cameraRange);
 
 	cameraController_->Update();
+}
+
+void GameScene2::WarningTriangle()
+{
+	if(player_->GetWorldTransform().translation_.x >= 86.0f && player_->GetWorldTransform().translation_.x <= 108.0f && player_->GetWorldTransform().translation_.y >= 153)
+	{
+		warningStart = true;
+	}
+	if (warningStart && warningLoops < 3) 
+	{
+		warningTimer++;
+	}
+	if (warningTimer >= 40) 
+	{
+		warningTimer = 0;
+		warningLoops++;
+	}
+
+	if (warningLoops >= 3) 
+	{
+		for (Spikes* spike : spikes_)
+		{
+			spike->SetMoveRight(true);
+		}
+	}
 }
 
 void GameScene2::StageClearCamera()
@@ -958,9 +994,6 @@ void GameScene2::Draw() {
 
 	//enemy_->Draw();
 
-
-
-
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
@@ -972,7 +1005,10 @@ void GameScene2::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-
+	if (warningTimer >= 20 && warningLoops < 3)
+	{
+		sprite_->Draw();
+	}
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
