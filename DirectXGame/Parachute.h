@@ -18,6 +18,10 @@ public:
 
 	void Update();
 
+	void SetUsingParachute(bool usepara) { usingParachute = usepara; };
+
+	bool GetUsingParachute() { return usingParachute; };
+
 	void Draw();
 
 
@@ -26,6 +30,7 @@ private:
 	Model* model_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	WorldTransform worldTransform_;
+	bool usingParachute = false;
 
 
 };

@@ -662,6 +662,12 @@ void Player::OnCollision(const Spikes* spike)
 	isDead_ = true;
 }
 
+void Player::OnCollision(const Wind* wind)
+{
+	(void)wind;
+	velocity_.y = 0.15f;
+}
+
 void Player::OnCollisionGoal(const Goal* goal)
 {
 	(void)goal;

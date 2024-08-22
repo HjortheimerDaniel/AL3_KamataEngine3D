@@ -16,12 +16,41 @@ void Wind::Initialize(Model* model, ViewProjection* viewProjection, const Vector
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
 	startPos = worldTransform_.translation_;
-	worldTransform_.scale_.y = 3.0f;
+	worldTransform_.scale_.y = scaleY;
 
+}
+
+Vector3 Wind::GetWorldPosition()
+{
+	Vector3 worldPos;
+
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
+
+	return worldPos;
+}
+
+AABB Wind::GetAABB()
+{
+	Vector3 worldPos = GetWorldPosition();
+
+	AABB aabb;
+
+	aabb.min = { worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f };
+	aabb.max = { worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f };
+
+	return aabb;
+}
+
+void Wind::Movement()
+{
+	worldTransform_.translation_.y += 0.2f;
 }
 
 void Wind::Update()
 {
+	//Movement();
 	worldTransform_.UpdateMatrix();
 }
 

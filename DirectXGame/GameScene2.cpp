@@ -83,8 +83,8 @@ void GameScene2::Initialize() {
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
 	//Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 3);
-	//playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 90);
+	//playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 3);
+	playerPosition = mapChipField_->GetMapChipPositionByIndex(19, 90);
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -247,7 +247,7 @@ void GameScene2::Initialize() {
 
 	windModel_ = Model::CreateFromOBJ("wind", true);
 	wind_ = new Wind();
-	Vector3 windPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)3, (uint32_t)10);
+	Vector3 windPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)22, (uint32_t)99);
 	wind_->Initialize(windModel_, viewProjection_, windPosition);
 
 
@@ -519,6 +519,16 @@ void GameScene2::CheckAllCollisions()
 
 #pragma endregion
 
+#pragma region player wind
+
+	AABB aabb5 = wind_->GetAABB();
+
+	if (IsCollision(aabb1, aabb5) && parachute_->GetUsingParachute() && !player_->GetOnGround())
+	{
+		player_->OnCollision(wind_);
+	}
+
+#pragma endregion
 
 }
 
@@ -637,17 +647,20 @@ void GameScene2::MoveCameraHorizontally()
 	//{
 	//	cameraRange.top = minCameraRangeTop;
 	//}
-	/*ImGui::Begin("Test");
-	ImGui::Text("top %f", cameraRange.top);
-	ImGui::End();*/
-	if(cameraRange.top > 15)
+	ImGui::Begin("Test");
+	ImGui::Text("Y %f", player_->GetWorldTransform().translation_.y);
+	ImGui::End();
+	
+	if (player_->GetWorldTransform().translation_.y > 23.0f)
 	{
 		cameraRange.top = player_->GetWorldPosition().y - 9.0f;
 	}
 	else 
 	{
-		cameraRange.top = 15;
+		cameraRange.top = 15.0f;
 	}
+	
+	
 
 	
 
@@ -677,18 +690,28 @@ void GameScene2::StageClearCamera()
 
 void GameScene2::UsingParachute()
 {
-	if (Input::GetInstance()->PushKey(DIK_SPACE))
+
+	if (Input::GetInstance()->PushKey(DIK_SPACE) && !player_->GetOnGround())
+	{
+		parachute_->SetUsingParachute(true);
+	
+	}
+	else 
+	{
+		player_->SetFallSpeed(0.3f);
+		parachute_->SetUsingParachute(false);
+
+
+	}
+
+	if (parachute_->GetUsingParachute()) 
 	{
 		player_->SetFallSpeed(0.09f);
 		parachutePosition = player_->GetWorldPosition() + Vector3(0.0f, 1.5f, 0.0f);
 		parachute_->Initialize(parachuteModel_, viewProjection_, parachutePosition);
 		parachute_->Update();
 	}
-	else 
-	{
-		player_->SetFallSpeed(0.3f);
 
-	}
 }
 
 void GameScene2::Draw() {

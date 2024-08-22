@@ -19,10 +19,16 @@ void Parachute::Initialize(Model* model, ViewProjection* viewProjection, const V
 
 void Parachute::Update()
 {
-	worldTransform_.UpdateMatrix();
+	if(usingParachute)
+	{
+		worldTransform_.UpdateMatrix();
+	}
 }
 
 void Parachute::Draw()
 {
-	model_->Draw(worldTransform_, *viewProjection_);
+	if (usingParachute)
+	{
+		model_->Draw(worldTransform_, *viewProjection_);
+	}
 }
