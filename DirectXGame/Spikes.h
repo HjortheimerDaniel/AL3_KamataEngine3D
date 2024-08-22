@@ -22,7 +22,9 @@ public:
 
 	void SpikeState();
 
-	void RotateSpike();
+	void RotateSpikeUpsideDown();
+
+	void RotateSpike90Degrees();
 
 	void MovingSpikes();
 
@@ -40,13 +42,17 @@ public:
 
 	bool GetMove() { return move_; };
 
-	void SetRotate(bool rotate) { rotate_ = rotate; };
+	void SetRotateUpsideDown(bool rotate) { rotateUpDown_ = rotate; };
 
-	bool GetRotate() { return rotate_; };
+	bool GetRotateUpsideDown() { return rotateUpDown_; };
 
 	void SetStartPosition(float newPos) { movingStartPosition = newPos; };
 
 	void SetAmplitude(float amplitude) { amplitude_ = amplitude; };
+
+	void SetRotateRight(bool rotateRight) { rotateRight_ = rotateRight; };
+
+	bool GetRotateRight() { return rotateRight_; };
 
 	void Draw();
 
@@ -67,6 +73,7 @@ private:
 	float movingStartPosition = 15.0f;
 	float movingStartPositionAdd = {};
 	bool move_ = false;
-	bool rotate_ = false;
+	bool rotateUpDown_ = false;
+	bool rotateRight_ = false;
 };
 

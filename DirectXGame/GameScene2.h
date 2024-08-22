@@ -176,7 +176,14 @@ private: // メンバ変数
 	{66, 69, 3, 78, 1, 0},   // Fifteenth range: X = 3 + (i - 66), Y = 78
 	{69, 72, 3, 83, 1, 0},   // Sixteenth range: X = 3 + (i - 69), Y = 83
 	{72, 75, 3, 84, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
-	{75, 87, 43, 1, 1, 0}    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{75, 87, 43, 1, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{87, 89, 63, 60, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{89, 91, 63, 61, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{91, 93, 63, 50, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{93, 95, 63, 51, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{95, 97, 63, 40, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{97, 99, 63, 41, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{99, 115, 43, 5, 0, 1},    // Seventeenth range: X = 3 + (i - 72), Y = 84
 	};
 
 

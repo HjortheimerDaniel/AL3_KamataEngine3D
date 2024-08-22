@@ -31,9 +31,13 @@ void Spikes::Update()
 		MovingSpikes();
 
 	}
-	if (rotate_) 
+	if (rotateUpDown_) 
 	{
-		RotateSpike();
+		RotateSpikeUpsideDown();
+	}
+	if (rotateRight_) 
+	{
+		RotateSpike90Degrees();
 	}
 	SpikeState();
 	worldTransform_.UpdateMatrix();
@@ -103,9 +107,15 @@ void Spikes::SpikeState()
 	}
 }
 
-void Spikes::RotateSpike()
+void Spikes::RotateSpikeUpsideDown()
 {
 	worldTransform_.rotation_.z = 1.0f * std::numbers::pi_v<float>;
+}
+
+void Spikes::RotateSpike90Degrees()
+{
+	worldTransform_.rotation_.z = 1.5f * std::numbers::pi_v<float>;
+
 }
 
 void Spikes::MovingSpikes()

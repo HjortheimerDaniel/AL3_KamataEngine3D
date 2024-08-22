@@ -192,7 +192,7 @@ void GameScene2::Initialize() {
 		if (i >= 54 && i< 57)
 		{
 			newSpike->SetMove(true);
-			newSpike->SetRotate(true);
+			newSpike->SetRotateUpsideDown(true);
 			newSpike->SetStartPosition(19.0f + (i - 54));
 		}
 		if (i >= 57 && i < 60)
@@ -204,7 +204,7 @@ void GameScene2::Initialize() {
 		if (i >= 60 && i < 63)
 		{
 			newSpike->SetMove(true);
-			newSpike->SetRotate(true);
+			newSpike->SetRotateUpsideDown(true);
 			newSpike->SetAmplitude(-12.0f);
 			newSpike->SetStartPosition(19.0f + (i - 60));
 		}
@@ -216,7 +216,7 @@ void GameScene2::Initialize() {
 		if (i >= 66 && i < 69)
 		{
 			newSpike->SetMove(true);
-			newSpike->SetRotate(true);
+			newSpike->SetRotateUpsideDown(true);
 			newSpike->SetStartPosition(19.0f + (i - 66));
 		}
 		if (i >= 69 && i < 72)
@@ -228,13 +228,56 @@ void GameScene2::Initialize() {
 		if (i >= 72 && i < 75)
 		{
 			newSpike->SetMove(true);
-			newSpike->SetRotate(true);
+			newSpike->SetRotateUpsideDown(true);
 			newSpike->SetAmplitude(-12.0f);
 			newSpike->SetStartPosition(19.0f + (i - 72));
 		}
-		if (i >= 75 && i < 88) 
+		if (i >= 75 && i < 87) 
 		{
-			newSpike->SetRotate(true);
+			newSpike->SetRotateUpsideDown(true);
+		}
+		if (i >= 87 && i < 89) 
+		{
+			newSpike->SetMove(true);
+			newSpike->SetAmplitude(-8.0f);
+			newSpike->SetStartPosition(96.0f + (i - 87));
+		}
+		if (i >= 89 && i < 91) 
+		{
+			newSpike->SetMove(true);
+			newSpike->SetRotateUpsideDown(true);
+			newSpike->SetAmplitude(-8.0f);
+			newSpike->SetStartPosition(96.0f + (i - 89));
+		}
+		if (i >= 91 && i < 93)
+		{
+			newSpike->SetMove(true);
+			newSpike->SetAmplitude(8.0f);
+			newSpike->SetStartPosition(96.0f + (i - 91));
+		}
+		if (i >= 93 && i < 95)
+		{
+			newSpike->SetMove(true);
+			newSpike->SetRotateUpsideDown(true);
+			newSpike->SetAmplitude(8.0f);
+			newSpike->SetStartPosition(96.0f + (i - 93));
+		}
+		if (i >= 95 && i < 97)
+		{
+			newSpike->SetMove(true);
+			newSpike->SetAmplitude(-8.0f);
+			newSpike->SetStartPosition(96.0f + (i - 95));
+		}
+		if (i >= 97 && i < 99)
+		{
+			newSpike->SetMove(true);
+			newSpike->SetRotateUpsideDown(true);
+			newSpike->SetAmplitude(-8.0f);
+			newSpike->SetStartPosition(96.0f + (i - 97));
+		}
+		if (i >= 99 && i < 115) 
+		{
+			newSpike->SetRotateRight(true);
 		}
 	}
 
@@ -319,6 +362,7 @@ void GameScene2::Update() {
 			enemy->Update();
 		}
 		for (Spikes* spike : spikes_) { //create new Enemy enemy 
+
 			spike->Update();
 		}
 		//parachute_->Update();
@@ -327,6 +371,7 @@ void GameScene2::Update() {
 		IsEnemyCloseToPlayer();
 		for (Wind* wind : winds_) 
 		{
+
 			wind->Update();
 		}
 		
@@ -806,7 +851,13 @@ void GameScene2::Draw() {
 		}
 		for (Spikes* spike : spikes_)
 		{
+			if(spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x >= -60 && spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x < 60 && 
+			   spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 30 && spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -30)
+			{
+				//Put spike.Draw in here
+			}
 			spike->Draw();
+
 		}
 		if (Input::GetInstance()->PushKey(DIK_SPACE) && !player_->GetOnGround())
 		{
@@ -818,7 +869,12 @@ void GameScene2::Draw() {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)
 					continue;
-				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+				if(worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x >= -60 && worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x < 60 &&
+					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 30 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -30)
+				{
+					modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+
+				}
 			}
 		}
 		for (Wind* wind : winds_)
