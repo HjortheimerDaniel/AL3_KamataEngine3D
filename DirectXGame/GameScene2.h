@@ -45,10 +45,13 @@ public: // メンバ関数
 	/// </summary>
 	~GameScene2();
 
+	void PlayerStartPos();
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize();
+
 
 	/// <summary>
 	/// 毎フレーム処理
@@ -90,6 +93,8 @@ public: // メンバ関数
 	bool GetStageClear() const { return stageClear_; };
 
 	bool GetGoToNextStage() const { return goToNextStage_; };
+
+	bool GetCheckpointReached() const { return checkPointReached; };
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -148,8 +153,8 @@ private: // メンバ変数
 	uint32_t spikeSpawnX[MAXSPIKES2] = {};
 	uint32_t spikeSpawnY[MAXSPIKES2] = {};
 
-	float windSpawnX[MAXWINDS] = { 95.0f, 95.0f,95.0f,95.0f,95.0f};
-	float windSpawnY[MAXWINDS] = { -45.0f,-4.0f, 50.0f, 100.0f,150.0f};
+	float windSpawnX[MAXWINDS] = { 95.0f, 95.0f,95.0f,95.0f,95.0f };
+	float windSpawnY[MAXWINDS] = { -45.0f,-4.0f, 50.0f, 100.0f,150.0f };
 
 
 
@@ -158,11 +163,13 @@ private: // メンバ変数
 
 	Vector3 parachutePosition;
 	Vector3 playerPosition;
+	Vector3 playerSpawnPos;
 	bool inWind = false;
 	bool stopUpCamera = false;
 	bool warningStart = false;
 	int warningTimer = 1;
 	int warningLoops = 0;
+	bool checkPointReached = false;
 
 	SpikeSpawnConfig configs[MAXSPIKES2] = {
 	{0, 8, 8, 9, 1, 1},      // First range: X = 8 + i, Y = 9 + i

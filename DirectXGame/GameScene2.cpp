@@ -56,6 +56,19 @@ GameScene2::~GameScene2() {
 	winds_.clear();
 }
 
+void GameScene2::PlayerStartPos()
+{
+	if (!checkPointReached) 
+	{
+		playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(60, 5);
+
+	}
+	else 
+	{
+		playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(1, 3);
+	}
+}
+
 void GameScene2::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
@@ -89,7 +102,7 @@ void GameScene2::Initialize() {
 	player_ = new Player();
 	//Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
 	//playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 3);
-	playerPosition = mapChipField_->GetMapChipPositionByIndex(60, 5);
+	playerPosition = playerSpawnPos;
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -336,6 +349,7 @@ void GameScene2::Initialize() {
 	
 }
 
+
 void GameScene2::Update() {
 
 	ChangePhase();
@@ -573,6 +587,7 @@ void GameScene2::CheckAllCollisions()
 			{
 				player_->StompCollision(enemy_);
 				enemy->StompCollision(player_);
+				checkPointReached = true;
 			}
 		}
 	}

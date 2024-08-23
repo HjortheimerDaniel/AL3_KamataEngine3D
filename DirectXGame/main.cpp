@@ -88,10 +88,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	gameScene->Initialize();
 
 	gameScene2 = new GameScene2();
+	gameScene2->PlayerStartPos();
 	gameScene2->Initialize();
+	
+
 	
 	titleScene = new TitleScene();
 	titleScene->Initialize();
+	bool checkPointReached = false;
 
 	// メインループ
 	while (true) {
@@ -187,6 +191,7 @@ void ChangeScene()
 			delete gameScene;
 			gameScene = nullptr;
 			gameScene2 = new GameScene2;
+			gameScene2->PlayerStartPos();
 			gameScene2->Initialize();
 			/*scene = Scene::kGame2;
 			delete gameScene;
@@ -205,6 +210,11 @@ void ChangeScene()
 			delete gameScene2;
 			gameScene2 = nullptr;
 			gameScene2 = new GameScene2;
+			if (gameScene2->GetCheckpointReached()) 
+			{
+
+			}
+			gameScene2->PlayerStartPos();
 			gameScene2->Initialize();
 		}
 
@@ -228,6 +238,7 @@ void UpdateScene()
 		break;
 	case Scene::kGame2:
 		gameScene2->Update();
+		
 		break;
 	default:
 		break;
