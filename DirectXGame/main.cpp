@@ -1,33 +1,14 @@
 #include "Audio.h"
 #include "AxisIndicator.h"
 #include "DirectXCommon.h"
-#include "GameScene.h"
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
 #include "WinApp.h"
-#include "TitleScene.h"
-#include "GameScene2.h"
+#include "StageManager.h"
 
-GameScene* gameScene = nullptr;
-GameScene2* gameScene2 = nullptr;
-TitleScene* titleScene = nullptr;
 
-void ChangeScene();
 
-void UpdateScene();
-
-void DrawScene();
-
-enum class Scene
-{
-	kUnknown = 0,
-	kTitle,
-	kGame,
-	kGame2,
-};
-
-Scene scene = Scene::kUnknown;
 
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -82,20 +63,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion
 
 	// ゲームシーンの初期化
-	scene = Scene::kGame2;
-
-	gameScene = new GameScene();
-	gameScene->Initialize();
-
-	gameScene2 = new GameScene2();
-	gameScene2->PlayerStartPos();
-	gameScene2->Initialize();
+	StageManager* stageManager = new StageManager();
+	stageManager->Initialize();
 	
-
-	
-	titleScene = new TitleScene();
-	titleScene->Initialize();
-	bool checkPointReached = false;
 
 	// メインループ
 	while (true) {
@@ -113,9 +83,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// ゲームタイトルの毎フレーム処理
 		//titleScene->Update();
 
-		ChangeScene();
-
-		UpdateScene();
+		//UPDATE
+		stageManager->Update();
 		// 軸表示の更新
 		axisIndicator->Update();
 		// ImGui受付終了
@@ -128,8 +97,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// ゲームタイトルの描画
 		//titleScene->Draw();
 		
-		DrawScene();
-
+		//DRAW
+		stageManager->DrawScene();
 		// 軸表示の描画
 		axisIndicator->Draw();
 		// プリミティブ描画のリセット
@@ -141,9 +110,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	// 各種解放
-	delete gameScene;
-	delete gameScene2;
-	delete titleScene;
+	delete stageManager;
 	// 3Dモデル解放
 	Model::StaticFinalize();
 	audio->Finalize();
@@ -154,112 +121,4 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	win->TerminateGameWindow();
 
 	return 0;
-}
-
-void ChangeScene()
-{
-	switch (scene)
-	{
-	case Scene::kUnknown:
-		break;
-	case Scene::kTitle:
-		if (titleScene->GetIsFinished()) 
-		{
-			scene = Scene::kGame;
-			delete titleScene;
-			titleScene = nullptr;
-			gameScene = new GameScene;
-			gameScene->Initialize();
-		}
-		break;
-	case Scene::kGame:
-		if (gameScene->GetIsFinished()) 
-		{
-			
-			scene = Scene::kGame;
-			delete gameScene;
-			gameScene = nullptr;
-			gameScene = new GameScene;
-			gameScene->Initialize();
-			//titleScene = new TitleScene;
-			//titleScene->Initialize();
-		}
-
-		if (gameScene->GetGoToNextStage()) 
-		{
-			scene = Scene::kGame2;
-			delete gameScene;
-			gameScene = nullptr;
-			gameScene2 = new GameScene2;
-			gameScene2->PlayerStartPos();
-			gameScene2->Initialize();
-			/*scene = Scene::kGame2;
-			delete gameScene;
-			gameScene = nullptr;
-			gameScene2 = new GameScene2;
-			gameScene2->Initialize();*/
-		}
-
-		break;
-
-	case Scene::kGame2:
-		if (gameScene2->GetIsFinished())
-		{
-
-			scene = Scene::kGame2;
-			delete gameScene2;
-			gameScene2 = nullptr;
-			gameScene2 = new GameScene2;
-			if (gameScene2->GetCheckpointReached()) 
-			{
-
-			}
-			gameScene2->PlayerStartPos();
-			gameScene2->Initialize();
-		}
-
-		break;
-	default:
-		break;
-	}
-}
-
-void UpdateScene()
-{
-	switch (scene)
-	{
-	case Scene::kUnknown:
-		break;
-	case Scene::kTitle:
-		titleScene->Update();
-		break;
-	case Scene::kGame:
-		gameScene->Update();
-		break;
-	case Scene::kGame2:
-		gameScene2->Update();
-		
-		break;
-	default:
-		break;
-	}
-}
-
-void DrawScene()
-{
-	switch (scene)
-	{
-	case Scene::kUnknown:
-		break;
-	case Scene::kTitle:
-		titleScene->Draw();
-		break;
-	case Scene::kGame:
-		gameScene->Draw();
-		break;
-	case Scene::kGame2:
-		gameScene2->Draw();
-	default:
-		break;
-	}
 }

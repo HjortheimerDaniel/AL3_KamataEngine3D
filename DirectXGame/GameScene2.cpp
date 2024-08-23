@@ -58,15 +58,13 @@ GameScene2::~GameScene2() {
 
 void GameScene2::PlayerStartPos()
 {
-	if (!checkPointReached) 
-	{
-		playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(60, 5);
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(60, 5);
+}
 
-	}
-	else 
-	{
-		playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(1, 3);
-	}
+void GameScene2::PlayerCheckpointPos()
+{
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(1, 3);
+
 }
 
 void GameScene2::Initialize() {
@@ -349,7 +347,6 @@ void GameScene2::Initialize() {
 	
 }
 
-
 void GameScene2::Update() {
 
 	ChangePhase();
@@ -587,7 +584,7 @@ void GameScene2::CheckAllCollisions()
 			{
 				player_->StompCollision(enemy_);
 				enemy->StompCollision(player_);
-				checkPointReached = true;
+				checkPointReached_ = true;
 			}
 		}
 	}

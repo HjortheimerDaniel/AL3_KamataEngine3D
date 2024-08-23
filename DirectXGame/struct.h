@@ -69,3 +69,11 @@ struct MovingSpikeSettings {
 	float amplitude;
 	float startPositionOffset;
 };
+
+enum class Scene
+{
+	kUnknown = 0,
+	kTitle,
+	kGame,
+	kGame2,
+};

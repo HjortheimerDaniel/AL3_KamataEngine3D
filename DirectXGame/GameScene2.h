@@ -47,6 +47,8 @@ public: // メンバ関数
 
 	void PlayerStartPos();
 
+	void PlayerCheckpointPos();
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -94,7 +96,9 @@ public: // メンバ関数
 
 	bool GetGoToNextStage() const { return goToNextStage_; };
 
-	bool GetCheckpointReached() const { return checkPointReached; };
+	bool GetCheckpointReached() const { return checkPointReached_; };
+
+	void SetCheckpointReached(bool checkpointReached) { checkPointReached_ = checkpointReached; };
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -169,7 +173,7 @@ private: // メンバ変数
 	bool warningStart = false;
 	int warningTimer = 1;
 	int warningLoops = 0;
-	bool checkPointReached = false;
+	bool checkPointReached_ = false;
 
 	SpikeSpawnConfig configs[MAXSPIKES2] = {
 	{0, 8, 8, 9, 1, 1},      // First range: X = 8 + i, Y = 9 + i
