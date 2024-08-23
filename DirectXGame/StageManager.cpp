@@ -25,12 +25,13 @@ void StageManager::Initialize()
 
 void StageManager::Update()
 {
-	ImGui::Begin("bool");
-	ImGui::Text("%d", checkpoint);
-	ImGui::End();
-	if (gameScene2->GetCheckpointReached()) 
+	if (gameScene2->GetCheckpoint2Reached()) 
 	{
-		checkpoint = true;
+		checkpoint2 = true;
+	}
+	if (gameScene2->GetCheckpoint1Reached())
+	{
+		checkpoint1 = true;
 	}
 	ChangeScene();
 	UpdateScene();
@@ -90,9 +91,13 @@ void StageManager::ChangeScene()
 			delete gameScene2;
 			gameScene2 = nullptr;
 			gameScene2 = new GameScene2;
-			if (checkpoint)
+			if (checkpoint2)
 			{
-				gameScene2->PlayerCheckpointPos();
+				gameScene2->PlayerCheckpoint2Pos();
+			}
+			else if(checkpoint1 && !checkpoint2)
+			{
+				gameScene2->PlayerCheckpoint1Pos();
 			}
 			else 
 			{

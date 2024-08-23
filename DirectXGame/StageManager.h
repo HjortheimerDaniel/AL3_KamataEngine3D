@@ -25,6 +25,7 @@ private:
 	GameScene* gameScene = nullptr;
 	GameScene2* gameScene2 = nullptr;
 	TitleScene* titleScene = nullptr;
-	bool checkpoint = false;
+	bool checkpoint1 = false;
+	bool checkpoint2 = false;
 };
 

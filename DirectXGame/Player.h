@@ -24,6 +24,8 @@ class Spikes;
 
 class Wind;
 
+class Checkpoint;
+
 class Player
 {
 	public:
@@ -81,6 +83,8 @@ class Player
 		void OnCollision(const Spikes* spike);
 
 		void OnCollision(const Wind* wind);
+
+		void OnCollision(const Checkpoint* checkpoint);
 
 		void OnCollisionGoal(const Goal* goal);
 		

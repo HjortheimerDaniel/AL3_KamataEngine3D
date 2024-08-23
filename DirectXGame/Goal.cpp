@@ -51,6 +51,7 @@ AABB Goal::GetAABB()
 void Goal::OnCollision(const Player* player)
 {
 	(void)player;
+	
 }
 
 void Goal::Draw()

@@ -23,6 +23,7 @@
 #include "Spikes.h"
 #include "Parachute.h"
 #include "Wind.h"
+#include "Checkpoint.h"
 
 #define NOMINMAX
 
@@ -47,7 +48,9 @@ public: // メンバ関数
 
 	void PlayerStartPos();
 
-	void PlayerCheckpointPos();
+	void PlayerCheckpoint1Pos();
+
+	void PlayerCheckpoint2Pos();
 
 	/// <summary>
 	/// 初期化
@@ -96,9 +99,11 @@ public: // メンバ関数
 
 	bool GetGoToNextStage() const { return goToNextStage_; };
 
-	bool GetCheckpointReached() const { return checkPointReached_; };
+	bool GetCheckpoint2Reached() const { return checkPoint2Reached_; };
 
-	void SetCheckpointReached(bool checkpointReached) { checkPointReached_ = checkpointReached; };
+	bool GetCheckpoint1Reached() const { return checkPoint1Reached_; };
+
+	void SetCheckpointReached(bool checkpointReached) { checkPoint2Reached_ = checkpointReached; };
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -114,6 +119,7 @@ private: // メンバ変数
 	Model* spikeModel_ = nullptr;
 	Model* parachuteModel_ = nullptr;
 	Model* windModel_ = nullptr;
+	Model* checkpointModel_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
@@ -149,6 +155,8 @@ private: // メンバ変数
 	Spikes* spike_ = nullptr;
 	Parachute* parachute_ = nullptr;
 	Wind* wind_ = nullptr;
+	Checkpoint* checkpoint1_ = nullptr;
+	Checkpoint* checkpoint2_ = nullptr;
 	//Enemy spawn position
 	uint32_t enemySpawnX[MAXENEMIES] = { 20 , 30, 60, 40 };
 	uint32_t enemySpawnY[MAXENEMIES] = { 18, 14, 12, 5 };
@@ -173,7 +181,8 @@ private: // メンバ変数
 	bool warningStart = false;
 	int warningTimer = 1;
 	int warningLoops = 0;
-	bool checkPointReached_ = false;
+	bool checkPoint2Reached_ = false;
+	bool checkPoint1Reached_ = false;
 
 	SpikeSpawnConfig configs[MAXSPIKES2] = {
 	{0, 8, 8, 9, 1, 1},      // First range: X = 8 + i, Y = 9 + i

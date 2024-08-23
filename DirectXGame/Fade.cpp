@@ -10,7 +10,7 @@ void Fade::Initialize()
 	dxCommon_ = DirectXCommon::GetInstance();
 	textureHandle_ = (TextureManager::Load("blackfade.png"));
 	sprite_ = Sprite::Create(textureHandle_, { 0, 0 });
-	sprite_->SetSize({ 1280.0f, 720.0f });
+	sprite_->SetSize({ 1920.0f, 1080.0f });
 	sprite_->SetColor({ 0,0,0,1 });
 }
 

@@ -37,6 +37,8 @@ GameScene2::~GameScene2() {
 	delete windModel_;
 	delete wind_;
 	delete sprite_;
+	delete checkpointModel_;
+	delete checkpoint1_;
 	for (Enemy* enemy : enemies_)
 	{
 		delete enemy;
@@ -58,13 +60,19 @@ GameScene2::~GameScene2() {
 
 void GameScene2::PlayerStartPos()
 {
-	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(60, 5);
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(1, 3);
+	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(60, 5);
 }
 
-void GameScene2::PlayerCheckpointPos()
+void GameScene2::PlayerCheckpoint1Pos()
 {
-	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(1, 3);
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(12, 98);
+}
 
+void GameScene2::PlayerCheckpoint2Pos()
+{
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(60, 5);
+	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(1, 3);
 }
 
 void GameScene2::Initialize() {
@@ -161,7 +169,7 @@ void GameScene2::Initialize() {
 
 	goalModel_ = Model::CreateFromOBJ("goal", true);
 	goal_ = new Goal();
-	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(64, 97);
+	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(59, 60);
 	goal_->Initialize(goalModel_, viewProjection_, doorPosition);
 	goal_->SetMapChipField(mapChipField_);
 
@@ -199,50 +207,54 @@ void GameScene2::Initialize() {
 		if (i >= 51 && i < 54) 
 		{
 			newSpike->SetMove(true);
-			newSpike->SetStartPosition(19.0f + (i -51));
+			newSpike->SetAmplitude(16.0f);
+			newSpike->SetStartPosition(18.0f + (i -51));
 		}
 		if (i >= 54 && i< 57)
 		{
 			newSpike->SetMove(true);
+			newSpike->SetAmplitude(16.0f);
 			newSpike->SetRotateUpsideDown(true);
-			newSpike->SetStartPosition(19.0f + (i - 54));
+			newSpike->SetStartPosition(18.0f + (i - 54));
 		}
 		if (i >= 57 && i < 60)
 		{
 			newSpike->SetMove(true);
-			newSpike->SetAmplitude(-12.0f);
-			newSpike->SetStartPosition(19.0f + (i - 57));
+			newSpike->SetAmplitude(-16.0f);
+			newSpike->SetStartPosition(18.0f + (i - 57));
 		}
 		if (i >= 60 && i < 63)
 		{
 			newSpike->SetMove(true);
 			newSpike->SetRotateUpsideDown(true);
-			newSpike->SetAmplitude(-12.0f);
-			newSpike->SetStartPosition(19.0f + (i - 60));
+			newSpike->SetAmplitude(-16.0f);
+			newSpike->SetStartPosition(18.0f + (i - 60));
 		}
 		if (i >= 63 && i < 66)
 		{
 			newSpike->SetMove(true);
-			newSpike->SetStartPosition(19.0f + (i - 63));
+			newSpike->SetAmplitude(16.0f);
+			newSpike->SetStartPosition(18.0f + (i - 63));
 		}
 		if (i >= 66 && i < 69)
 		{
 			newSpike->SetMove(true);
+			newSpike->SetAmplitude(16.0f);
 			newSpike->SetRotateUpsideDown(true);
-			newSpike->SetStartPosition(19.0f + (i - 66));
+			newSpike->SetStartPosition(18.0f + (i - 66));
 		}
 		if (i >= 69 && i < 72)
 		{
 			newSpike->SetMove(true);
-			newSpike->SetAmplitude(-12.0f);
-			newSpike->SetStartPosition(19.0f + (i - 69));
+			newSpike->SetAmplitude(-16.0f);
+			newSpike->SetStartPosition(18.0f + (i - 69));
 		}
 		if (i >= 72 && i < 75)
 		{
 			newSpike->SetMove(true);
 			newSpike->SetRotateUpsideDown(true);
-			newSpike->SetAmplitude(-12.0f);
-			newSpike->SetStartPosition(19.0f + (i - 72));
+			newSpike->SetAmplitude(-16.0f);
+			newSpike->SetStartPosition(18.0f + (i - 72));
 		}
 		if (i >= 75 && i < 87) 
 		{
@@ -344,6 +356,21 @@ void GameScene2::Initialize() {
 	sprite_->SetSize({100,100});
 
 #pragma endregion
+
+#pragma region Checkpoint
+
+	checkpointModel_ = Model::CreateFromOBJ("checkpoint", true);
+	checkpoint1_ = new Checkpoint();
+	Vector3 checkpointPosition = mapChipField_->GetMapChipPositionByIndex(64, 4);
+	checkpoint1_->Initialize(checkpointModel_, viewProjection_, checkpointPosition);
+	checkpoint1_->SetMapChipField(mapChipField_);
+	
+	checkpoint2_ = new Checkpoint();
+	Vector3 checkpoint2Position = mapChipField_->GetMapChipPositionByIndex(10, 97);
+	checkpoint2_->Initialize(checkpointModel_, viewProjection_, checkpoint2Position);
+	checkpoint2_->SetMapChipField(mapChipField_);
+
+#pragma endregion
 	
 }
 
@@ -367,6 +394,7 @@ void GameScene2::Update() {
 
 		}
 		IsEnemyCloseToPlayer();
+		MoveCameraHorizontally();
 
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
@@ -414,6 +442,8 @@ void GameScene2::Update() {
 		
 		UsingParachute();
 		WarningTriangle();
+		checkpoint1_->Update();
+		checkpoint2_->Update();
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -584,7 +614,6 @@ void GameScene2::CheckAllCollisions()
 			{
 				player_->StompCollision(enemy_);
 				enemy->StompCollision(player_);
-				checkPointReached_ = true;
 			}
 		}
 	}
@@ -632,6 +661,32 @@ void GameScene2::CheckAllCollisions()
 		}
 	}
 	
+
+#pragma endregion
+
+#pragma  region player checkpoint
+
+	AABB aabb6 = checkpoint1_->GetAABB();
+
+	if (IsCollision(aabb1, aabb6)) 
+	{
+		player_->OnCollision(checkpoint1_);
+		checkpoint1_->OnCollision(player_);
+		checkPoint2Reached_ = true;
+	}
+
+	AABB aabb7 = checkpoint2_->GetAABB();
+
+	if (IsCollision(aabb1, aabb7)) 
+	{
+		player_->OnCollision(checkpoint2_);
+		checkpoint2_->OnCollisionFirst(player_);
+		checkPoint1Reached_ = true;
+	}
+
+
+
+
 
 #pragma endregion
 
@@ -910,6 +965,8 @@ void GameScene2::Draw() {
 
 #pragma region Play
 	case Phase::kPlay:
+		checkpoint1_->Draw();
+		checkpoint2_->Draw();
 		player_->Draw();
 		for (Enemy* enemy : enemies_) {
 			enemy->Draw();
@@ -947,6 +1004,7 @@ void GameScene2::Draw() {
 			wind->Draw();
 		}
 		//stageClearText_->Draw();
+
 		break;
 #pragma endregion
 

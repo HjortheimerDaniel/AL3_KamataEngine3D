@@ -668,6 +668,11 @@ void Player::OnCollision(const Wind* wind)
 	velocity_.y = 0.15f;
 }
 
+void Player::OnCollision(const Checkpoint* checkpoint)
+{
+	(void)checkpoint;
+}
+
 void Player::OnCollisionGoal(const Goal* goal)
 {
 	(void)goal;
