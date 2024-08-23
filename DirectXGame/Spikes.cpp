@@ -29,7 +29,6 @@ void Spikes::Update()
 	if(move_)
 	{
 		MovingSpikes();
-
 	}
 	if (rotateUpDown_) 
 	{
@@ -39,12 +38,21 @@ void Spikes::Update()
 	{
 		RotateSpike90Degrees();
 	}
-	if (moveRight_ && mayMove_) 
+	if (moveRight_ && mayMove_ || moveRightEnd_)
 	{
-		MovingSpikesRight();
+		MovingSpikesSideways();
+	}
+	if (usesTimer_)
+	{
+		Timer();
 	}
 	SpikeState();
 	worldTransform_.UpdateMatrix();
+	if (usesSpikeTimer_) 
+	{
+		SpikeTimer();
+	}
+	
 }
 
 void Spikes::SpikeTimer()
@@ -118,7 +126,7 @@ void Spikes::RotateSpikeUpsideDown()
 
 void Spikes::RotateSpike90Degrees()
 {
-	worldTransform_.rotation_.z = 1.5f * std::numbers::pi_v<float>;
+	worldTransform_.rotation_.z = rotate_ * std::numbers::pi_v<float>;
 
 }
 
@@ -129,9 +137,17 @@ void Spikes::MovingSpikes()
 
 }
 
-void Spikes::MovingSpikesRight()
+void Spikes::MovingSpikesSideways()
 {
-	if(worldTransform_.translation_.x <= 108)
+	if(worldTransform_.translation_.x <= maxRightDistance_)
+	{
+		worldTransform_.translation_.x += speed_;
+	}
+}
+
+void Spikes::MovingSpikesRightEnd()
+{
+	if (worldTransform_.translation_.x <= 198)
 	{
 		worldTransform_.translation_.x += 0.8f;
 	}
@@ -160,6 +176,23 @@ AABB Spikes::GetAABB()
 	return aabb;
 	
 	
+}
+
+void Spikes::Timer()
+{
+	timer_++;
+
+	if (timer_ >= 120) 
+	{
+		moveRightEnd_ = true;
+	}
+
+	if (timer_ >= 300) 
+	{
+		timer_ = 0;
+		moveRightEnd_ = false;
+		worldTransform_.translation_ = startPos;
+	}
 }
 
 void Spikes::Draw()

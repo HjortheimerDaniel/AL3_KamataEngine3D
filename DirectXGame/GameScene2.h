@@ -190,6 +190,9 @@ private: // メンバ変数
 	{95, 97, 63, 40, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
 	{97, 99, 63, 41, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
 	{99, 115, 43, 6, 0, 1},    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{115, 120, 56, 12, 0, 7},    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{120, 157, 56, 48, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
+	{157, MAXSPIKES2, 62, 55, 1, 0},    // Seventeenth range: X = 3 + (i - 72), Y = 84
 	};
 
 

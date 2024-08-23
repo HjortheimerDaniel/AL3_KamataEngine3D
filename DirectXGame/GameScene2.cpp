@@ -89,7 +89,7 @@ void GameScene2::Initialize() {
 	player_ = new Player();
 	//Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
 	//playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 3);
-	playerPosition = mapChipField_->GetMapChipPositionByIndex(39, 90);
+	playerPosition = mapChipField_->GetMapChipPositionByIndex(60, 5);
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -150,7 +150,7 @@ void GameScene2::Initialize() {
 
 	goalModel_ = Model::CreateFromOBJ("goal", true);
 	goal_ = new Goal();
-	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(8, 80);
+	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(64, 97);
 	goal_->Initialize(goalModel_, viewProjection_, doorPosition);
 	goal_->SetMapChipField(mapChipField_);
 
@@ -280,6 +280,22 @@ void GameScene2::Initialize() {
 		{
 			newSpike->SetRotateRight(true);
 			newSpike->SetMayMove(true);
+			newSpike->SetMaxDistance(108.0f);
+			newSpike->SetSpeed(0.8f);
+			newSpike->SetRotation(1.5f);
+		}
+		if (i >= 115 && i < 120) 
+		{
+			newSpike->SetRotateRight(true);
+			newSpike->SetUsesTimer(true);
+			newSpike->SetMaxDistance(196.0f);
+			newSpike->SetSpeed(1.2f);
+			newSpike->SetRotation(1.5f);
+		}
+		if (i >= 120 && i < MAXSPIKES2) 
+		{
+			newSpike->SetUsesSpikeTimer(true);
+			newSpike->SetStruct(SpikesStruct::Active);
 		}
 	}
 	
@@ -777,6 +793,7 @@ void GameScene2::WarningTriangle()
 	{
 		for (Spikes* spike : spikes_)
 		{
+			
 			spike->SetMoveRight(true);
 		}
 	}
