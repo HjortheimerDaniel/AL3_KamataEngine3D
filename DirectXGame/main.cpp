@@ -108,7 +108,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// 描画終了
 		dxCommon->PostDraw();
 	}
-
 	// 各種解放
 	delete stageManager;
 	// 3Dモデル解放

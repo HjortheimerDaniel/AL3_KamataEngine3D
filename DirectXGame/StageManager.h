@@ -2,6 +2,7 @@
 #include "TitleScene.h"
 #include "GameScene2.h"
 #include "GameScene.h"
+#include "Audio.h"
 
 class StageManager
 {
@@ -12,6 +13,8 @@ public:
 	void Initialize();
 
 	void Update();
+
+	void ConstantThingies();
 
 	void ChangeScene();
 
@@ -28,5 +31,9 @@ private:
 	bool checkpoint1 = false;
 	bool checkpoint2 = false;
 	bool shownParachuteText = false;
+	uint32_t audioHandle_ = 0;
+	uint32_t playHandle = {};
+	Audio* audio_ = nullptr;
+
 };
 

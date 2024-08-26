@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
+#include "imgui.h"
 
 GameScene::GameScene() {}
 
@@ -54,7 +55,16 @@ void GameScene::Initialize() {
 	viewProjection_ = new ViewProjection();
 	viewProjection_->Initialize();
 	modelBlock_ = Model::Create();
-	
+
+#pragma region audio
+
+	audioHandle_ = audio_->LoadWave("powerUp.wav");
+	audioHandle2_ = audio_->LoadWave("explosion.wav");
+	playHandle = 1;
+	playHandle2 = 1;
+
+#pragma endregion
+
 #pragma region skydome
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
 	skydome_ = new Skydome();
@@ -198,7 +208,7 @@ void GameScene::Update() {
 	#pragma region FadeIn
 
 	case Phase::kFadeIn:
-
+		
 		fade_->Update();
 		player_->Update();
 		skydome_->Update();
@@ -230,9 +240,10 @@ void GameScene::Update() {
 	#pragma region Play
 
 	case Phase::kPlay:
+		
 
 		player_->Update();
-
+		player_->Movement();
 		skydome_->Update();
 		//fade_->SetCounter_(0.0f);
 		MoveCameraHorizontally();
@@ -411,12 +422,21 @@ void GameScene::CheckAllCollisions()
 			{
 				player_->OnCollision(enemy_);
 				enemy_->OnCollision(player_);
+				if (audio_->IsPlaying(playHandle2) == 0 && playHandle2 == 1)
+				{
+					playHandle2 = audio_->PlayWave(audioHandle2_, false, 1.0f);
+				}
 			}
 
 			if (IsStompCollision(aabb1, aabb2) && !player_->GetOnGround())
 			{
 				player_->StompCollision(enemy_);
 				enemy->StompCollision(player_);
+				if (audio_->IsPlaying(playHandle) == 0 && playHandle == 1)
+				{
+					playHandle = audio_->PlayWave(audioHandle_, false, 1.0f);
+				}
+				playHandle = 1;
 			}
 		}
 	}

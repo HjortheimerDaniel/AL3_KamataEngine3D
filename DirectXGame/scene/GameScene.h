@@ -88,6 +88,10 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	uint32_t textureHandle_ = 0;
+	uint32_t audioHandle_ = 0;
+	uint32_t audioHandle2_ = 0;
+	uint32_t playHandle = {};
+	uint32_t playHandle2 = {};
 	Model* playerModel_ = nullptr;
 	Model* enemyModel_ = nullptr;
 	Model* deathparticleModel_ = nullptr;

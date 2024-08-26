@@ -10,7 +10,16 @@ StageManager::~StageManager()
 
 void StageManager::Initialize()
 {
-	scene = Scene::kGame2;
+	audio_ = Audio::GetInstance();
+
+#pragma region audio
+
+	audioHandle_ = audio_->LoadWave("Quiet_Intention.mp3");
+	playHandle = 1;
+
+#pragma endregion
+
+	scene = Scene::kGame;
 
 	gameScene = new GameScene();
 	gameScene->Initialize();
@@ -25,7 +34,19 @@ void StageManager::Initialize()
 
 void StageManager::Update()
 {
-	if (gameScene2->GetCheckpoint2Reached()) 
+	if (audio_->IsPlaying(playHandle) == 0 && playHandle == 1)
+	{
+		playHandle = audio_->PlayWave(audioHandle_, false, 1.0f);
+	}
+
+	ConstantThingies();
+	ChangeScene();
+	UpdateScene();
+}
+
+void StageManager::ConstantThingies()
+{
+	if (gameScene2->GetCheckpoint2Reached())
 	{
 		checkpoint2 = true;
 	}
@@ -33,14 +54,11 @@ void StageManager::Update()
 	{
 		checkpoint1 = true;
 	}
-	if (gameScene2->GetShownText()) 
+	if (gameScene2->GetShownText())
 	{
 		shownParachuteText = true;
 	}
 	gameScene2->SetShownText(shownParachuteText);
-
-	ChangeScene();
-	UpdateScene();
 }
 
 void StageManager::ChangeScene()
