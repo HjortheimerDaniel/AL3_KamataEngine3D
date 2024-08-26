@@ -33,6 +33,12 @@ void StageManager::Update()
 	{
 		checkpoint1 = true;
 	}
+	if (gameScene2->GetShownText()) 
+	{
+		shownParachuteText = true;
+	}
+	gameScene2->SetShownText(shownParachuteText);
+
 	ChangeScene();
 	UpdateScene();
 }

@@ -380,14 +380,14 @@ void GameScene2::Initialize() {
 
 	parachuteTextModel_ = Model::CreateFromOBJ("paratext", true);
 	parachuteText_ = new ParachuteText();
-	Vector3 parachuteTextPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)4, (uint32_t)4);
+	Vector3 parachuteTextPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)8, (uint32_t)6);
 	parachuteText_->Initialize(parachuteTextModel_, viewProjection_, parachuteTextPosition);
 	parachuteText_->SetMapChipField(mapChipField_);
 	parachuteText_->SetShowText(true);
 
 	parachuteTextModel2_ = Model::CreateFromOBJ("paratext2", true);
 	parachuteText2_ = new ParachuteText();
-	Vector3 parachuteTextPosition2 = mapChipField_->GetMapChipPositionByIndex((uint32_t)4, (uint32_t)3);
+	Vector3 parachuteTextPosition2 = mapChipField_->GetMapChipPositionByIndex((uint32_t)8, (uint32_t)5);
 	parachuteText2_->Initialize(parachuteTextModel2_, viewProjection_, parachuteTextPosition2);
 	parachuteText2_->SetMapChipField(mapChipField_);
 	parachuteText2_->SetShowText(false);
@@ -418,7 +418,15 @@ void GameScene2::Update() {
 		}
 		IsEnemyCloseToPlayer();
 		MoveCameraHorizontally();
-
+		if (parachuteText_->GetShowText())
+		{
+			parachuteText_->Update();
+		}
+		if (parachuteText2_->GetShowText())
+		{
+			parachuteText2_->Update();
+		}
+		ParachuteTextModelSwitch();
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -467,15 +475,7 @@ void GameScene2::Update() {
 		WarningTriangle();
 		checkpoint1_->Update();
 		checkpoint2_->Update();
-		if (parachuteText_->GetShowText()) 
-		{
-			parachuteText_->Update();
-		}
-		if (parachuteText2_->GetShowText())
-		{
-			parachuteText2_->Update();
-		}
-		ParachuteTextModelSwitch();
+		
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -764,7 +764,7 @@ void GameScene2::ChangePhase()
 	switch (phase_)
 	{
 	case Phase::kFadeIn:
-		if (fade_->IsFinished() && Input::GetInstance()->PushKey(DIK_SPACE))
+		if (fade_->IsFinished() && shownText_)
 		{
 			phase_ = Phase::kPlay;
 		}
@@ -945,20 +945,37 @@ void GameScene2::UsingParachute()
 
 void GameScene2::ParachuteTextModelSwitch()
 {
-	parachuteTextTimer_++;
+	
 
-	if (parachuteTextTimer_ >= 100) 
-	{
-		parachuteText_->SetShowText(false);
-		parachuteText2_->SetShowText(true);
-
-	}
-	if (parachuteTextTimer_ >= 200)
+	if (parachuteTextCount_ >= 0) 
 	{
 		parachuteText_->SetShowText(true);
 		parachuteText2_->SetShowText(false);
-		parachuteTextTimer_ = 0;
 
+	}
+	if (parachuteTextCount_ >= 1)
+	{
+		parachuteText_->SetShowText(false);
+		parachuteText2_->SetShowText(true);
+		//parachuteTextCount_ = 0;
+
+	}
+
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && parachuteTextCount_ == 0) 
+	{
+		parachuteTextCount_ = 1;
+		delayBetweenText_ = 1;
+	}
+
+	if (delayBetweenText_ >= 1 && delayBetweenText_ <= 29)
+	{
+		delayBetweenText_++;
+	}
+
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && delayBetweenText_ >= 29)
+	{
+		parachuteTextCount_ = 2;
+		shownText_ = true;
 	}
 
 }
@@ -1009,8 +1026,16 @@ void GameScene2::Draw() {
 			}
 		}
 		goal_->Draw();
+		if (parachuteText_->GetShowText() && !shownText_)
+		{
+			parachuteText_->Draw();
+		}
+		if (parachuteText2_->GetShowText() && !shownText_)
+		{
+			parachuteText2_->Draw();
+		}
 		fade_->Draw();
-
+		
 		break;
 
 #pragma endregion
@@ -1055,14 +1080,7 @@ void GameScene2::Draw() {
 		{
 			wind->Draw();
 		}
-		if (parachuteText_->GetShowText())
-		{
-			parachuteText_->Draw();
-		}
-		if (parachuteText2_->GetShowText())
-		{
-			parachuteText2_->Draw();
-		}
+		
 		//stageClearText_->Draw();
 
 		break;

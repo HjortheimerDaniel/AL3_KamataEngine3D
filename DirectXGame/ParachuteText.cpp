@@ -15,8 +15,8 @@ void ParachuteText::Initialize(Model* model, ViewProjection* viewProjection, con
 	viewProjection_ = viewProjection;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-	worldTransform_.scale_ = { titleSize, titleSize, titleSize };
-	worldTransform_.translation_.z = 5.0f;
+	worldTransform_.scale_ = { textSize, textSize, textSize };
+	worldTransform_.translation_.z = -10.0f;
 }
 
 void ParachuteText::Update()

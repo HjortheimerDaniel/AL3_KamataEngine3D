@@ -107,6 +107,10 @@ public: // メンバ関数
 	bool GetCheckpoint1Reached() const { return checkPoint1Reached_; };
 
 	void SetCheckpointReached(bool checkpointReached) { checkPoint2Reached_ = checkpointReached; };
+	
+	void SetShownText(bool shownText) { shownText_ = shownText; };
+
+	bool GetShownText() { return shownText_; };
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -164,7 +168,9 @@ private: // メンバ変数
 	Checkpoint* checkpoint2_ = nullptr;
 	ParachuteText* parachuteText_ = nullptr;
 	ParachuteText* parachuteText2_ = nullptr;
-	int parachuteTextTimer_ = 0;
+	int parachuteTextCount_ = 0;
+	int delayBetweenText_ = 0;
+	bool shownText_ = false;
 	//Enemy spawn position
 	uint32_t enemySpawnX[MAXENEMIES] = { 20 , 30, 60, 40 };
 	uint32_t enemySpawnY[MAXENEMIES] = { 18, 14, 12, 5 };

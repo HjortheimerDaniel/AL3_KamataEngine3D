@@ -27,5 +27,6 @@ private:
 	TitleScene* titleScene = nullptr;
 	bool checkpoint1 = false;
 	bool checkpoint2 = false;
+	bool shownParachuteText = false;
 };
 
