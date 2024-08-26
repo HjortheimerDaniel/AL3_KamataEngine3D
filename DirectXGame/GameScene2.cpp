@@ -760,7 +760,7 @@ void GameScene2::ChangePhase()
 		}
 		break;
 	case Phase::kStageClear:
-		if (Input::GetInstance()->PushKey(DIK_SPACE))
+		if (Input::GetInstance()->PushKey(DIK_RETURN))
 		{
 			fade_->Start(Status::FadeOut, duration_);
 			phase_ = Phase::kFadeOut;
