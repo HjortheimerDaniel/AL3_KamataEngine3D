@@ -42,7 +42,7 @@ void Player::Update()
 	CollisionRight(collisionMapInfo);
 	CollisionLeft(collisionMapInfo);
 	HitCeiling(collisionMapInfo);
-	Movement();
+	//Movement();
 	FellBelowStage();
 	ImGui::Begin("Window");
 	ImGui::Text("velocity %f", velocity_.x);

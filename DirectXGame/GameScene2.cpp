@@ -169,6 +169,13 @@ void GameScene2::Initialize() {
 
 #pragma endregion
 
+#pragma region GreyPauseVeil
+
+	grey_ = new GreyPauseVeil();
+	grey_->Initialize();
+
+#pragma endregion
+
 #pragma region goal
 
 	goalModel_ = Model::CreateFromOBJ("goal", true);
@@ -380,14 +387,14 @@ void GameScene2::Initialize() {
 
 	parachuteTextModel_ = Model::CreateFromOBJ("paratext", true);
 	parachuteText_ = new ParachuteText();
-	Vector3 parachuteTextPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)8, (uint32_t)6);
+	Vector3 parachuteTextPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)7, (uint32_t)6);
 	parachuteText_->Initialize(parachuteTextModel_, viewProjection_, parachuteTextPosition);
 	parachuteText_->SetMapChipField(mapChipField_);
 	parachuteText_->SetShowText(true);
 
 	parachuteTextModel2_ = Model::CreateFromOBJ("paratext2", true);
 	parachuteText2_ = new ParachuteText();
-	Vector3 parachuteTextPosition2 = mapChipField_->GetMapChipPositionByIndex((uint32_t)8, (uint32_t)5);
+	Vector3 parachuteTextPosition2 = mapChipField_->GetMapChipPositionByIndex((uint32_t)7, (uint32_t)5);
 	parachuteText2_->Initialize(parachuteTextModel2_, viewProjection_, parachuteTextPosition2);
 	parachuteText2_->SetMapChipField(mapChipField_);
 	parachuteText2_->SetShowText(false);
@@ -427,6 +434,7 @@ void GameScene2::Update() {
 			parachuteText2_->Update();
 		}
 		ParachuteTextModelSwitch();
+		grey_->Update();
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -449,7 +457,7 @@ void GameScene2::Update() {
 	case Phase::kPlay:
 
 		player_->Update();
-
+		player_->Movement();
 		skydome_->Update();
 		//fade_->SetCounter_(0.0f);
 		MoveCameraHorizontally();
@@ -961,7 +969,7 @@ void GameScene2::ParachuteTextModelSwitch()
 
 	}
 
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && parachuteTextCount_ == 0) 
+	if (Input::GetInstance()->TriggerKey(DIK_RETURN) && parachuteTextCount_ == 0) 
 	{
 		parachuteTextCount_ = 1;
 		delayBetweenText_ = 1;
@@ -972,7 +980,7 @@ void GameScene2::ParachuteTextModelSwitch()
 		delayBetweenText_++;
 	}
 
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && delayBetweenText_ >= 29)
+	if (Input::GetInstance()->TriggerKey(DIK_RETURN) && delayBetweenText_ >= 29)
 	{
 		parachuteTextCount_ = 2;
 		shownText_ = true;
@@ -1033,6 +1041,10 @@ void GameScene2::Draw() {
 		if (parachuteText2_->GetShowText() && !shownText_)
 		{
 			parachuteText2_->Draw();
+		}
+		if (!shownText_) 
+		{
+			grey_->Draw();
 		}
 		fade_->Draw();
 		

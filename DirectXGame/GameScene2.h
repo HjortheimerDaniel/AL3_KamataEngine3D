@@ -25,6 +25,7 @@
 #include "Wind.h"
 #include "Checkpoint.h"
 #include "ParachuteText.h"
+#include "GreyPauseVeil.h"
 
 #define NOMINMAX
 
@@ -151,6 +152,7 @@ private: // メンバ変数
 	bool isDead_ = false;
 	bool finished_ = false;
 	Fade* fade_ = nullptr;
+	GreyPauseVeil* grey_ = nullptr;
 	float duration_ = 1.0f;
 	float stompDistance = 0.9f;
 	float activateEnemyDistance = 48.0f;
