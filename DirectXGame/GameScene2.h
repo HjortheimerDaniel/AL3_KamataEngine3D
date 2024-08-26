@@ -24,6 +24,7 @@
 #include "Parachute.h"
 #include "Wind.h"
 #include "Checkpoint.h"
+#include "ParachuteText.h"
 
 #define NOMINMAX
 
@@ -84,6 +85,8 @@ public: // メンバ関数
 
 	void UsingParachute();
 
+	void ParachuteTextModelSwitch();
+
 	/// <summary>
 	/// 描画
 	/// </summary>
@@ -120,6 +123,8 @@ private: // メンバ変数
 	Model* parachuteModel_ = nullptr;
 	Model* windModel_ = nullptr;
 	Model* checkpointModel_ = nullptr;
+	Model* parachuteTextModel_ = nullptr;
+	Model* parachuteTextModel2_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
@@ -157,6 +162,9 @@ private: // メンバ変数
 	Wind* wind_ = nullptr;
 	Checkpoint* checkpoint1_ = nullptr;
 	Checkpoint* checkpoint2_ = nullptr;
+	ParachuteText* parachuteText_ = nullptr;
+	ParachuteText* parachuteText2_ = nullptr;
+	int parachuteTextTimer_ = 0;
 	//Enemy spawn position
 	uint32_t enemySpawnX[MAXENEMIES] = { 20 , 30, 60, 40 };
 	uint32_t enemySpawnY[MAXENEMIES] = { 18, 14, 12, 5 };

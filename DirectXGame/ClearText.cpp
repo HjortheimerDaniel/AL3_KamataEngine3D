@@ -43,5 +43,4 @@ void ClearText::Update()
 void ClearText::Draw()
 {
 	model_->Draw(worldTransform_, *viewProjection_);
-
 }

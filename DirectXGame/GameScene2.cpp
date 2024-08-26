@@ -39,6 +39,10 @@ GameScene2::~GameScene2() {
 	delete sprite_;
 	delete checkpointModel_;
 	delete checkpoint1_;
+	delete parachuteTextModel_;
+	delete parachuteTextModel2_;
+	delete parachuteText_;
+	delete parachuteText2_;
 	for (Enemy* enemy : enemies_)
 	{
 		delete enemy;
@@ -371,6 +375,25 @@ void GameScene2::Initialize() {
 	checkpoint2_->SetMapChipField(mapChipField_);
 
 #pragma endregion
+
+#pragma region Parachutetext
+
+	parachuteTextModel_ = Model::CreateFromOBJ("paratext", true);
+	parachuteText_ = new ParachuteText();
+	Vector3 parachuteTextPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)4, (uint32_t)4);
+	parachuteText_->Initialize(parachuteTextModel_, viewProjection_, parachuteTextPosition);
+	parachuteText_->SetMapChipField(mapChipField_);
+	parachuteText_->SetShowText(true);
+
+	parachuteTextModel2_ = Model::CreateFromOBJ("paratext2", true);
+	parachuteText2_ = new ParachuteText();
+	Vector3 parachuteTextPosition2 = mapChipField_->GetMapChipPositionByIndex((uint32_t)4, (uint32_t)3);
+	parachuteText2_->Initialize(parachuteTextModel2_, viewProjection_, parachuteTextPosition2);
+	parachuteText2_->SetMapChipField(mapChipField_);
+	parachuteText2_->SetShowText(false);
+
+
+#pragma endregion
 	
 }
 
@@ -444,6 +467,15 @@ void GameScene2::Update() {
 		WarningTriangle();
 		checkpoint1_->Update();
 		checkpoint2_->Update();
+		if (parachuteText_->GetShowText()) 
+		{
+			parachuteText_->Update();
+		}
+		if (parachuteText2_->GetShowText())
+		{
+			parachuteText2_->Update();
+		}
+		ParachuteTextModelSwitch();
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -732,7 +764,7 @@ void GameScene2::ChangePhase()
 	switch (phase_)
 	{
 	case Phase::kFadeIn:
-		if (fade_->IsFinished())
+		if (fade_->IsFinished() && Input::GetInstance()->PushKey(DIK_SPACE))
 		{
 			phase_ = Phase::kPlay;
 		}
@@ -911,6 +943,26 @@ void GameScene2::UsingParachute()
 
 }
 
+void GameScene2::ParachuteTextModelSwitch()
+{
+	parachuteTextTimer_++;
+
+	if (parachuteTextTimer_ >= 100) 
+	{
+		parachuteText_->SetShowText(false);
+		parachuteText2_->SetShowText(true);
+
+	}
+	if (parachuteTextTimer_ >= 200)
+	{
+		parachuteText_->SetShowText(true);
+		parachuteText2_->SetShowText(false);
+		parachuteTextTimer_ = 0;
+
+	}
+
+}
+
 void GameScene2::Draw() {
 
 	// コマンドリストの取得
@@ -1002,6 +1054,14 @@ void GameScene2::Draw() {
 		for (Wind* wind : winds_)
 		{
 			wind->Draw();
+		}
+		if (parachuteText_->GetShowText())
+		{
+			parachuteText_->Draw();
+		}
+		if (parachuteText2_->GetShowText())
+		{
+			parachuteText2_->Draw();
 		}
 		//stageClearText_->Draw();
 
