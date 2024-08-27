@@ -76,4 +76,5 @@ enum class Scene
 	kTitle,
 	kGame,
 	kGame2,
+	kGameClear,
 };

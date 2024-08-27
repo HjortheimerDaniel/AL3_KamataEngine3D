@@ -64,8 +64,8 @@ GameScene2::~GameScene2() {
 
 void GameScene2::PlayerStartPos()
 {
-	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(1, 3);
-	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(60, 5);
+	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(1, 3);
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(60, 5);
 }
 
 void GameScene2::PlayerCheckpoint1Pos()

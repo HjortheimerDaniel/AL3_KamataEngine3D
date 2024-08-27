@@ -6,6 +6,7 @@ StageManager::~StageManager()
 	delete gameScene;
 	delete gameScene2;
 	delete titleScene;
+	delete gameClearScreen;
 }
 
 void StageManager::Initialize()
@@ -19,7 +20,7 @@ void StageManager::Initialize()
 
 #pragma endregion
 
-	scene = Scene::kGame;
+	scene = Scene::kGame2;
 
 	gameScene = new GameScene();
 	gameScene->Initialize();
@@ -30,6 +31,9 @@ void StageManager::Initialize()
 
 	titleScene = new TitleScene();
 	titleScene->Initialize();
+
+	gameClearScreen = new GameClearScreen();
+	gameClearScreen->Initialize();
 }
 
 void StageManager::Update()
@@ -38,8 +42,10 @@ void StageManager::Update()
 	{
 		playHandle = audio_->PlayWave(audioHandle_, true, 0.7f);
 	}
-
-	ConstantThingies();
+	if(scene == Scene::kGame2)
+	{
+		ConstantThingies();
+	}
 	ChangeScene();
 	UpdateScene();
 }
@@ -129,8 +135,19 @@ void StageManager::ChangeScene()
 			}
 			gameScene2->Initialize();
 		}
+		if (gameScene2->GetGoToNextStage()) 
+		{
+			scene = Scene::kGameClear;
+			delete gameScene2;
+			gameScene2 = nullptr;
+			gameClearScreen = new GameClearScreen;
+			gameClearScreen->Initialize();
+		}
 
 		break;
+	case Scene::kGameClear:
+
+
 	default:
 		break;
 	}
@@ -150,8 +167,9 @@ void StageManager::UpdateScene()
 		break;
 	case Scene::kGame2:
 		gameScene2->Update();
-
 		break;
+	case Scene::kGameClear:
+		gameClearScreen->Update();
 	default:
 		break;
 	}
@@ -171,6 +189,9 @@ void StageManager::DrawScene()
 		break;
 	case Scene::kGame2:
 		gameScene2->Draw();
+		break;
+	case Scene::kGameClear:
+		gameClearScreen->Draw();
 	default:
 		break;
 	}

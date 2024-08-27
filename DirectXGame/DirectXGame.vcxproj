@@ -117,6 +117,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="functions.cpp" />
+    <ClCompile Include="GameClearScreen.cpp" />
     <ClCompile Include="GameScene2.cpp" />
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="GreyPauseVeil.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="functions.h" />
+    <ClInclude Include="GameClearScreen.h" />
     <ClInclude Include="GameScene2.h" />
     <ClInclude Include="Goal.h" />
     <ClInclude Include="GreyPauseVeil.h" />
