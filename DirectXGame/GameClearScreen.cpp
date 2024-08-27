@@ -31,14 +31,14 @@ void GameClearScreen::Initialize()
 	Vector3 playerPosition = { 1.0f, -5.0f, 1.0f };
 	titlePlayer_->Initialize(playerModel_, viewProjection_, playerPosition);
 
-	textModel_ = Model::CreateFromOBJ("titleMapchip", true);
+	textModel_ = Model::CreateFromOBJ("gamecleartext1", true);
 	titleText_ = new TitleText();
-	Vector3 textPosition = { -30.0f, 3.0f, 1.0f };
+	Vector3 textPosition = { -40.0f, 3.0f, 1.0f };
 	titleText_->Initialize(textModel_, viewProjection_, textPosition);
 
 	textModel2_ = Model::CreateFromOBJ("title3DLand", true);
 	titleText2_ = new TitleText();
-	Vector3 textPosition2 = { 0.0f, 3.0f, 1.0f };
+	Vector3 textPosition2 = { 0.0f, 20.0f, 1.0f };
 	titleText2_->Initialize(textModel2_, viewProjection_, textPosition2);
 
 	fade_ = new Fade();
