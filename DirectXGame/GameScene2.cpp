@@ -88,6 +88,19 @@ void GameScene2::Initialize() {
 	viewProjection_->Initialize();
 	modelBlock_ = Model::Create();
 
+#pragma region audio
+
+	audioHandle_ = audio_->LoadWave("Checkpoint.wav");
+	audioHandle2_ = audio_->LoadWave("explosion.wav");
+	audioHandle3_ = audio_->LoadWave("warning.wav");
+	audioHandle4_ = audio_->LoadWave("test.m4a");
+	playHandle = 1;
+	playHandle2 = 1;
+	playHandle3 = 1;
+	playHandle4 = 1;
+
+#pragma endregion
+
 #pragma region skydome
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
 	skydome_ = new Skydome();
@@ -484,6 +497,12 @@ void GameScene2::Update() {
 		checkpoint1_->Update();
 		checkpoint2_->Update();
 		
+		if (!checkpoint2_->GetHasBeenTouchedPoint1() && !checkpoint1_->GetHasBeenTouched())
+		{
+			playHandle = 1;
+		}
+
+		
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -668,6 +687,10 @@ void GameScene2::CheckAllCollisions()
 		player_->OnCollisionGoal(goal_);
 		goal_->OnCollision(player_);
 		stageClear_ = true;
+		if (audio_->IsPlaying(playHandle4) == 0 && playHandle4 == 1)
+		{
+			playHandle4 = audio_->PlayWave(audioHandle4_, false, 0.5f);
+		}
 	}
 
 #pragma endregion
@@ -713,6 +736,10 @@ void GameScene2::CheckAllCollisions()
 		player_->OnCollision(checkpoint1_);
 		checkpoint1_->OnCollision(player_);
 		checkPoint2Reached_ = true;
+		if (audio_->IsPlaying(playHandle) == 0 && playHandle == 1)
+		{
+			playHandle = audio_->PlayWave(audioHandle_, false, 0.1f);
+		}
 	}
 
 	AABB aabb7 = checkpoint2_->GetAABB();
@@ -722,6 +749,11 @@ void GameScene2::CheckAllCollisions()
 		player_->OnCollision(checkpoint2_);
 		checkpoint2_->OnCollisionFirst(player_);
 		checkPoint1Reached_ = true;
+		if (audio_->IsPlaying(playHandle) == 0 && playHandle == 1)
+		{
+			playHandle = audio_->PlayWave(audioHandle_, false, 0.1f);
+		}
+		
 	}
 
 
@@ -780,6 +812,10 @@ void GameScene2::ChangePhase()
 	case Phase::kPlay:
 		if (player_->GetIsDead())
 		{
+			if (audio_->IsPlaying(playHandle2) == 0 && playHandle2 == 1)
+			{
+				playHandle2 = audio_->PlayWave(audioHandle2_, false, 0.1f);
+			}
 			phase_ = Phase::kDeath;
 			const Vector3& deathParticlePosition = player_->GetWorldPosition();
 			deathParticles_->Initialize(deathparticleModel_, viewProjection_, deathParticlePosition);
@@ -894,6 +930,7 @@ void GameScene2::WarningTriangle()
 	{
 		warningTimer = 0;
 		warningLoops++;
+		playHandle3 = 1;
 	}
 
 	if (warningLoops >= 3) 
@@ -904,6 +941,15 @@ void GameScene2::WarningTriangle()
 			spike->SetMoveRight(true);
 		}
 	}
+
+	if (warningTimer >= 20) 
+	{
+		if (audio_->IsPlaying(playHandle3) == 0 && playHandle3 == 1)
+		{
+			playHandle3 = audio_->PlayWave(audioHandle3_, false, 0.2f);
+		}
+	}
+	
 }
 
 void GameScene2::StageClearCamera()

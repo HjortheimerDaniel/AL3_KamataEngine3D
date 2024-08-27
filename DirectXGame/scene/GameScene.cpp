@@ -60,8 +60,10 @@ void GameScene::Initialize() {
 
 	audioHandle_ = audio_->LoadWave("powerUp.wav");
 	audioHandle2_ = audio_->LoadWave("explosion.wav");
+	audioHandle3_ = audio_->LoadWave("test.m4a");
 	playHandle = 1;
 	playHandle2 = 1;
+	playHandle3 = 1;
 
 #pragma endregion
 
@@ -422,10 +424,7 @@ void GameScene::CheckAllCollisions()
 			{
 				player_->OnCollision(enemy_);
 				enemy_->OnCollision(player_);
-				if (audio_->IsPlaying(playHandle2) == 0 && playHandle2 == 1)
-				{
-					playHandle2 = audio_->PlayWave(audioHandle2_, false, 1.0f);
-				}
+				
 			}
 
 			if (IsStompCollision(aabb1, aabb2) && !player_->GetOnGround())
@@ -434,7 +433,7 @@ void GameScene::CheckAllCollisions()
 				enemy->StompCollision(player_);
 				if (audio_->IsPlaying(playHandle) == 0 && playHandle == 1)
 				{
-					playHandle = audio_->PlayWave(audioHandle_, false, 1.0f);
+					playHandle = audio_->PlayWave(audioHandle_, false, 0.1f);
 				}
 				playHandle = 1;
 			}
@@ -451,6 +450,10 @@ void GameScene::CheckAllCollisions()
 		player_->OnCollisionGoal(goal_);
 		goal_->OnCollision(player_);
 		stageClear_ = true;
+		if (audio_->IsPlaying(playHandle3) == 0 && playHandle3 == 1)
+		{
+			playHandle3 = audio_->PlayWave(audioHandle3_, false, 0.5f);
+		}
 	}
 
 	#pragma endregion
@@ -521,6 +524,10 @@ void GameScene::ChangePhase()
 	case Phase::kPlay:
 		if (player_->GetIsDead())
 		{
+			if (audio_->IsPlaying(playHandle2) == 0 && playHandle2 == 1)
+			{
+				playHandle2 = audio_->PlayWave(audioHandle2_, false, 0.1f);
+			}
 			phase_ = Phase::kDeath;
 			const Vector3& deathParticlePosition = player_->GetWorldPosition();
 			deathParticles_->Initialize(deathparticleModel_, viewProjection_, deathParticlePosition);

@@ -118,6 +118,14 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	uint32_t textureHandle_ = 0;
+	uint32_t audioHandle_ = 0;
+	uint32_t audioHandle2_ = 0;
+	uint32_t audioHandle3_ = 0;
+	uint32_t audioHandle4_ = 0;
+	uint32_t playHandle = {};
+	uint32_t playHandle2 = {};
+	uint32_t playHandle3 = {};
+	uint32_t playHandle4 = {};
 	Sprite* sprite_ = nullptr;
 	Model* playerModel_ = nullptr;
 	Model* enemyModel_ = nullptr;

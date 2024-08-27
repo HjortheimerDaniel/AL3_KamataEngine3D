@@ -36,7 +36,7 @@ void StageManager::Update()
 {
 	if (audio_->IsPlaying(playHandle) == 0 && playHandle == 1)
 	{
-		playHandle = audio_->PlayWave(audioHandle_, false, 1.0f);
+		playHandle = audio_->PlayWave(audioHandle_, true, 0.7f);
 	}
 
 	ConstantThingies();

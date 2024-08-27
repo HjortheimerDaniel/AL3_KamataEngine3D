@@ -31,6 +31,10 @@ public:
 
 	void OnCollisionFirst(const Player* player);
 
+	bool GetHasBeenTouchedPoint1() { return hasBeenTouchedPoint1; };
+
+	bool GetHasBeenTouched() { return hasBeenTouched_; };
+
 	void Draw();
 
 private:
