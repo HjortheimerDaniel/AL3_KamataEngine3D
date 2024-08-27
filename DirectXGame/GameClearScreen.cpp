@@ -8,8 +8,13 @@ GameClearScreen::~GameClearScreen()
 {
 	delete titlePlayer_;
 	delete viewProjection_;
-	delete titleText_;
+	delete clearText_;
 	delete fade_;
+	for (GameClearText* titleText_ : gameClearTexts)
+	{
+		delete titleText_;
+	}
+	gameClearTexts.clear();
 }
 
 void GameClearScreen::Initialize()
@@ -31,15 +36,13 @@ void GameClearScreen::Initialize()
 	Vector3 playerPosition = { 1.0f, -5.0f, 1.0f };
 	titlePlayer_->Initialize(playerModel_, viewProjection_, playerPosition);
 
-	textModel_ = Model::CreateFromOBJ("gamecleartext1", true);
-	titleText_ = new TitleText();
-	Vector3 textPosition = { -40.0f, 3.0f, 1.0f };
-	titleText_->Initialize(textModel_, viewProjection_, textPosition);
-
-	textModel2_ = Model::CreateFromOBJ("title3DLand", true);
-	titleText2_ = new TitleText();
-	Vector3 textPosition2 = { 0.0f, 20.0f, 1.0f };
-	titleText2_->Initialize(textModel2_, viewProjection_, textPosition2);
+	for (int32_t i = 0; i < MAXTHANKYOU; i++)
+	{
+		GameClearText* newClearText_ = new GameClearText();
+		Vector3 textPos = textPos_[i];
+		newClearText_->Initialize(textModel[i], viewProjection_, textPos, startPos[i], startUpdate[i], amplitude[i]);
+		gameClearTexts.push_back(newClearText_);
+	}
 
 	fade_ = new Fade();
 	fade_->Initialize();
@@ -50,8 +53,11 @@ void GameClearScreen::Update()
 {
 	fade_->Update();
 	titlePlayer_->Update();
-	titleText_->Update();
-	titleText2_->Update();
+
+	for (GameClearText* titleText_ : gameClearTexts)
+	{
+		titleText_->Update();
+	}
 
 	if (Input::GetInstance()->PushKey(DIK_SPACE) && fade_->IsFinished())
 	{
@@ -93,11 +99,15 @@ void GameClearScreen::Draw()
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	titlePlayer_->Draw();
-	titleText_->Draw();
-	titleText2_->Draw();
 
+	for (GameClearText* titleText_ : gameClearTexts)
+	{
+		titleText_->Draw();
+	}
 	// 3Dオブジェクト描画後処理
+
 	fade_->Draw();
+
 	Model::PostDraw();
 
 #pragma endregion

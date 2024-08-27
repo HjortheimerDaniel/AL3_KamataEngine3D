@@ -4,6 +4,7 @@
 #define MAXSPIKES 3
 #define MAXSPIKES2 194
 #define MAXWINDS 5
+#define MAXTHANKYOU 12
 
 struct AABB {
 	Vector3 min;
