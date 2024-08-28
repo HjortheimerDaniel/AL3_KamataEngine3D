@@ -14,7 +14,6 @@
 #include "Skydome.h"
 #include "MapChipField.h"
 #include "CameraController.h"
-#include "Enemy.h"
 #include "DeathParticles.h"
 #include "Fade.h"
 #include "Goal.h"
@@ -72,10 +71,6 @@ public: // メンバ関数
 
 	bool IsCollision(const AABB& aabb1, const AABB& aabb2);
 
-	bool IsStompCollision(const AABB& aabb1, const AABB& aabb2);
-
-	void IsEnemyCloseToPlayer();
-
 	void ChangePhase();
 
 	void MoveCameraHorizontally();
@@ -128,7 +123,6 @@ private: // メンバ変数
 	uint32_t playHandle4 = {};
 	Sprite* sprite_ = nullptr;
 	Model* playerModel_ = nullptr;
-	Model* enemyModel_ = nullptr;
 	Model* deathparticleModel_ = nullptr;
 	Model* goalModel_ = nullptr;
 	Model* clearTextModel_ = nullptr;
@@ -151,8 +145,6 @@ private: // メンバ変数
 	CameraController* cameraController_ = nullptr;
 	Rect cameraRange = { 168.0f,28.5f,0.0f,16.0f + 167.0f };
 	float topStartCameraPos = 16.0f + 167.0f;
-	Enemy* enemy_ = nullptr;
-	std::list<Enemy*> enemies_;
 	std::list<Spikes*> spikes_;
 	std::list<Wind*> winds_;
 	DeathParticles* deathParticles_ = nullptr;

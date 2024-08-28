@@ -21,7 +21,6 @@ GameScene2::~GameScene2() {
 	delete modelSkydome_;
 	delete mapChipField_;
 	delete cameraController_;
-	delete enemy_;
 	delete deathParticles_;
 	delete viewProjection_;
 	delete goal_;
@@ -43,11 +42,6 @@ GameScene2::~GameScene2() {
 	delete parachuteTextModel2_;
 	delete parachuteText_;
 	delete parachuteText2_;
-	for (Enemy* enemy : enemies_)
-	{
-		delete enemy;
-	}
-	enemies_.clear();
 
 	for (Spikes* spike : spikes_)
 	{
@@ -128,22 +122,6 @@ void GameScene2::Initialize() {
 	playerPosition = playerSpawnPos;
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
-
-#pragma endregion
-
-#pragma region Enemy
-
-	enemyModel_ = Model::CreateFromOBJ("enemy", true);
-
-	for (int32_t i = 0; i < MAXENEMIES; i++)
-	{
-		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(enemySpawnX[i], enemySpawnY[i]);
-		newEnemy->Initialize(enemyModel_, viewProjection_, enemyPosition);
-		enemies_.push_back(newEnemy);
-		newEnemy->SetMapChipField(mapChipField_);
-
-	}
 
 #pragma endregion
 
@@ -432,11 +410,6 @@ void GameScene2::Update() {
 		skydome_->Update();
 		cameraController_->Update();
 		goal_->Update();
-		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
-			enemy->Update();
-
-		}
-		IsEnemyCloseToPlayer();
 		MoveCameraHorizontally();
 		if (parachuteText_->GetShowText())
 		{
@@ -475,9 +448,7 @@ void GameScene2::Update() {
 		//fade_->SetCounter_(0.0f);
 		MoveCameraHorizontally();
 		goal_->Update();
-		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
-			enemy->Update();
-		}
+
 		for (Spikes* spike : spikes_) { //create new Enemy enemy 
 
 			spike->Update();
@@ -485,7 +456,6 @@ void GameScene2::Update() {
 		//parachute_->Update();
 		//stageClearText_->Update();
 		CheckAllCollisions();
-		IsEnemyCloseToPlayer();
 		for (Wind* wind : winds_) 
 		{
 
@@ -558,9 +528,7 @@ void GameScene2::Update() {
 	case Phase::kDeath:
 		skydome_->Update();
 		goal_->Update();
-		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
-			enemy->Update();
-		}
+
 		if (deathParticles_)
 		{
 			deathParticles_->Update();
@@ -613,9 +581,7 @@ void GameScene2::Update() {
 		fade_->Update();
 		skydome_->Update();
 		goal_->Update();
-		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
-			enemy->Update();
-		}
+		
 		stageClearText_->Update();
 
 		viewProjection_->matView = cameraController_->GetViewProjection().matView;
@@ -651,33 +617,11 @@ void GameScene2::Update() {
 
 void GameScene2::CheckAllCollisions()
 {
-#pragma region player enemy
 
-	AABB aabb1, aabb2;
+	AABB aabb1;
 
 	aabb1 = player_->GetAABB();
-
-	for (Enemy* enemy : enemies_)
-	{
-		if (!enemy->GetIsDead())
-		{
-			aabb2 = enemy->GetAABB();
-
-			if (IsCollision(aabb1, aabb2))
-			{
-				player_->OnCollision(enemy_);
-				enemy_->OnCollision(player_);
-			}
-
-			if (IsStompCollision(aabb1, aabb2) && !player_->GetOnGround())
-			{
-				player_->StompCollision(enemy_);
-				enemy->StompCollision(player_);
-			}
-		}
-	}
-#pragma endregion
-
+	
 #pragma region player goal
 
 	AABB aabb3 = goal_->GetAABB();
@@ -704,7 +648,7 @@ void GameScene2::CheckAllCollisions()
 
 		if (IsCollision(aabb1, aabb4) && spike->GetStruct() == SpikesStruct::Active)
 		{
-			player_->OnCollision(enemy_);
+			player_->OnCollision(spike);
 		}
 	}
 
@@ -774,29 +718,6 @@ bool GameScene2::IsCollision(const AABB& aabb1, const AABB& aabb2)
 	}
 
 	return false;
-}
-
-bool GameScene2::IsStompCollision(const AABB& aabb1, const AABB& aabb2)
-{
-	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
-		(aabb1.min.y - aabb2.max.y <= stompDistance && aabb1.max.y >= aabb2.min.y) &&
-		(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z))
-	{
-		return true;
-	}
-
-	return false;
-}
-
-void GameScene2::IsEnemyCloseToPlayer()
-{
-	for (Enemy* enemy : enemies_)
-	{
-		if (enemy->GetWorldPosition().x - player_->GetWorldPosition().x <= activateEnemyDistance)
-		{
-			enemy->SetCanMove(true);
-		}
-	}
 }
 
 void GameScene2::ChangePhase()
@@ -1068,9 +989,7 @@ void GameScene2::Draw() {
 
 	case Phase::kFadeIn:
 		player_->Draw();
-		for (Enemy* enemy : enemies_) {
-			enemy->Draw();
-		}
+
 		skydome_->Draw();
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -1103,9 +1022,7 @@ void GameScene2::Draw() {
 		checkpoint1_->Draw();
 		checkpoint2_->Draw();
 		player_->Draw();
-		for (Enemy* enemy : enemies_) {
-			enemy->Draw();
-		}
+
 		for (Spikes* spike : spikes_)
 		{
 			if(spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x >= -60 && spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x < 60 && 
@@ -1147,9 +1064,7 @@ void GameScene2::Draw() {
 #pragma region Death
 
 	case Phase::kDeath:
-		for (Enemy* enemy : enemies_) {
-			enemy->Draw();
-		}
+	
 		deathParticles_->Draw();
 		skydome_->Draw();
 		goal_->Draw();
@@ -1187,9 +1102,7 @@ void GameScene2::Draw() {
 #pragma region FadeOut
 
 	case Phase::kFadeOut:
-		for (Enemy* enemy : enemies_) {
-			enemy->Draw();
-		}
+
 		skydome_->Draw();
 		goal_->Draw();
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
