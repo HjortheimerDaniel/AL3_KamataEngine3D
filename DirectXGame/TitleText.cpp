@@ -11,11 +11,12 @@ TitleText::~TitleText()
 {
 }
 
-void TitleText::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position)
+void TitleText::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position, bool isFloating)
 {
 	assert(model);
 	model_ = model;
 	viewProjection_ = viewProjection;
+	isFloating_ = isFloating;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
 	worldTransform_.scale_ = { titleSize, titleSize, titleSize };
@@ -25,13 +26,11 @@ void TitleText::Initialize(Model* model, ViewProjection* viewProjection, const V
 
 void TitleText::Update()
 {
-	theta += float(M_PI) / 150.0f;
-	worldTransform_.translation_.y = sinf(theta) * amplitude + 3.0f;
-
-	/*if (worldTransform_.translation_.y >= 1.0f) 
+	if (isFloating_)
 	{
-		worldTransform_.translation_.y--;
-	}*/
+		theta += float(M_PI) / 150.0f;
+		worldTransform_.translation_.y = sinf(theta) * amplitude + 3.0f;
+	}
 	worldTransform_.UpdateMatrix();
 }
 

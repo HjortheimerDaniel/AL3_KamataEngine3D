@@ -36,10 +36,14 @@ private:
 	Model* playerModel_ = nullptr;
 	Model* textModel_ = nullptr;
 	Model* textModel2_ = nullptr;
+	Model* textModel3_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	TitlePlayer* titlePlayer_ = nullptr;
+	TitlePlayer* titlePlayer2_ = nullptr;
+	TitlePlayer* titlePlayer3_ = nullptr;
 	TitleText* titleText_ = nullptr;
 	TitleText* titleText2_ = nullptr;
+	TitleText* titleText3_ = nullptr;
 	bool finished_ = false;
 	Fade* fade_ = nullptr;
 	float duration_ = 1.0f;

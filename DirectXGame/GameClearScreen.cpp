@@ -41,7 +41,7 @@ void GameClearScreen::Initialize()
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	titlePlayer_ = new TitlePlayer();
 	Vector3 playerPosition = { 1.0f, -5.0f, 1.0f };
-	titlePlayer_->Initialize(playerModel_, viewProjection_, playerPosition);
+	titlePlayer_->Initialize(playerModel_, viewProjection_, playerPosition, true, false, false);
 
 	for (int32_t i = 0; i < MAXTHANKYOU; i++)
 	{

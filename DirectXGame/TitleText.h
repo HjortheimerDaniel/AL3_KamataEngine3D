@@ -10,7 +10,7 @@ public:
 
 	~TitleText();
 
-	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position);
+	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position, bool isFloating);
 
 	void Update();
 
@@ -25,7 +25,7 @@ private:
 	ViewProjection* viewProjection_ = nullptr;
 	static inline const float titleSize = 8.0f;
 	float theta, amplitude;
-
+	bool isFloating_ = false;
 
 
 

@@ -304,41 +304,9 @@ void Player::Rotation()
 		float nowRotationY = std::lerp(turnFirstRotationY_, destinationRotationY, easing);
 		// Get angle from status
 		worldTransform_.rotation_.y = nowRotationY;
-
-		//float easing = 1 - turnTimer_ / kTimeTurn;
-		//float nowRotationY = std::lerp(turnFirstRotationY_, destinationRotationY, easing);
-
-		//worldTransform_.rotation_.y = destinationRotationY;
-		//worldTransform_.rotation_.y = EaseInSine(turnTimer_, turnFirstRotationY_, destinationRotationY, kTimeTurn);
 	}
 
-#pragma region Better rotation?
 
-	//if (turnTimer_ > 0.0f) {
-	//	turnTimer_ -= 1.0f / 60.0f;
-
-
-	//	float destinationRotationYTable[] =
-	//	{
-	//		 std::numbers::pi_v < float> / 2.0f, // Facing right
-	//		std::numbers::pi_v<float> *3.0f / 2.0f // Facing left
-	//	};
-
-	//	float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
-	//	if (destinationRotationY - turnFirstRotationY_ > std::numbers::pi_v<float>) {
-	//		destinationRotationY -= 2.0f * std::numbers::pi_v<float>;
-	//	}
-	//	else if (destinationRotationY - turnFirstRotationY_ < -std::numbers::pi_v<float>) {
-	//		destinationRotationY += 3.0f / 2.0f * std::numbers::pi_v<float>;
-	//	}
-
-	//	float easing = 1 - turnTimer_ / kTimeTurn;
-	//	float nowRotationY = std::lerp(turnFirstRotationY_, destinationRotationY, easing);
-
-	//	//worldTransform_.rotation_.y = destinationRotationY;
-	//	worldTransform_.rotation_.y = nowRotationY;
-
-#pragma endregion
 }
 
 void Player::CollisionCeiling(CollisionMapInfo& info)
