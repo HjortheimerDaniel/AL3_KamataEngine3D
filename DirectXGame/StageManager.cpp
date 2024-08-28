@@ -20,7 +20,7 @@ void StageManager::Initialize()
 
 #pragma endregion
 
-	scene = Scene::kGameClear;
+	scene = Scene::kGame;
 
 	gameScene = new GameScene();
 	gameScene->Initialize();
