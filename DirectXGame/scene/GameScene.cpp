@@ -98,7 +98,7 @@ void GameScene::Initialize() {
 	
 #pragma region Enemy
 
-	enemyModel_ = Model::CreateFromOBJ("enemycolor", true);
+	enemyModel_ = Model::CreateFromOBJ("enemy", true);
 
 	for (int32_t i = 0; i < MAXENEMIES; i++)
 	{
