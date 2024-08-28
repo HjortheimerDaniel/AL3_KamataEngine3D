@@ -96,6 +96,7 @@ void GameScene2::Initialize() {
 #pragma endregion
 
 #pragma region skydome
+
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_, viewProjection_);

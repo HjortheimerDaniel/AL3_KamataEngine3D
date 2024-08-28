@@ -116,6 +116,7 @@
     <ClCompile Include="DeathParticles.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Fade.cpp" />
+    <ClCompile Include="Fireworks.cpp" />
     <ClCompile Include="functions.cpp" />
     <ClCompile Include="GameClearScreen.cpp" />
     <ClCompile Include="GameClearText.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="DeathParticles.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Fade.h" />
+    <ClInclude Include="Fireworks.h" />
     <ClInclude Include="functions.h" />
     <ClInclude Include="GameClearScreen.h" />
     <ClInclude Include="GameClearText.h" />

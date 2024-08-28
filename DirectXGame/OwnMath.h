@@ -21,5 +21,7 @@
 
 	Vector3 Transform(const Vector3& vector, const Matrix4x4& Matrix);
 
+	Vector3 Normalize(Vector3 v);
+
 
 

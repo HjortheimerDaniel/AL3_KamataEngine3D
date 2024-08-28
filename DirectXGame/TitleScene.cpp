@@ -46,6 +46,10 @@ void TitleScene::Initialize()
 	fade_ = new Fade();
 	fade_->Initialize();
 	fade_->Start(Status::FadeIn, duration_);
+
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_, viewProjection_);
 }
 
 void TitleScene::Update()
@@ -55,7 +59,7 @@ void TitleScene::Update()
 	titlePlayer_->Update();
 	titleText_->Update();
 	titleText2_->Update();
-	
+	skydome_->Update();
 	if (Input::GetInstance()->PushKey(DIK_SPACE) && fade_->IsFinished()) 
 	{
 		clicks_ = 1;
@@ -98,7 +102,7 @@ void TitleScene::Draw()
 	titlePlayer_->Draw();
 	titleText_->Draw();
 	titleText2_->Draw();
-	
+	skydome_->Draw();
 	// 3Dオブジェクト描画後処理
 	fade_->Draw();
 	Model::PostDraw();

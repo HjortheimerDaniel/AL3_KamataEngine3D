@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "cassert"
+
 class GameClearText
 {
 public:

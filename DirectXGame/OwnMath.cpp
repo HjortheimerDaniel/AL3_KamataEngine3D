@@ -81,6 +81,20 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& Matrix)
 	return result;
 }
 
+Vector3 Normalize(Vector3 v)
+{
+
+	float normalize(v.x * v.x + v.y * v.y + v.z * v.z);
+
+	if (normalize != 0)
+	{
+		return Vector3(v.x / normalize, v.y / normalize, v.z / normalize);
+	}
+		return v;
+}
+
+
+
 Matrix4x4 MakeRotateMatrixX(float radian){
 	Matrix4x4 result = {
 	1.0f, 0.0f, 0.0f, 0.0f,

@@ -11,6 +11,9 @@
 #include "Fade.h"
 #include <vector>
 #include "struct.h"
+#include "Fireworks.h"
+#include "Skydome.h"
+
 
 class GameClearScreen
 {
@@ -34,6 +37,7 @@ private:
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	WorldTransform worldTransform_;
+	Model* fireworksModel_ = nullptr;
 	Model* playerModel_ = nullptr;
 	Model* textModel[MAXTHANKYOU] =
 	{
@@ -82,11 +86,12 @@ private:
 	TitlePlayer* titlePlayer_ = nullptr;
 	GameClearText* clearText_ = nullptr;
 	std::list<GameClearText*> gameClearTexts;
+	std::list<Fireworks*> fireworks;
 	bool finished_ = false;
 	Fade* fade_ = nullptr;
 	float duration_ = 1.0f;
 	int clicks_ = 0;
-	int desyncSin = 0;
+	Fireworks* firework_ = nullptr;
 	enum class Phase
 	{
 		kFadeIn,
@@ -96,5 +101,25 @@ private:
 
 	Phase phase_ = Phase::kFadeIn;
 
+	Vector3 fireworksPos_[MAXFIREWORKS] =
+	{
+		{-21.0f, -20.0f, 1.0f }, {41.0f, -20.0f, 1.0f },
+		{-21.0f, 30.0f, 1.0f }, {41.0f, 30.0f, 1.0f },
+
+	};
+
+	Vector4 fireworksColor[MAXFIREWORKS] =
+	{
+		{ 0,0,1,1 }, { 1,0,0,1 },
+		{ 0,1,1,1 }, { 0,1,0,0 },
+	};
+
+	int startFireworkUpdate[MAXFIREWORKS]
+	{
+		10, 50, 90, 140,
+	};
+
+	Model* modelSkydome_ = nullptr;
+	Skydome* skydome_ = nullptr;
 };
 

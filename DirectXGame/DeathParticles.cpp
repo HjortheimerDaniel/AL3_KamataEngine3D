@@ -43,8 +43,6 @@ void DeathParticles::Update()
 	{
 		isFinished_ = true;
 		counter_ = kDuration;
-		
-
 	}
 
 	if (isFinished_) 

@@ -10,11 +10,18 @@ GameClearScreen::~GameClearScreen()
 	delete viewProjection_;
 	delete clearText_;
 	delete fade_;
+	delete firework_;
 	for (GameClearText* titleText_ : gameClearTexts)
 	{
 		delete titleText_;
 	}
 	gameClearTexts.clear();
+
+	for (Fireworks* firework : fireworks)
+	{
+		delete firework;
+	}
+	fireworks.clear();
 }
 
 void GameClearScreen::Initialize()
@@ -47,13 +54,32 @@ void GameClearScreen::Initialize()
 	fade_ = new Fade();
 	fade_->Initialize();
 	fade_->Start(Status::FadeIn, duration_);
+
+	fireworksModel_ = Model::CreateFromOBJ("fireworks", true);
+	for (uint32_t i = 0; i < MAXFIREWORKS; i++)
+	{
+		Fireworks* newFireworks_ = new Fireworks();
+		Vector3 fireWorksPosition = fireworksPos_[i];
+		newFireworks_->Initialize(fireworksModel_, viewProjection_, fireWorksPosition, fireworksColor[i],startFireworkUpdate[i]);
+		fireworks.push_back(newFireworks_);
+
+	}
+	
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_, viewProjection_);
 }
 
 void GameClearScreen::Update()
 {
 	fade_->Update();
 	titlePlayer_->Update();
+	for (Fireworks* firework : fireworks)
+	{
 
+		firework->Update();
+	}
+	
 	for (GameClearText* titleText_ : gameClearTexts)
 	{
 		titleText_->Update();
@@ -68,6 +94,8 @@ void GameClearScreen::Update()
 	if (fade_->IsFinished() && clicks_ != 0) {
 		finished_ = true;
 	}
+
+	skydome_->Update();
 }
 
 void GameClearScreen::Draw()
@@ -99,12 +127,17 @@ void GameClearScreen::Draw()
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	titlePlayer_->Draw();
-
+	for (Fireworks* firework : fireworks)
+	{
+		firework->Draw();
+	}
 	for (GameClearText* titleText_ : gameClearTexts)
 	{
 		titleText_->Draw();
 	}
 	// 3Dオブジェクト描画後処理
+
+	skydome_->Draw();
 
 	fade_->Draw();
 
