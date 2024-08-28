@@ -54,7 +54,9 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-
+	ImGui::Begin("clicks");
+	ImGui::Text("%d", clicks_);
+	ImGui::End();
 	fade_->Update();
 	titlePlayer_->Update();
 	titleText_->Update();

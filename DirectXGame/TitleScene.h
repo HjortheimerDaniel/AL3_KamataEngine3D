@@ -52,7 +52,6 @@ private:
 	};
 
 	Phase phase_ = Phase::kFadeIn;
-
 	Model* modelSkydome_ = nullptr;
 	Skydome* skydome_ = nullptr;
 };
