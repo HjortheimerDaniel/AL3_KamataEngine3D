@@ -1,7 +1,7 @@
 #include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
-#include "imgui.h"
+//#include "imgui.h"
 
 GameScene::GameScene() {}
 
@@ -90,7 +90,6 @@ void GameScene::Initialize() {
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	//Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(9, 7);
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -162,7 +161,6 @@ void GameScene::Initialize() {
 	clearTextModel_ = Model::CreateFromOBJ("cleartext", true);
 	stageClearText_ = new ClearText();
 	Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)doorPosition.x, (uint32_t)doorPosition.y);
-	//Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
 	stageClearText_->Initialize(clearTextModel_, viewProjection_, doorPosition + Vector3((int) - 7, (int)6, 0));
 	stageClearText_->SetMapChipField(mapChipField_);
 	
@@ -247,7 +245,6 @@ void GameScene::Update() {
 		player_->Update();
 		player_->Movement();
 		skydome_->Update();
-		//fade_->SetCounter_(0.0f);
 		MoveCameraHorizontally();
 		goal_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
@@ -257,8 +254,6 @@ void GameScene::Update() {
 			spike->Update();
 			spike->SpikeTimer();
 		}
-
-		//stageClearText_->Update();
 		CheckAllCollisions();
 		IsEnemyCloseToPlayer();
 
@@ -275,16 +270,9 @@ void GameScene::Update() {
 
 
 
-		//debugCamera_->Update();
 
 #ifdef _DEBUG
-	/*if (input_->TriggerKey(DIK_SPACE) && !isDebugCameraActive_) {
-		isDebugCameraActive_ = true;
-	}
-	else if (input_->TriggerKey(DIK_SPACE) && isDebugCameraActive_) {
-		isDebugCameraActive_ = false;
-
-	}*/
+	
 		if (input_->TriggerKey(DIK_BACK))
 		{
 			isDebugCameraActive_ ^= true; //same as above
@@ -355,7 +343,6 @@ void GameScene::Update() {
 				worldTransformBlock->TransferMatrix();
 			}
 		}
-		//fade_->Update();
 
 		break;
 
@@ -388,12 +375,10 @@ void GameScene::Update() {
 		fade_->Update();
 		skydome_->Update();
 		goal_->Update();
-		//for (Enemy* enemy : enemies_) { //create new Enemy enemy 
-		//	enemy->Update();
-		//}
-			viewProjection_->matView = cameraController_->GetViewProjection().matView;
-			viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
-			viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
+		
+		viewProjection_->matView = cameraController_->GetViewProjection().matView;
+		viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
+		viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
 
 		break;
 
@@ -667,7 +652,11 @@ void GameScene::Draw() {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)
 					continue;
-				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+				if (worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x >= -60 && worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x < 60 &&
+					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 40 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -30)
+				{
+					modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+				}
 			}
 		}
 		goal_->Draw();
@@ -685,7 +674,11 @@ void GameScene::Draw() {
 		}
 		for (Spikes* spike : spikes_)
 		{
-			spike->Draw();
+			if (spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x >= -60 && spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x < 60 &&
+				spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 40 && spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -30)
+			{
+				spike->Draw();
+			}
 		}
 
 		skydome_->Draw();
@@ -694,11 +687,14 @@ void GameScene::Draw() {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)
 					continue;
-				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+				if (worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x >= -60 && worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x < 60 &&
+					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 40 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -30)
+				{
+					modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+				}
 			}
 		}
 		
-		//stageClearText_->Draw();
 		break;
 	#pragma endregion
 
@@ -715,12 +711,20 @@ void GameScene::Draw() {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)
 					continue;
-				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+				if (worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x >= -60 && worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x < 60 &&
+					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 40 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -30)
+				{
+					modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+				}
 			}
 		}
 		for (Spikes* spike : spikes_)
 		{
-			spike->Draw();
+			if (spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x >= -60 && spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x < 60 &&
+				spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 40 && spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -30)
+			{
+				spike->Draw();
+			}
 		}
 		break;
 
@@ -758,17 +762,6 @@ void GameScene::Draw() {
 	default:
 		break;
 	}
-	
-
-		
-	//if (deathParticles_)
-	//{
-	//}
-
-	//enemy_->Draw();
-	
-	
-	
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

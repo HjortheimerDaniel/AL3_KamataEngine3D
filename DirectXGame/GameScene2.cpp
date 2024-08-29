@@ -1,7 +1,7 @@
 #include "GameScene2.h"
 #include "TextureManager.h"
 #include <cassert>
-#include "imgui.h"
+//#include "imgui.h"
 
 GameScene2::GameScene2() {}
 
@@ -118,8 +118,6 @@ void GameScene2::Initialize() {
 
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
-	//Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	//playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 3);
 	playerPosition = playerSpawnPos;
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
@@ -183,7 +181,6 @@ void GameScene2::Initialize() {
 	clearTextModel_ = Model::CreateFromOBJ("cleartext", true);
 	stageClearText_ = new ClearText();
 	Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)doorPosition.x, (uint32_t)doorPosition.y);
-	//Vector3 clearPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
 	stageClearText_->Initialize(clearTextModel_, viewProjection_, doorPosition + Vector3((int)-7, (int)6, 0));
 	stageClearText_->SetMapChipField(mapChipField_);
 
@@ -347,8 +344,6 @@ void GameScene2::Initialize() {
 		winds_.push_back(newWinds);
 
 	}
-	//Vector3 windPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)47, (uint32_t)99);
-
 
 #pragma endregion
 
@@ -450,7 +445,6 @@ void GameScene2::Update() {
 		player_->Update();
 		player_->Movement();
 		skydome_->Update();
-		//fade_->SetCounter_(0.0f);
 		MoveCameraHorizontally();
 		goal_->Update();
 
@@ -458,8 +452,6 @@ void GameScene2::Update() {
 
 			spike->Update();
 		}
-		//parachute_->Update();
-		//stageClearText_->Update();
 		CheckAllCollisions();
 		for (Wind* wind : winds_) 
 		{
@@ -493,16 +485,10 @@ void GameScene2::Update() {
 
 
 
-		//debugCamera_->Update();
+		
 
 #ifdef _DEBUG
-	/*if (input_->TriggerKey(DIK_SPACE) && !isDebugCameraActive_) {
-		isDebugCameraActive_ = true;
-	}
-	else if (input_->TriggerKey(DIK_SPACE) && isDebugCameraActive_) {
-		isDebugCameraActive_ = false;
 
-	}*/
 		if (input_->TriggerKey(DIK_BACK))
 		{
 			isDebugCameraActive_ ^= true; //same as above
@@ -571,7 +557,6 @@ void GameScene2::Update() {
 				worldTransformBlock->TransferMatrix();
 			}
 		}
-		//fade_->Update();
 
 		break;
 
@@ -602,9 +587,6 @@ void GameScene2::Update() {
 		fade_->Update();
 		skydome_->Update();
 		goal_->Update();
-		//for (Enemy* enemy : enemies_) { //create new Enemy enemy 
-		//	enemy->Update();
-		//}
 		viewProjection_->matView = cameraController_->GetViewProjection().matView;
 		viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
 		viewProjection_->TransferMatrix(); //this function keeps check of the movement of your objects. If this isnt written the object wont move
@@ -704,11 +686,6 @@ void GameScene2::CheckAllCollisions()
 		}
 		
 	}
-
-
-
-
-
 #pragma endregion
 
 }
@@ -789,11 +766,6 @@ void GameScene2::ChangePhase()
 
 void GameScene2::MoveCameraHorizontally()
 {
-	
-	//ImGui::Begin("Test");
-	//ImGui::Text("Y %f", player_->GetWorldTransform().translation_.y);
-	//ImGui::Text("X %f", player_->GetWorldTransform().translation_.x);
-	//ImGui::End();
 	if (!inWind) 
 	{
 		if (player_->GetWorldTransform().translation_.y > 23.0f)
@@ -948,7 +920,6 @@ void GameScene2::ParachuteTextModelSwitch()
 	{
 		parachuteText_->SetShowText(false);
 		parachuteText2_->SetShowText(true);
-		//parachuteTextCount_ = 0;
 
 	}
 
@@ -1090,8 +1061,6 @@ void GameScene2::Draw() {
 			wind->Draw();
 		}
 		
-		//stageClearText_->Draw();
-
 		break;
 #pragma endregion
 
@@ -1200,14 +1169,6 @@ void GameScene2::Draw() {
 	default:
 		break;
 	}
-
-
-
-	//if (deathParticles_)
-	//{
-	//}
-
-	//enemy_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
