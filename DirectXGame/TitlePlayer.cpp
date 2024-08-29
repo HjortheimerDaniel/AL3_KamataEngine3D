@@ -57,7 +57,7 @@ void TitlePlayer::Movement()
 				velocity_.x = 0;
 			}
 		}
-		if (worldTransform_.translation_.x >= -60) {
+		if (worldTransform_.translation_.x >= -40) {
 			acceleration.x -= kAcceleration;
 		}
 
@@ -82,7 +82,7 @@ void TitlePlayer::Movement()
 			velocity_.x = 0;
 		}
 	}
-	if (worldTransform_.translation_.x <= 60 && !Input::GetInstance()->PushKey(DIK_LEFT) || worldTransform_.translation_.x >= -60 && !Input::GetInstance()->PushKey(DIK_RIGHT))
+	if (worldTransform_.translation_.x <= 60 && !Input::GetInstance()->PushKey(DIK_LEFT) || worldTransform_.translation_.x >= -40 && !Input::GetInstance()->PushKey(DIK_RIGHT))
 	{
 		worldTransform_.translation_.x += velocity_.x;
 	}
@@ -92,9 +92,9 @@ void TitlePlayer::Movement()
 		worldTransform_.translation_.x = 60;
 	}
 
-	if(worldTransform_.translation_.x <= -60)
+	if(worldTransform_.translation_.x <= -40)
 	{
-		worldTransform_.translation_.x = -60;
+		worldTransform_.translation_.x = -40;
 	}
 }
 

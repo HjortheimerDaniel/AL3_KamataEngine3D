@@ -56,6 +56,25 @@ void TitleScene::Initialize()
 	Vector3 textPosition3 = { -16.0f, 30.0f, 1.0f };
 	titleText3_->Initialize(textModel3_, viewProjection_, textPosition3,false);
 
+	textModel4_ = Model::CreateFromOBJ("rightleft", true);
+	titleText4_ = new TitleText();
+	Vector3 textPosition4 = { -70.0f, 15.0f, 3.0f };
+	titleText4_->Initialize(textModel4_, viewProjection_, textPosition4, false);
+
+	textModel5_ = Model::CreateFromOBJ("up", true);
+	titleText5_ = new TitleText();
+	Vector3 textPosition5 = { -70.0f, -25.0f, 3.0f };
+	titleText5_->Initialize(textModel5_, viewProjection_, textPosition5, false);
+
+	textModel6_ = Model::CreateFromOBJ("enter", true);
+	titleText6_ = new TitleText();
+	Vector3 textPosition6 = { -15.0f, -23.0f, 1.0f };
+	titleText6_->Initialize(textModel6_, viewProjection_, textPosition6, false);
+
+	titleText7_ = new TitleText();
+	Vector3 textPosition7 = { 40.0f, -36.0f, 1.0f };
+	titleText7_->Initialize(textModel6_, viewProjection_, textPosition7, false);
+
 	fade_ = new Fade();
 	fade_->Initialize();
 	fade_->Start(Status::FadeIn, duration_);
@@ -67,9 +86,7 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-	ImGui::Begin("clicks");
-	ImGui::Text("%d", clicks_);
-	ImGui::End();
+
 	fade_->Update();
 	skydome_->Update();
 	switch (clicks_)
@@ -78,22 +95,33 @@ void TitleScene::Update()
 		titlePlayer_->Update();
 		titleText_->Update();
 		titleText2_->Update();
+		titleText6_->Update();
+		enterTimer_++;
+
+		if (enterTimer_ >= 120) 
+		{
+			enterTimer_ = 0;
+		}
+
 		break;
 	case 1:
 		titlePlayer2_->Update();
 		titlePlayer3_->Update();
 		titleText3_->Update();
+		titleText4_->Update();
+		titleText5_->Update();
+		titleText7_->Update();
 		break;
 
 	default:
 		break;
 	}
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && fade_->IsFinished()) 
+	if (Input::GetInstance()->TriggerKey(DIK_RETURN) && fade_->IsFinished()) 
 	{
 		clicks_ ++;
 	}
 
-	if (clicks_ == 2 && Input::GetInstance()->TriggerKey(DIK_SPACE))
+	if (clicks_ == 2 && Input::GetInstance()->TriggerKey(DIK_RETURN))
 	{
 		fade_->Start(Status::FadeOut, duration_);
 	}
@@ -137,11 +165,20 @@ void TitleScene::Draw()
 		titlePlayer_->Draw();
 		titleText_->Draw();
 		titleText2_->Draw();
+		if (enterTimer_ >= 60) 
+		{
+			titleText6_->Draw();
+		}
+
 		break;
 	case 1:
 		titlePlayer2_->Draw();
 		titlePlayer3_->Draw();
 		titleText3_->Draw();
+		titleText4_->Draw();
+		titleText5_->Draw();
+		titleText7_->Draw();
+		break;
 	default:
 		break;
 	}

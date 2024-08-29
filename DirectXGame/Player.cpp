@@ -44,12 +44,7 @@ void Player::Update()
 	HitCeiling(collisionMapInfo);
 	//Movement();
 	FellBelowStage();
-	ImGui::Begin("Window");
-	ImGui::Text("velocity %f", velocity_.x);
-	ImGui::Text("leeway %d", leewayTimer);
-	ImGui::Text("wall Right %d", hitRightWall);
-	ImGui::Text("wall left %d", hitLeftWall);
-	ImGui::End();
+
 	
 	worldTransform_.UpdateMatrix();
 	//worldTransform_.TransferMatrix();
@@ -582,7 +577,6 @@ void Player::HitCeiling(const CollisionMapInfo& info)
 {
 	if(info.isHittingCeiling)
 	{
-		//ImGui::Text("hit ceiling");
 		velocity_.y = 0;
 	}
 }

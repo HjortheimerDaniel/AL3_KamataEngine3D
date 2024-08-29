@@ -58,8 +58,8 @@ GameScene2::~GameScene2() {
 
 void GameScene2::PlayerStartPos()
 {
-	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(1, 3);
-	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(60, 5);
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(1, 3);
+	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(68, 5);
 }
 
 void GameScene2::PlayerCheckpoint1Pos()
@@ -69,7 +69,7 @@ void GameScene2::PlayerCheckpoint1Pos()
 
 void GameScene2::PlayerCheckpoint2Pos()
 {
-	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(60, 5);
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(68, 5);
 	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(1, 3);
 }
 
@@ -422,7 +422,11 @@ void GameScene2::Update() {
 		}
 		ParachuteTextModelSwitch();
 		grey_->Update();
+		for (Wind* wind : winds_)
+		{
 
+			wind->Update();
+		}
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 
@@ -786,10 +790,10 @@ void GameScene2::ChangePhase()
 void GameScene2::MoveCameraHorizontally()
 {
 	
-	ImGui::Begin("Test");
-	ImGui::Text("Y %f", player_->GetWorldTransform().translation_.y);
-	ImGui::Text("X %f", player_->GetWorldTransform().translation_.x);
-	ImGui::End();
+	//ImGui::Begin("Test");
+	//ImGui::Text("Y %f", player_->GetWorldTransform().translation_.y);
+	//ImGui::Text("X %f", player_->GetWorldTransform().translation_.x);
+	//ImGui::End();
 	if (!inWind) 
 	{
 		if (player_->GetWorldTransform().translation_.y > 23.0f)
@@ -996,8 +1000,27 @@ void GameScene2::Draw() {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)
 					continue;
-				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+				if (worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x >= -60 && worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x < 60 &&
+					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 40 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -30)
+				{
+					modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+				}
 			}
+		}
+
+		for (Spikes* spike : spikes_)
+		{
+			if (spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x >= -60 && spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x < 60 &&
+				spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 40 && spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -30)
+			{
+				//Put spike.Draw in here
+				spike->Draw();
+			}
+		}
+
+		for (Wind* wind : winds_)
+		{
+			wind->Draw();
 		}
 		goal_->Draw();
 		if (parachuteText_->GetShowText() && !shownText_)
@@ -1027,12 +1050,11 @@ void GameScene2::Draw() {
 		for (Spikes* spike : spikes_)
 		{
 			if(spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x >= -60 && spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x < 60 && 
-			   spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 30 && spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -30)
+			   spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 40 && spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -30)
 			{
 				//Put spike.Draw in here
+				spike->Draw();
 			}
-			spike->Draw();
-
 		}
 		if (Input::GetInstance()->PushKey(DIK_SPACE) && !player_->GetOnGround())
 		{
@@ -1045,7 +1067,7 @@ void GameScene2::Draw() {
 				if (!worldTransformBlock)
 					continue;
 				if(worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x >= -60 && worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x < 60 &&
-					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 30 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -30)
+					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 40 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -30)
 				{
 					modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 
@@ -1069,13 +1091,31 @@ void GameScene2::Draw() {
 		deathParticles_->Draw();
 		skydome_->Draw();
 		goal_->Draw();
+		for (Wind* wind : winds_)
+		{
+			wind->Draw();
+		}
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)
 					continue;
-				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+				if (worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x >= -60 && worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x < 60 &&
+					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 40 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -30)
+				{
+					modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+				}
 			}
 		}
+		for (Spikes* spike : spikes_)
+		{
+			if (spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x >= -60 && spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x < 60 &&
+				spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 40 && spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -30)
+			{
+				//Put spike.Draw in here
+				spike->Draw();
+			}
+		}
+
 		break;
 
 #pragma endregion
@@ -1087,13 +1127,6 @@ void GameScene2::Draw() {
 		player_->Draw();
 		skydome_->Draw();
 		goal_->Draw();
-		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-				if (!worldTransformBlock)
-					continue;
-				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
-			}
-		}
 		stageClearText_->Draw();
 		fade_->Draw();
 		break;
@@ -1106,13 +1139,8 @@ void GameScene2::Draw() {
 
 		skydome_->Draw();
 		goal_->Draw();
-		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-				if (!worldTransformBlock)
-					continue;
-				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
-			}
-		}
+		
+		stageClearText_->Draw();
 		fade_->Draw();
 
 		break;

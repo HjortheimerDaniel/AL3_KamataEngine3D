@@ -6,7 +6,6 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "TitlePlayer.h"
 #include "GameClearText.h"
 #include "Fade.h"
 #include <vector>
@@ -38,7 +37,6 @@ private:
 	Audio* audio_ = nullptr;
 	WorldTransform worldTransform_;
 	Model* fireworksModel_ = nullptr;
-	Model* playerModel_ = nullptr;
 	Model* textModel[MAXTHANKYOU] =
 	{
 		{Model::CreateFromOBJ("gamecleartext1", true)},  {Model::CreateFromOBJ("a", true)}, {Model::CreateFromOBJ("r", true)},
@@ -83,7 +81,6 @@ private:
 	Model* textModel_ = nullptr;
 
 	ViewProjection* viewProjection_ = nullptr;
-	TitlePlayer* titlePlayer_ = nullptr;
 	GameClearText* clearText_ = nullptr;
 	std::list<GameClearText*> gameClearTexts;
 	std::list<Fireworks*> fireworks;

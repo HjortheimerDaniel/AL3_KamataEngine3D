@@ -6,7 +6,7 @@ GameClearScreen::GameClearScreen()
 
 GameClearScreen::~GameClearScreen()
 {
-	delete titlePlayer_;
+	
 	delete viewProjection_;
 	delete clearText_;
 	delete fade_;
@@ -36,12 +36,6 @@ void GameClearScreen::Initialize()
 	viewProjection_->UpdateViewMatrix();
 	viewProjection_->UpdateProjectionMatrix();
 	viewProjection_->TransferMatrix();
-
-
-	playerModel_ = Model::CreateFromOBJ("player", true);
-	titlePlayer_ = new TitlePlayer();
-	Vector3 playerPosition = { 1.0f, -5.0f, 1.0f };
-	titlePlayer_->Initialize(playerModel_, viewProjection_, playerPosition, true, false, false);
 
 	for (int32_t i = 0; i < MAXTHANKYOU; i++)
 	{
@@ -73,7 +67,6 @@ void GameClearScreen::Initialize()
 void GameClearScreen::Update()
 {
 	fade_->Update();
-	titlePlayer_->Update();
 	for (Fireworks* firework : fireworks)
 	{
 
@@ -83,16 +76,6 @@ void GameClearScreen::Update()
 	for (GameClearText* titleText_ : gameClearTexts)
 	{
 		titleText_->Update();
-	}
-
-	if (Input::GetInstance()->PushKey(DIK_SPACE) && fade_->IsFinished())
-	{
-		clicks_ = 1;
-		fade_->Start(Status::FadeOut, duration_);
-	}
-
-	if (fade_->IsFinished() && clicks_ != 0) {
-		finished_ = true;
 	}
 
 	skydome_->Update();
@@ -126,7 +109,6 @@ void GameClearScreen::Draw()
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	titlePlayer_->Draw();
 	for (Fireworks* firework : fireworks)
 	{
 		firework->Draw();

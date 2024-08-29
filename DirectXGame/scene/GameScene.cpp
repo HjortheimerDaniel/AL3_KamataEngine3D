@@ -707,6 +707,10 @@ void GameScene::Draw() {
 				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 			}
 		}
+		for (Spikes* spike : spikes_)
+		{
+			spike->Draw();
+		}
 		break;
 
 	#pragma endregion
@@ -738,6 +742,7 @@ void GameScene::Draw() {
 			enemy->Draw();
 		}
 		skydome_->Draw();
+		stageClearText_->Draw();
 		goal_->Draw();
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -745,6 +750,10 @@ void GameScene::Draw() {
 					continue;
 				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 			}
+		}
+		for (Spikes* spike : spikes_)
+		{
+			spike->Draw();
 		}
 		fade_->Draw();
 		
