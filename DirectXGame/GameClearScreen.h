@@ -113,7 +113,7 @@ private:
 
 	int startFireworkUpdate[MAXFIREWORKS]
 	{
-		10, 50, 90, 140,
+		10, 60, 110, 150,
 	};
 
 	Model* modelSkydome_ = nullptr;

@@ -68,6 +68,8 @@ public: // メンバ関数
 
 	void StageClearCamera();
 
+	void TransitionScene();
+
 	/// <summary>
 	/// 描画
 	/// </summary>
@@ -139,6 +141,9 @@ private: // メンバ変数
 	//Spike spawn position
 	uint32_t spikeSpawnX[MAXSPIKES] = { 45, 48, 51 };
 	uint32_t spikeSpawnY[MAXSPIKES] = { 6, 6, 6 };
+
+	uint32_t sceneTransitionTimer = 0;
+	bool isSceneTransitioning = false;
 
 	
 

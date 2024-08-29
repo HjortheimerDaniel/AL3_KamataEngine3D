@@ -374,7 +374,7 @@ void GameScene::Update() {
 			enemy->Update();
 		}
 		stageClearText_->Update();
-
+		TransitionScene();
 		viewProjection_->matView = cameraController_->GetViewProjection().matView;
 		viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
 		viewProjection_->TransferMatrix();
@@ -548,7 +548,7 @@ void GameScene::ChangePhase()
 		}
 		break;
 	case Phase::kStageClear:
-		if (Input::GetInstance()->PushKey(DIK_RETURN)) 
+		if (isSceneTransitioning) 
 		{
 			fade_->Start(Status::FadeOut, duration_);
 			phase_ = Phase::kFadeOut;
@@ -611,6 +611,17 @@ void GameScene::StageClearCamera()
 	cameraController_->SetStageClearCamera(true);
 	cameraController_->SetTargetOffset({ 2,goalCameraPos.y,goalCameraPos.z });
 	cameraController_->Update();
+}
+
+void GameScene::TransitionScene()
+{
+	sceneTransitionTimer++;
+
+	if (sceneTransitionTimer >= 130) 
+	{
+		isSceneTransitioning = true;
+		sceneTransitionTimer = 130;
+	}
 }
 
 void GameScene::Draw() {
@@ -722,13 +733,6 @@ void GameScene::Draw() {
 		player_->Draw();
 		skydome_->Draw();
 		goal_->Draw();
-		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-				if (!worldTransformBlock)
-					continue;
-				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
-			}
-		}
 		stageClearText_->Draw();
 		fade_->Draw();
 		break;
@@ -738,23 +742,13 @@ void GameScene::Draw() {
 	#pragma region FadeOut
 
 	case Phase::kFadeOut:
-		for (Enemy* enemy : enemies_) {
-			enemy->Draw();
-		}
 		skydome_->Draw();
 		stageClearText_->Draw();
-		goal_->Draw();
-		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-				if (!worldTransformBlock)
-					continue;
-				modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
-			}
-		}
-		for (Spikes* spike : spikes_)
+		if (isSceneTransitioning) 
 		{
-			spike->Draw();
+			goal_->Draw();
 		}
+	
 		fade_->Draw();
 		
 		break;

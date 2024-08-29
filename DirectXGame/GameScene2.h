@@ -79,6 +79,8 @@ public: // メンバ関数
 
 	void StageClearCamera();
 
+	void TransitionScene();
+
 	void UsingParachute();
 
 	void ParachuteTextModelSwitch();
@@ -199,6 +201,9 @@ private: // メンバ変数
 	int warningLoops = 0;
 	bool checkPoint2Reached_ = false;
 	bool checkPoint1Reached_ = false;
+
+	uint32_t sceneTransitionTimer = 0;
+	bool isSceneTransitioning = false;
 
 	SpikeSpawnConfig configs[MAXSPIKES2] = {
 	{0, 8, 8, 9, 1, 1},      // First range: X = 8 + i, Y = 9 + i

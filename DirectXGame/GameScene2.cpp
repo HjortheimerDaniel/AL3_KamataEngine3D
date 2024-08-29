@@ -588,7 +588,7 @@ void GameScene2::Update() {
 		goal_->Update();
 		
 		stageClearText_->Update();
-
+		TransitionScene();
 		viewProjection_->matView = cameraController_->GetViewProjection().matView;
 		viewProjection_->matProjection = cameraController_->GetViewProjection().matProjection;
 		viewProjection_->TransferMatrix();
@@ -762,7 +762,7 @@ void GameScene2::ChangePhase()
 		}
 		break;
 	case Phase::kStageClear:
-		if (Input::GetInstance()->PushKey(DIK_RETURN))
+		if (isSceneTransitioning)
 		{
 			fade_->Start(Status::FadeOut, duration_);
 			phase_ = Phase::kFadeOut;
@@ -897,6 +897,17 @@ void GameScene2::StageClearCamera()
 	cameraController_->Update();
 }
 
+void GameScene2::TransitionScene()
+{
+	sceneTransitionTimer++;
+
+	if (sceneTransitionTimer >= 130)
+	{
+		isSceneTransitioning = true;
+		sceneTransitionTimer = 130;
+	}
+}
+
 void GameScene2::UsingParachute()
 {
 
@@ -941,7 +952,7 @@ void GameScene2::ParachuteTextModelSwitch()
 
 	}
 
-	if (Input::GetInstance()->TriggerKey(DIK_RETURN) && parachuteTextCount_ == 0) 
+	if (Input::GetInstance()->TriggerKey(DIK_RETURN) && parachuteTextCount_ == 0 || Input::GetInstance()->TriggerKey(DIK_SPACE) && parachuteTextCount_ == 0)
 	{
 		parachuteTextCount_ = 1;
 		delayBetweenText_ = 1;
@@ -952,7 +963,7 @@ void GameScene2::ParachuteTextModelSwitch()
 		delayBetweenText_++;
 	}
 
-	if (Input::GetInstance()->TriggerKey(DIK_RETURN) && delayBetweenText_ >= 29)
+	if (Input::GetInstance()->TriggerKey(DIK_RETURN) && delayBetweenText_ >= 29 || Input::GetInstance()->TriggerKey(DIK_SPACE) && delayBetweenText_ >= 29)
 	{
 		parachuteTextCount_ = 2;
 		shownText_ = true;
@@ -1087,7 +1098,8 @@ void GameScene2::Draw() {
 #pragma region Death
 
 	case Phase::kDeath:
-	
+		checkpoint1_->Draw();
+		checkpoint2_->Draw();
 		deathParticles_->Draw();
 		skydome_->Draw();
 		goal_->Draw();
@@ -1136,11 +1148,49 @@ void GameScene2::Draw() {
 #pragma region FadeOut
 
 	case Phase::kFadeOut:
+		if (isSceneTransitioning)
+		{
 
-		skydome_->Draw();
-		goal_->Draw();
-		
-		stageClearText_->Draw();
+
+			skydome_->Draw();
+			goal_->Draw();
+
+			stageClearText_->Draw();
+		}
+		else 
+		{
+			skydome_->Draw();
+			for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+				for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+					if (!worldTransformBlock)
+						continue;
+					if (worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x >= -60 && worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x < 60 &&
+						worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 40 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -30)
+					{
+						modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
+					}
+				}
+			}
+
+			for (Spikes* spike : spikes_)
+			{
+				if (spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x >= -60 && spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x < 60 &&
+					spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 40 && spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -30)
+				{
+					//Put spike.Draw in here
+					spike->Draw();
+				}
+			}
+			checkpoint1_->Draw();
+			checkpoint2_->Draw();
+
+			goal_->Draw();
+
+			for (Wind* wind : winds_)
+			{
+				wind->Draw();
+			}
+		}
 		fade_->Draw();
 
 		break;

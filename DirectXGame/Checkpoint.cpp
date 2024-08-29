@@ -24,9 +24,6 @@ void Checkpoint::Initialize(Model* model, ViewProjection* viewProjection, const 
 
 void Checkpoint::Update()
 {
-	ImGui::Begin("spin");
-	ImGui::Text("%f", worldTransform_.rotation_.y);
-	ImGui::End();
 	worldTransform_.UpdateMatrix();
 	Spin();
 }

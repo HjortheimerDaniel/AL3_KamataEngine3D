@@ -107,7 +107,7 @@ void Fireworks::ResetFireWorks()
 		resetTimer_++;
 	}
 
-	if (resetTimer_ >= 60) 
+	if (resetTimer_ >= 200) 
 	{	
 		reset_ = true;
 
