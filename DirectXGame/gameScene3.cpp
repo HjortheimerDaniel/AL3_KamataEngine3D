@@ -46,6 +46,15 @@ GameScene3::~GameScene3()
 		delete spike;
 	}
 	spikes_.clear();
+
+	delete reverseCube_;
+
+
+	for (ReverseCubes* reversecube : reversedCubes_)
+	{
+		delete reversecube;
+	}
+	reversedCubes_.clear();
 }
 
 void GameScene3::Initialize() {
@@ -72,6 +81,10 @@ void GameScene3::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true); //find the model inside the skydome folder
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_, viewProjection_);
+
+	modelSkydome2_ = Model::CreateFromOBJ("skydomereverse", true); //find the model inside the skydome folder
+	skydome2_ = new Skydome();
+	skydome2_->Initialize(modelSkydome2_, viewProjection_);
 
 
 #pragma endregion
@@ -199,14 +212,27 @@ void GameScene3::Initialize() {
 
 #pragma endregion
 
+#pragma region ReverseCubes
+
+	
+
+	for (int32_t i = 0; i < MAXREVERSECUBES; i++)
+	{
+		ReverseCubes* newReverseCubes = new ReverseCubes();
+		Vector3 reverseBlockPosition = mapChipField_->GetMapChipPositionByIndex(reverseCubeSpawnX[i], reverseCubeSpawnY[i]);
+		newReverseCubes->Initialize(viewProjection_, reverseBlockPosition, isReversedBlock[i]);
+		reversedCubes_.push_back(newReverseCubes);
+		newReverseCubes->SetMapChipField(mapChipField_);
+
+	}
+
+
+#pragma endregion
+
 }
 
 void GameScene3::Update() {
-	ImGui::Begin("Stage3");
-	ImGui::Text("STAGE3333");
-	ImGui::End();
 	
-
 	ChangePhase();
 	switch (phase_)
 	{
@@ -249,8 +275,21 @@ void GameScene3::Update() {
 	case Phase::kPlay:
 
 		ReverseCamera();
-		player_->Update();
-		player_->Movement();
+		if (playerCanMove) 
+		{
+			player_->Update();
+			player_->Movement();
+
+		}
+		if (!IsChanged) 
+		{
+			skydome_->Update();
+		}
+		else 
+		{
+			skydome2_->Update();
+
+		}
 		skydome_->Update();
 		MoveCameraHorizontally();
 		goal_->Update();
@@ -260,6 +299,9 @@ void GameScene3::Update() {
 		for (Spikes* spike : spikes_) { //create new Enemy enemy 
 			spike->Update();
 			spike->SpikeTimer();
+		}
+		for (ReverseCubes* reverseCube : reversedCubes_) { //create new Enemy enemy 
+			reverseCube->Update();
 		}
 		CheckAllCollisions();
 		IsEnemyCloseToPlayer();
@@ -466,6 +508,21 @@ void GameScene3::CheckAllCollisions()
 #pragma endregion
 
 
+#pragma region player reversecubes
+
+	for (ReverseCubes* reversecube : reversedCubes_)
+	{
+		AABB aabb5 = reversecube->GetAABB();
+
+		if (IsCollision(aabb1, aabb5))
+		{
+			player_->OnCollision(reversecube);
+		}
+
+	}
+
+#pragma endregion
+
 }
 
 bool GameScene3::IsCollision(const AABB& aabb1, const AABB& aabb2)
@@ -505,8 +562,9 @@ void GameScene3::IsEnemyCloseToPlayer()
 
 void GameScene3::ReverseCamera()
 {
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && !IsChanged)
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && !IsChanged && changeTimer >= 10)
 	{
+		changeTimer = 0;
 		player_->SetReversed(true);
 		IsChanged = true;
 		cameraController_->SetIsReversed(true);
@@ -514,26 +572,39 @@ void GameScene3::ReverseCamera()
 
 	}
 
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && changeTimer >= 10)
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && IsChanged &&  changeTimer >= 10)
 	{
+		changeTimer = 0;
 		player_->SetReversed(false);
 		IsChanged = false;
 		cameraController_->SetIsReversed(false);
 		cameraController_->SetTargetOffset({ 0.0f, 0.0f, -40.0f });
-		
-
 
 	}
 
-	if (IsChanged)
+
+
+	if (changeTimer < 20) 
 	{
 		changeTimer++;
-	}
-	else
-	{
-		changeTimer = 0;
 
 	}
+	if (changeTimer >= 20) 
+	{
+		changeTimer = 20;
+
+	}
+
+	if (changeTimer == 20) 
+	{
+		playerCanMove = true;
+	}
+	else 
+	{
+		playerCanMove = false;
+
+	}
+	
 }
 
 void GameScene3::ChangePhase()
@@ -714,8 +785,27 @@ void GameScene3::Draw() {
 				spike->Draw();
 			}
 		}
+		
+		for (ReverseCubes* reverseCube : reversedCubes_) { //create new Enemy enemy 
+			if (reverseCube->GetIsReversed() && !IsChanged)
+			{
+				reverseCube->Draw();
+			}
+			else if (!reverseCube->GetIsReversed() && IsChanged) 
+			{
+				reverseCube->Draw();
+			}
+		}
+		if (!IsChanged)
+		{
+			skydome_->Draw();
+		}
+		else
+		{
+			skydome2_->Draw();
 
-		skydome_->Draw();
+		}
+		//skydome_->Draw();
 		goal_->Draw();
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {

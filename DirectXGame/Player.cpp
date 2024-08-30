@@ -30,6 +30,7 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 }
 void Player::Update()
 {
+
 	
 	Rotation();
 	//initialize collision
@@ -45,9 +46,7 @@ void Player::Update()
 	//Movement();
 	FellBelowStage();
 
-	ImGui::Begin("speed");
-	ImGui::Text("%f", velocity_.x);
-	ImGui::End();
+	
 	
 	worldTransform_.UpdateMatrix();
 	//worldTransform_.TransferMatrix();
@@ -177,6 +176,13 @@ void Player::Movement()
  #pragma endregion
 
 Vector3 acceleration = {};
+
+ImGui::Begin("speed");
+ImGui::Text("X %f", velocity_.x);
+ImGui::Text("Y %f", velocity_.y);
+ImGui::Text("acc Y %f", acceleration.y);
+ImGui::Text("ground %d", onGround_);
+ImGui::End();
 if (Input::GetInstance()->PushKey(DIK_RIGHT))
 {
 	if (velocity_.x < 0.0f) // were not moving to the right
@@ -238,6 +244,7 @@ if (!onGround_)
 	velocity_ += Vector3(0, -kGravityAcceleration, 0);
 	velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 }
+
 
 if (Input::GetInstance()->TriggerKey(DIK_UP) && onGround_ || Input::GetInstance()->TriggerKey(DIK_UP) && !hasJumped && leewayTimer < 10 /*&& !holdingSpace*/)
 {
@@ -380,14 +387,21 @@ void Player::CollisionFalling(CollisionMapInfo& info)
 	//}
 
 	MapChipType mapChipType;
-	bool hit = false;
+	//bool hit = false;
 	IndexSet indexSet;
+	bool hit = false;
 
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + Vector3(0, kAdjustLanding, 0));
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock)
 	{
 		hit = true;
+	} 
+	else 
+	{
+		hit = false;
+
+
 	}
 
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom] + Vector3(0, kAdjustLanding, 0));
@@ -395,6 +409,12 @@ void Player::CollisionFalling(CollisionMapInfo& info)
 	if (mapChipType == MapChipType::kBlock)
 	{
 		hit = true;
+	}
+	else
+	{
+		hit = false;
+
+
 	}
 
 	if (!hit)
@@ -408,17 +428,6 @@ void Player::CollisionFalling(CollisionMapInfo& info)
 		}*/
 
 	}
-
-	/*if (jumpLeeway) 
-	{
-		leewayTimer++;
-	}
-
-	if (leewayTimer == 30) 
-	{
-		jumpLeeway = false;
-	}*/
-	
 
 	if (hit)
 	{
@@ -581,16 +590,6 @@ Vector3 Player::CornerPositon(const Vector3& center, Corner corner)
 void Player::AfterCollision(const CollisionMapInfo& info)
 {
 	worldTransform_.translation_ += info.movement;
-
-	//if (Input::GetInstance()->PushKey(DIK_LEFT) /*|| Input::GetInstance()->PushKey(DIK_UP)*/)
-	//{
-	//	hitRightWall = false;
-	//}
-
-	//if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_UP))
-	//{
-	//	hitLeftWall = false;
-	//}
 }
 
 void Player::HitCeiling(const CollisionMapInfo& info)
@@ -655,6 +654,12 @@ void Player::OnCollision(const Checkpoint* checkpoint)
 	(void)checkpoint;
 }
 
+void Player::OnCollision(const ReverseCubes* reverseCubes)
+{
+	(void)reverseCubes;
+	isDead_ = true;
+}
+
 void Player::OnCollisionGoal(const Goal* goal)
 {
 	(void)goal;
@@ -667,6 +672,7 @@ void Player::StompCollision(const Enemy* enemy)
 	velocity_ += Vector3(0, kStompAcceleration, 0);
 	onGround_ = false;
 }
+
 
 void Player::Draw()
 {

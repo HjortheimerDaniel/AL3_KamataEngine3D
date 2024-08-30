@@ -130,6 +130,7 @@
     <ClCompile Include="Parachute.cpp" />
     <ClCompile Include="ParachuteText.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ReverseCubes.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="Skydome.cpp" />
     <ClCompile Include="Spikes.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Parachute.h" />
     <ClInclude Include="ParachuteText.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="ReverseCubes.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="Skydome.h" />
     <ClInclude Include="Spikes.h" />

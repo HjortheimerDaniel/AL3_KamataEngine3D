@@ -21,6 +21,7 @@
 #include "struct.h"
 #include "ClearText.h"
 #include "Spikes.h"
+#include "ReverseCubes.h"
 
 #define NOMINMAX
 
@@ -107,12 +108,14 @@ private: // メンバ変数
 	ViewProjection* viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
+	Skydome* skydome2_ = nullptr;
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
 	std::vector<std::vector<WorldTransform*>>worldTransformBlocks_;
 	//std::vector<std::vector<WorldTransform*>>worldTransformDeathParticles_;
 	Model* modelBlock_ = nullptr;
 	Model* modelSkydome_ = nullptr;
+	Model* modelSkydome2_ = nullptr;
 	MapChipField* mapChipField_ = nullptr;
 	MapChipField* mapChipField2_ = nullptr;
 	CameraController* cameraController_ = nullptr;
@@ -120,8 +123,10 @@ private: // メンバ変数
 	Enemy* enemy_ = nullptr;
 	std::list<Enemy*> enemies_;
 	std::list<Spikes*> spikes_;
+	std::list<ReverseCubes*> reversedCubes_;
 	DeathParticles* deathParticles_ = nullptr;
 	Phase phase_;
+	ReverseCubes* reverseCube_ = nullptr;
 	bool isDead_ = false;
 	bool finished_ = false;
 	Fade* fade_ = nullptr;
@@ -137,7 +142,7 @@ private: // メンバ変数
 	static inline const float minCameraRangeTop = 16.0f + 160.0f;
 	Spikes* spike_ = nullptr;
 	bool IsChanged = false;
-	int changeTimer = 0;
+	int changeTimer = 20;
 
 	//Enemy spawn position
 	uint32_t enemySpawnX[MAXENEMIES] = { 20 , 30, 60, 40 };
@@ -147,8 +152,14 @@ private: // メンバ変数
 	uint32_t spikeSpawnX[MAXSPIKES] = { 45, 48, 51 };
 	uint32_t spikeSpawnY[MAXSPIKES] = { 6, 6, 6 };
 
+	uint32_t reverseCubeSpawnX[MAXREVERSECUBES] = { 6, 8};
+	uint32_t reverseCubeSpawnY[MAXREVERSECUBES] = { 95, 95 };
+
+	bool isReversedBlock[MAXREVERSECUBES] = { true, false };
+
 	uint32_t sceneTransitionTimer = 0;
 	bool isSceneTransitioning = false;
+	bool playerCanMove;
 
 
 

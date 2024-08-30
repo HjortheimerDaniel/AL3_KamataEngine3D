@@ -26,6 +26,8 @@ class Wind;
 
 class Checkpoint;
 
+class ReverseCubes;
+
 class Player
 {
 	public:
@@ -86,9 +88,13 @@ class Player
 
 		void OnCollision(const Checkpoint* checkpoint);
 
+		void OnCollision(const ReverseCubes* reverseCubes);
+
 		void OnCollisionGoal(const Goal* goal);
 		
 		void StompCollision(const Enemy* enemy);
+
+		void StompCollision(const ReverseCubes* reverseCubes);
 
 		bool GetIsDead() const { return isDead_; };
 
@@ -153,6 +159,7 @@ class Player
 		int leewayTimer = 0;
 		bool hasJumped = false;
 		bool reverse_ = false;
+
 
 
 };
