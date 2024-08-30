@@ -653,7 +653,7 @@ void GameScene::Draw() {
 				if (!worldTransformBlock)
 					continue;
 				if (worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x >= -60 && worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x < 60 &&
-					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 40 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -30)
+					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 50 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -40)
 				{
 					modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 				}
@@ -675,7 +675,7 @@ void GameScene::Draw() {
 		for (Spikes* spike : spikes_)
 		{
 			if (spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x >= -60 && spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x < 60 &&
-				spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 40 && spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -30)
+				spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 50 && spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -40)
 			{
 				spike->Draw();
 			}
@@ -688,7 +688,7 @@ void GameScene::Draw() {
 				if (!worldTransformBlock)
 					continue;
 				if (worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x >= -60 && worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x < 60 &&
-					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 40 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -30)
+					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 50 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -40)
 				{
 					modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 				}
@@ -712,7 +712,7 @@ void GameScene::Draw() {
 				if (!worldTransformBlock)
 					continue;
 				if (worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x >= -60 && worldTransformBlock->translation_.x - player_->GetWorldTransform().translation_.x < 60 &&
-					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 40 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -30)
+					worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y <= 50 && worldTransformBlock->translation_.y - player_->GetWorldTransform().translation_.y >= -40)
 				{
 					modelBlock_->Draw(*worldTransformBlock, *viewProjection_);
 				}
@@ -721,7 +721,7 @@ void GameScene::Draw() {
 		for (Spikes* spike : spikes_)
 		{
 			if (spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x >= -60 && spike->GetWorldPosition().x - player_->GetWorldTransform().translation_.x < 60 &&
-				spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 40 && spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -30)
+				spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 50 && spike->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -40)
 			{
 				spike->Draw();
 			}
