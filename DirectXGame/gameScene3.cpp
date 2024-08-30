@@ -81,7 +81,7 @@ void GameScene3::Initialize() {
 	mapChipField_ = new MapChipField;
 	mapChipField_->Initialize(100, 100); //HERE
 	mapChipField_->ResetMapChipData();
-	mapChipField_->LoadMapChipCsv("Resources/mapchip/blockstest.csv");
+	mapChipField_->LoadMapChipCsv("Resources/mapchip/blocks4.csv");
 	GenerateBlocks();
 
 #pragma endregion
@@ -90,7 +90,7 @@ void GameScene3::Initialize() {
 
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 98);
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -218,6 +218,7 @@ void GameScene3::Update() {
 		fade_->Update();
 		player_->Update();
 		skydome_->Update();
+		MoveCameraHorizontally();
 		cameraController_->Update();
 		goal_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
@@ -599,21 +600,15 @@ void GameScene3::ChangePhase()
 
 void GameScene3::MoveCameraHorizontally()
 {
-	if (player_->GetWorldPosition().y > 18 + 160 && cameraRange.top <= maxCameraRangeTop)
+	if (player_->GetWorldTransform().translation_.y > 23.0f)
 	{
-		cameraRange.top += 0.1f;
-
+		cameraRange.top = player_->GetWorldPosition().y - 9.0f;
 	}
-	else if (player_->GetWorldPosition().y < 18 + 160 && cameraRange.top >= minCameraRangeTop)
+	else
 	{
-		cameraRange.top -= 0.2f;
-
+		cameraRange.top = 15.0f;
 	}
 
-	if (cameraRange.top <= minCameraRangeTop)
-	{
-		cameraRange.top = minCameraRangeTop;
-	}
 	cameraController_->SetMoveableArea(cameraRange);
 	cameraController_->Update();
 }
