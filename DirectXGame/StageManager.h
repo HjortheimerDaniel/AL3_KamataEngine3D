@@ -1,6 +1,7 @@
 #pragma once
 #include "TitleScene.h"
 #include "GameScene2.h"
+#include "GameScene3.h"
 #include "GameScene.h"
 #include "GameClearScreen.h"
 #include "Audio.h"
@@ -31,6 +32,7 @@ private:
 	Scene scene = Scene::kUnknown;
 	GameScene* gameScene = nullptr;
 	GameScene2* gameScene2 = nullptr;
+	GameScene3* gameScene3 = nullptr;
 	TitleScene* titleScene = nullptr;
 	GreyPauseVeil* greyPauseVeil = nullptr;
 	GameClearScreen* gameClearScreen = nullptr;

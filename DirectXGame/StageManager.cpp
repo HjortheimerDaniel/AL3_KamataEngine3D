@@ -5,6 +5,7 @@ StageManager::~StageManager()
 {
 	delete gameScene;
 	delete gameScene2;
+	delete gameScene3;
 	delete titleScene;
 	delete gameClearScreen;
 	delete greyPauseVeil;
@@ -21,7 +22,7 @@ void StageManager::Initialize()
 
 #pragma endregion
 
-	scene = Scene::kTitle;
+	scene = Scene::kGame2;
 
 	gameScene = new GameScene();
 	gameScene->Initialize();
@@ -29,6 +30,9 @@ void StageManager::Initialize()
 	gameScene2 = new GameScene2();
 	gameScene2->PlayerStartPos();
 	gameScene2->Initialize();
+
+	gameScene3 = new GameScene3();
+	gameScene3->Initialize();
 
 	titleScene = new TitleScene();
 	titleScene->Initialize();
@@ -152,9 +156,32 @@ void StageManager::ChangeScene()
 		}
 		if (gameScene2->GetGoToNextStage()) 
 		{
-			scene = Scene::kGameClear;
+			scene = Scene::kGame3;
 			delete gameScene2;
 			gameScene2 = nullptr;
+			gameScene3 = new GameScene3;
+			gameScene3->Initialize();
+		}
+
+		break;
+	case Scene::kGame3:
+		if (gameScene3->GetIsFinished())
+		{
+
+			scene = Scene::kGame3;
+			delete gameScene3;
+			gameScene3 = nullptr;
+			gameScene3 = new GameScene3;
+			gameScene3->Initialize();
+			//titleScene = new TitleScene;
+			//titleScene->Initialize();
+		}
+
+		if (gameScene3->GetGoToNextStage())
+		{
+			scene = Scene::kGameClear;
+			delete gameScene3;
+			gameScene3 = nullptr;
 			gameClearScreen = new GameClearScreen;
 			gameClearScreen->Initialize();
 		}
@@ -201,6 +228,11 @@ void StageManager::UpdateScene()
 			gameScene2->Update();
 		}
 		break;
+	case Scene::kGame3:
+		if (!isPaused)
+		{
+			gameScene3->Update();
+		}
 	case Scene::kGameClear:
 		gameClearScreen->Update();
 	default:
@@ -223,6 +255,9 @@ void StageManager::DrawScene()
 		break;
 	case Scene::kGame2:
 		gameScene2->Draw();
+		break;
+	case Scene::kGame3:
+		gameScene3->Draw();
 		break;
 	case Scene::kGameClear:
 		gameClearScreen->Draw();

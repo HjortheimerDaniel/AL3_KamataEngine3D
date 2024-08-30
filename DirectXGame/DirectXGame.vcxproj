@@ -121,6 +121,7 @@
     <ClCompile Include="GameClearScreen.cpp" />
     <ClCompile Include="GameClearText.cpp" />
     <ClCompile Include="GameScene2.cpp" />
+    <ClCompile Include="gameScene3.cpp" />
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="GreyPauseVeil.cpp" />
     <ClCompile Include="main.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="GameClearScreen.h" />
     <ClInclude Include="GameClearText.h" />
     <ClInclude Include="GameScene2.h" />
+    <ClInclude Include="gameScene3.h" />
     <ClInclude Include="Goal.h" />
     <ClInclude Include="GreyPauseVeil.h" />
     <ClInclude Include="input\Input.h" />
