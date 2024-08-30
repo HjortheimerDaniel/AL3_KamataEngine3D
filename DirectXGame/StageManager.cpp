@@ -7,6 +7,7 @@ StageManager::~StageManager()
 	delete gameScene2;
 	delete titleScene;
 	delete gameClearScreen;
+	delete greyPauseVeil;
 }
 
 void StageManager::Initialize()
@@ -20,7 +21,7 @@ void StageManager::Initialize()
 
 #pragma endregion
 
-	scene = Scene::kGame;
+	scene = Scene::kGame2;
 
 	gameScene = new GameScene();
 	gameScene->Initialize();
@@ -34,6 +35,9 @@ void StageManager::Initialize()
 
 	gameClearScreen = new GameClearScreen();
 	gameClearScreen->Initialize();
+
+	greyPauseVeil = new GreyPauseVeil();
+	greyPauseVeil->Initialize(true);
 }
 
 void StageManager::Update()
@@ -48,6 +52,17 @@ void StageManager::Update()
 	}
 	ChangeScene();
 	UpdateScene();
+	Pause();
+	if (isPaused) 
+	{
+		greyPauseVeil->Update();
+		audio_->SetVolume(playHandle, 0.3f);
+	} 
+	else 
+	{
+		audio_->SetVolume(playHandle, 0.7f);
+
+	}
 }
 
 void StageManager::ConstantThingies()
@@ -153,6 +168,18 @@ void StageManager::ChangeScene()
 	}
 }
 
+void StageManager::Pause()
+{
+	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE) && !isPaused) 
+	{
+		isPaused = true;
+	} 
+	else if (Input::GetInstance()->TriggerKey(DIK_ESCAPE) && isPaused) 
+	{
+		isPaused = false;
+	}
+}
+
 void StageManager::UpdateScene()
 {
 	switch (scene)
@@ -163,10 +190,16 @@ void StageManager::UpdateScene()
 		titleScene->Update();
 		break;
 	case Scene::kGame:
-		gameScene->Update();
+		if (!isPaused) 
+		{
+			gameScene->Update();
+		}
 		break;
 	case Scene::kGame2:
-		gameScene2->Update();
+		if (!isPaused) 
+		{
+			gameScene2->Update();
+		}
 		break;
 	case Scene::kGameClear:
 		gameClearScreen->Update();
@@ -177,6 +210,7 @@ void StageManager::UpdateScene()
 
 void StageManager::DrawScene()
 {
+	
 	switch (scene)
 	{
 	case Scene::kUnknown:
@@ -194,6 +228,10 @@ void StageManager::DrawScene()
 		gameClearScreen->Draw();
 	default:
 		break;
+	}
+	if (isPaused)
+	{
+		greyPauseVeil->Draw();
 	}
 }
 

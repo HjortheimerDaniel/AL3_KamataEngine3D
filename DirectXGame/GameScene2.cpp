@@ -162,7 +162,7 @@ void GameScene2::Initialize() {
 #pragma region GreyPauseVeil
 
 	grey_ = new GreyPauseVeil();
-	grey_->Initialize();
+	grey_->Initialize(false);
 
 #pragma endregion
 
@@ -1038,7 +1038,7 @@ void GameScene2::Draw() {
 				spike->Draw();
 			}
 		}
-		if (Input::GetInstance()->PushKey(DIK_SPACE) && !player_->GetOnGround())
+		if (parachute_->GetUsingParachute())
 		{
 			parachute_->Draw();
 		}

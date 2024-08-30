@@ -4,6 +4,7 @@
 #include "GameScene.h"
 #include "GameClearScreen.h"
 #include "Audio.h"
+#include "GreyPauseVeil.h"
 
 class StageManager
 {
@@ -19,6 +20,8 @@ public:
 
 	void ChangeScene();
 
+	void Pause();
+
 	void UpdateScene();
 
 	void DrawScene();
@@ -29,6 +32,7 @@ private:
 	GameScene* gameScene = nullptr;
 	GameScene2* gameScene2 = nullptr;
 	TitleScene* titleScene = nullptr;
+	GreyPauseVeil* greyPauseVeil = nullptr;
 	GameClearScreen* gameClearScreen = nullptr;
 	bool checkpoint1 = false;
 	bool checkpoint2 = false;
@@ -36,6 +40,7 @@ private:
 	uint32_t audioHandle_ = 0;
 	uint32_t playHandle = {};
 	Audio* audio_ = nullptr;
+	bool isPaused = false;
 
 };
 

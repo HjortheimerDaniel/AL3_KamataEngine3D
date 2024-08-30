@@ -204,6 +204,7 @@ private: // メンバ変数
 
 	uint32_t sceneTransitionTimer = 0;
 	bool isSceneTransitioning = false;
+	bool isPaused = true;
 
 	SpikeSpawnConfig configs[MAXSPIKES2] = {
 	{0, 8, 8, 9, 1, 1},      // First range: X = 8 + i, Y = 9 + i
