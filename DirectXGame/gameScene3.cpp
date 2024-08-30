@@ -119,6 +119,7 @@ void GameScene3::Initialize() {
 	cameraController_->SetTarget(player_); //follow the player
 	cameraController_->Reset();
 	cameraController_->SetMoveableArea(cameraRange);
+	
 
 
 #pragma endregion
@@ -204,6 +205,8 @@ void GameScene3::Update() {
 	ImGui::Begin("Stage3");
 	ImGui::Text("STAGE3333");
 	ImGui::End();
+	
+
 	ChangePhase();
 	switch (phase_)
 	{
@@ -244,7 +247,7 @@ void GameScene3::Update() {
 
 	case Phase::kPlay:
 
-
+		ReverseCamera();
 		player_->Update();
 		player_->Movement();
 		skydome_->Update();
@@ -496,6 +499,39 @@ void GameScene3::IsEnemyCloseToPlayer()
 		{
 			enemy->SetCanMove(true);
 		}
+	}
+}
+
+void GameScene3::ReverseCamera()
+{
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && !IsChanged)
+	{
+		player_->SetReversed(true);
+		IsChanged = true;
+		cameraController_->SetIsReversed(true);
+		cameraController_->SetTargetOffset({ 0.0f, 0.0f, 40.0f });
+
+	}
+
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && changeTimer >= 10)
+	{
+		player_->SetReversed(false);
+		IsChanged = false;
+		cameraController_->SetIsReversed(false);
+		cameraController_->SetTargetOffset({ 0.0f, 0.0f, -40.0f });
+		
+
+
+	}
+
+	if (IsChanged)
+	{
+		changeTimer++;
+	}
+	else
+	{
+		changeTimer = 0;
+
 	}
 }
 

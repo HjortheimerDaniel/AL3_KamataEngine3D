@@ -36,6 +36,10 @@ class CameraController
 
 		void SetStageClearCamera(bool clear) { stageClearCamera_ = clear; };
 
+		void SetIsReversed(bool isReversed) { isReversed_ = isReversed; };
+
+		bool GetIsReversed() { return isReversed_; };
+
 
 	private:
 
@@ -48,6 +52,7 @@ class CameraController
 		static inline const float kVelocityBias = 20.0f;
 		static inline const Rect margin = { -400.0f, 400.0f, -200.0f, 200.0f };
 		bool stageClearCamera_ = false;
+		bool isReversed_ = false;
 
 };
 

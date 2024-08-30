@@ -1,5 +1,6 @@
 #include "CameraController.h"
 #include "Player.h"
+#include "imgui.h"
 void CameraController::Initialize()
 {
 	viewProjection_.Initialize();
@@ -7,6 +8,34 @@ void CameraController::Initialize()
 
 void CameraController::Update()
 {
+	/*ImGui::Begin("View");
+	ImGui::DragFloat3("view", &viewProjection_.rotation_.y, 0.01f);
+	ImGui::End();*/
+	if (isReversed_) 
+	{
+		if (viewProjection_.rotation_.y <= 3.1f) 
+		{
+			viewProjection_.rotation_.y += 0.2f;
+
+		}
+		if (viewProjection_.rotation_.y >= 3.1f) 
+		{
+			viewProjection_.rotation_.y = 3.1f;
+		}
+
+	}
+	else 
+	{
+		if (viewProjection_.rotation_.y >= 0.0f)
+		{
+			viewProjection_.rotation_.y -= 0.2f;
+
+		}
+		if (viewProjection_.rotation_.y <= 0.0f)
+		{
+			viewProjection_.rotation_.y = 0.0f;
+		}
+	}
 	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
 	if (target_->GetVelocity().x > 0.5f) {
 		printf("");

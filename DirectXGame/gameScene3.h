@@ -62,6 +62,8 @@ public: // メンバ関数
 
 	void IsEnemyCloseToPlayer();
 
+	void ReverseCamera();
+
 	void ChangePhase();
 
 	void MoveCameraHorizontally();
@@ -112,6 +114,7 @@ private: // メンバ変数
 	Model* modelBlock_ = nullptr;
 	Model* modelSkydome_ = nullptr;
 	MapChipField* mapChipField_ = nullptr;
+	MapChipField* mapChipField2_ = nullptr;
 	CameraController* cameraController_ = nullptr;
 	Rect cameraRange = { 168.0f,28.5f,0.0f,16.0f + 160.0f };
 	Enemy* enemy_ = nullptr;
@@ -133,6 +136,8 @@ private: // メンバ変数
 	static inline const float maxCameraRangeTop = 22.0f + 160.0f;
 	static inline const float minCameraRangeTop = 16.0f + 160.0f;
 	Spikes* spike_ = nullptr;
+	bool IsChanged = false;
+	int changeTimer = 0;
 
 	//Enemy spawn position
 	uint32_t enemySpawnX[MAXENEMIES] = { 20 , 30, 60, 40 };

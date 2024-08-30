@@ -98,6 +98,8 @@ class Player
 
 		float GetLimitFallSpeed() { return kLimitFallSpeed; };
 
+		void SetReversed(bool reverse) { reverse_ = reverse; };
+
 		/// <summary>
 		/// 描画
 		/// </summary>
@@ -150,6 +152,7 @@ class Player
 		bool jumpLeeway = false;
 		int leewayTimer = 0;
 		bool hasJumped = false;
+		bool reverse_ = false;
 
 
 };

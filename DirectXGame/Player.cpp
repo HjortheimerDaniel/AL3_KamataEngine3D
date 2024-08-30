@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "MapChipField.h"
 #include "ImGuiManager.h"
-//#include "imgui.h"
+#include "imgui.h"
 #include "functions.h"
 
 
@@ -45,6 +45,9 @@ void Player::Update()
 	//Movement();
 	FellBelowStage();
 
+	ImGui::Begin("speed");
+	ImGui::Text("%f", velocity_.x);
+	ImGui::End();
 	
 	worldTransform_.UpdateMatrix();
 	//worldTransform_.TransferMatrix();
@@ -187,12 +190,7 @@ if (Input::GetInstance()->PushKey(DIK_RIGHT))
 	if (!hitRightWall) {
 		acceleration.x += kAcceleration;
 	}
-	if (lrDirection_ != LRDirection::kRight) // if were moving right and were not facing right
-	{
-		lrDirection_ = LRDirection::kRight; // face right
-		turnFirstRotationY_ = worldTransform_.rotation_.y; // set to current rotation
-		turnTimer_ = kTimeTurn; // reset the timer
-	}
+	
 }
 else if (Input::GetInstance()->PushKey(DIK_LEFT))
 {
@@ -209,17 +207,20 @@ else if (Input::GetInstance()->PushKey(DIK_LEFT))
 		acceleration.x -= kAcceleration;
 	}
 
-	if (lrDirection_ != LRDirection::kLeft) // if were moving left and were not facing left
-	{
-		lrDirection_ = LRDirection::kLeft; // face left
-		turnFirstRotationY_ = worldTransform_.rotation_.y; // set to current rotation
-		turnTimer_ = kTimeTurn; // reset the timer
-	}
+
 }
 
 // Update horizontal velocity
+	if (!reverse_) 
+	{
+		velocity_.x += acceleration.x; // add movement to our X
 
-	velocity_.x += acceleration.x; // add movement to our X
+	}
+	else 
+	{
+		velocity_.x -= acceleration.x; // add movement to our X
+
+	}
 	velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); // set the limit for the max speed and min speed
 
 if (!Input::GetInstance()->PushKey(DIK_RIGHT) && !Input::GetInstance()->PushKey(DIK_LEFT))
@@ -242,9 +243,41 @@ if (Input::GetInstance()->TriggerKey(DIK_UP) && onGround_ || Input::GetInstance(
 {
 	hasJumped = true;
 	velocity_.y = 0.0f;
-	//holdingSpace = true;
 	velocity_ += Vector3(0, kJumpAcceleration, 0);
 	onGround_ = false;
+}
+
+if (!reverse_) 
+{
+	if (lrDirection_ != LRDirection::kRight && Input::GetInstance()->PushKey(DIK_RIGHT)) // if were moving right and were not facing right
+	{
+		lrDirection_ = LRDirection::kRight; // face right
+		turnFirstRotationY_ = worldTransform_.rotation_.y; // set to current rotation
+		turnTimer_ = kTimeTurn; // reset the timer
+	}
+
+	if (lrDirection_ != LRDirection::kLeft && Input::GetInstance()->PushKey(DIK_LEFT)) // if were moving left and were not facing left
+	{
+		lrDirection_ = LRDirection::kLeft; // face left
+		turnFirstRotationY_ = worldTransform_.rotation_.y; // set to current rotation
+		turnTimer_ = kTimeTurn; // reset the timer
+	}
+}
+else if (reverse_) 
+{
+	if (lrDirection_ != LRDirection::kRight && Input::GetInstance()->PushKey(DIK_LEFT)) // if were moving right and were not facing right
+	{
+		lrDirection_ = LRDirection::kRight; // face right
+		turnFirstRotationY_ = worldTransform_.rotation_.y; // set to current rotation
+		turnTimer_ = kTimeTurn; // reset the timer
+	}
+
+	if (lrDirection_ != LRDirection::kLeft && Input::GetInstance()->PushKey(DIK_RIGHT)) // if were moving left and were not facing left
+	{
+		lrDirection_ = LRDirection::kLeft; // face left
+		turnFirstRotationY_ = worldTransform_.rotation_.y; // set to current rotation
+		turnTimer_ = kTimeTurn; // reset the timer
+	}
 }
 
 
@@ -254,15 +287,7 @@ worldTransform_.translation_.y += velocity_.y; // update Y pos before checking l
 worldTransform_.translation_.x += velocity_.x;
 //}
 
-// Check for landing
-//bool landing = false;
-//if (velocity_.y < 0)  // if were falling
-//{
-//	if (worldTransform_.translation_.y <= 2.0f) // if were on the mapchip that is on pos 1.0f or below weve hit the ground
-//	{
-//		landing = true;
-//	}
-//}
+
 
 if (onGround_)
 {
@@ -271,15 +296,7 @@ if (onGround_)
 		onGround_ = false; // we are not on the ground
 	}
 }
-//else 
-//{
-//	if (landing) // if were landing
-//	{
-//		worldTransform_.translation_.y = 2.0f;
-//		velocity_.y = 0.0f;
-//		onGround_ = true;
-//	}
-//}
+
 
 }
 
@@ -454,15 +471,16 @@ void Player::CollisionRight(CollisionMapInfo& info)
 	MapChipType mapChipType;
 	bool hit = false;
 	IndexSet indexSet;
+	Vector3 offset = reverse_ ? Vector3(-2.1f, 0, 0) : Vector3(kAdjustWall, 0, 0);
 
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop] + Vector3(kAdjustWall, 0, 0));
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop] + offset);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
 	if (mapChipType == MapChipType::kBlock)
 	{
 		hit = true;
 	}
 
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom] + Vector3(kAdjustWall, 0, 0));
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom] + offset);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
 	if (mapChipType == MapChipType::kBlock)
 	{
@@ -474,10 +492,11 @@ void Player::CollisionRight(CollisionMapInfo& info)
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(info.movement.x);
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 		info.isHittingRightWall = true;
-		if (info.movement.x > 0) // Only set movement to 0 if moving right
+		if (reverse_ ? (info.movement.x < 0) : (info.movement.x > 0) /*|| info.movement.x < 0*/) // Only set movement to 0 if moving right
 		{
 			info.movement.x = 0.0f;
 			velocity_.x = 0.0f;
+			
 		}
 		hitRightWall = true;
 	}
@@ -505,8 +524,9 @@ void Player::CollisionLeft(CollisionMapInfo& info)
 	MapChipType mapChipType;
 	bool hit = false;
 	IndexSet indexSet;
+	Vector3 offset = reverse_ ? Vector3(2.1f, 0, 0) : Vector3(-kAdjustWall, 0, 0);
 
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop] + Vector3(-kAdjustWall, 0, 0));
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop] + offset);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
 	if (mapChipType == MapChipType::kBlock)
 	{
@@ -514,7 +534,7 @@ void Player::CollisionLeft(CollisionMapInfo& info)
 	}
 	
 
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + Vector3(-kAdjustWall, 0, 0));
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + offset);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex - 1);
 	if (mapChipType == MapChipType::kBlock)
 	{
@@ -527,7 +547,7 @@ void Player::CollisionLeft(CollisionMapInfo& info)
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(info.movement.x);
 		Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 		info.isHittingLeftWall = true;
-		if (info.movement.x < 0) // Only set movement to 0 if moving right
+		if (reverse_ ? (info.movement.x > 0) : (info.movement.x < 0) /*|| info.movement.x > 0*/) // Only set movement to 0 if moving right
 		{
 			info.movement.x = 0.0f;
 			velocity_.x = 0.0f;
