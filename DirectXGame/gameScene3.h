@@ -28,6 +28,7 @@
 #include "Lock.h"
 #include "Key.h"
 #include "GreyPauseVeil.h"
+#include "ParachuteText.h"
 
 #define NOMINMAX
 
@@ -106,6 +107,10 @@ public: // メンバ関数
 
 	bool GetGoToNextStage() const { return goToNextStage_; };
 
+	void SetShownText(bool shownText) { shownText_ = shownText; };
+
+	bool GetShownText() { return shownText_; };
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -129,6 +134,8 @@ private: // メンバ変数
 	Model* deathSpikeBlueModel_ = nullptr;
 	Model* lockModel_ = nullptr;
 	Model* keyModel_ = nullptr;
+	Model* textModel1_ = nullptr;
+	Model* textModel2_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
@@ -251,6 +258,8 @@ private: // メンバ変数
 	int dimensionTextCount_ = 0;
 	int delayBetweenText_ = 0;
 	bool shownText_ = false;
+	ParachuteText* dimensionText_ = nullptr;
+	ParachuteText* dimensionText2_ = nullptr;
 };
 
 

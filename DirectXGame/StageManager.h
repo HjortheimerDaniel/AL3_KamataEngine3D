@@ -43,6 +43,7 @@ private:
 	bool checkpoint2 = false;
 	bool checkpoint2Stage3 = false;
 	bool shownParachuteText = false;
+	bool showText = false;
 	uint32_t audioHandle_ = 0;
 	uint32_t playHandle = {};
 	Audio* audio_ = nullptr;

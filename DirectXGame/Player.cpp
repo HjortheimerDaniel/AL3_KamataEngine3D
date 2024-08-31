@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "MapChipField.h"
 #include "ImGuiManager.h"
-#include "imgui.h"
 #include "functions.h"
 
 
@@ -55,134 +54,11 @@ void Player::Update()
 
 void Player::Movement()
 {
- #pragma region old movement
-
-	//if (onGround_){
-	//	if (Input::GetInstance()->PushKey(DIK_RIGHT) ||
-	//		Input::GetInstance()->PushKey(DIK_LEFT))
-	//	{
-
-	//		Vector3 acceleration = {};
-	//		if (Input::GetInstance()->PushKey(DIK_RIGHT))
-	//		{
-	//			if (velocity_.x < 0.0f) //were not moving to the right
-	//			{
-	//				velocity_.x *= (1.0f - kAttenuation);
-	//			}
-	//			acceleration.x += kAcceleration;
-
-	//			if (lrDirection_ != LRDirection::kRight) //if were moving right and were not facing right
-	//			{
-	//				turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
-	//				turnTimer_ = kTimeTurn; // reset the timer
-	//				lrDirection_ = LRDirection::kRight; //face right
-	//			}
-	//		}
-	//		else if (Input::GetInstance()->PushKey(DIK_LEFT))
-	//		{
-	//			if (velocity_.x > 0.0f) //were not moving to the left
-	//			{
-	//				velocity_.x *= (1.0f - kAttenuation);
-	//				if (velocity_.x * velocity_.x < 0.001f)
-	//				{
-	//					velocity_.x = 0;
-	//				}
-	//			}
-	//			acceleration.x -= kAcceleration;
-
-	//			if (lrDirection_ != LRDirection::kLeft) //if were moving left and were not facing left
-	//			{
-	//				turnFirstRotationY_ = -worldTransform_.rotation_.y; // set to current rotation
-	//				turnTimer_ = kTimeTurn; // reset the timer
-	//				lrDirection_ = LRDirection::kLeft; //face left
-
-	//				
-
-	//			}
-
-
-	//		}
-
-	//		//no matter if we press LEFT or RIGHT we pass here
-
-	//		velocity_.x += acceleration.x; //add movement to our X
-	//		velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); //set the limit for the max speed and min speed
-
-	//		//worldTransform_.translation_.x += velocity_.x;
-	//	}
-	//	else
-	//	{
-	//		velocity_.x *= (1.0f - kAttenuation);
-	//		if (velocity_.x * velocity_.x < 0.001f)
-	//		{
-	//			velocity_.x = 0;
-	//		}
-	//	}
-	//}
-	//else {
-	//	velocity_ += Vector3(0, -kGravityAcceleration, 0);
-
-	//	//velocity_.y += -kGravityAcceleration;
-	//	//velocity_.x = 0;
-	//	//velocity_.z = 0;
-
-	//	velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
-	//}
-
-	//if (Input::GetInstance()->PushKey(DIK_UP))
-	//{
-	//	if (onGround_)
-	//	{
-	//		velocity_ += Vector3(0, kJumpAcceleration, 0);
-	//		onGround_ = false;
-	//	}
-	//}
-
-	//worldTransform_.translation_.y += velocity_.y; //we need to update the new Y pos before were checking the landing, otherwise we will go through the mapchip for a short while
-	//if (!(worldTransform_.translation_.x >= 70 && velocity_.x > 0
-	//	|| worldTransform_.translation_.x <= 20 && velocity_.x < 0)) {
-	//	worldTransform_.translation_.x += velocity_.x;
-	//}
-
-
-	//bool landing = false;
-
-	//if (velocity_.y < 0)  //if were falling
-	//{
-	//	if(worldTransform_.translation_.y <= 2.0f) //if were on the mapchip that is on pos 1.0f or below weve hit the ground
-	//	{
-	//		landing = true;
-	//	}
-	//}
-
-	//if(onGround_)
-	//{
-	//	if(velocity_.y > 0.0f) //if were moving upwards
-	//	{
-	//		onGround_ = false; //we are not on the ground
-	//	}
-	//}
-	//else {
-
-	//	if(landing) //if were landing
-	//	{
-	//		worldTransform_.translation_.y = 2.0f;
-	//		//velocity_.x *= (1.0f - kAttenuation);
-	//		
-	//		velocity_.y = 0.0f;
-	//		onGround_ = true;
-	//	}
-	//}
- #pragma endregion
+ 
 
 Vector3 acceleration = {};
 
-ImGui::Begin("speed");
-ImGui::Text("X %f", velocity_.x);
-ImGui::Text("Y %f", velocity_.y);
-ImGui::Text("acc Y %f", acceleration.y);
-ImGui::Text("ground %d", onGround_);
-ImGui::End();
+
 if (Input::GetInstance()->PushKey(DIK_RIGHT))
 {
 	if (velocity_.x < 0.0f) // were not moving to the right

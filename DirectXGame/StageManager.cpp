@@ -1,6 +1,7 @@
 #include "StageManager.h"
 #include "ImGuiManager.h"
 
+
 StageManager::~StageManager()
 {
 	delete gameScene;
@@ -22,7 +23,7 @@ void StageManager::Initialize()
 
 #pragma endregion
 
-	scene = Scene::kGame3;
+	scene = Scene::kTitle;
 
 	gameScene = new GameScene();
 	gameScene->Initialize();
@@ -47,6 +48,7 @@ void StageManager::Initialize()
 
 void StageManager::Update()
 {
+
 	if (audio_->IsPlaying(playHandle) == 0 && playHandle == 1)
 	{
 		playHandle = audio_->PlayWave(audioHandle_, true, 0.7f);
@@ -101,6 +103,12 @@ void StageManager::ConstantThingiesStage3()
 	{
 		checkpoint1Stage3 = true;
 	}
+	if (gameScene3->GetShownText())
+	{
+		showText = true;
+	}
+
+	gameScene3->SetShownText(showText);
 }
 
 void StageManager::ChangeScene()
@@ -190,11 +198,11 @@ void StageManager::ChangeScene()
 			delete gameScene3;
 			gameScene3 = nullptr;
 			gameScene3 = new GameScene3;
-			if (checkpoint2Stage3)
+			if (checkpoint2Stage3 && !checkpoint1Stage3)
 			{
 				gameScene3->PlayerCheckpoint2Pos();
 			}
-			else if (checkpoint1Stage3 && !checkpoint2Stage3)
+			else if (checkpoint1Stage3 && checkpoint2Stage3)
 			{
 				gameScene3->PlayerCheckpoint1Pos();
 			}

@@ -1,7 +1,6 @@
 #include "gameScene3.h"
 #include "TextureManager.h"
 #include <cassert>
-#include "imgui.h"
 
 GameScene3::GameScene3()
 {
@@ -89,13 +88,13 @@ GameScene3::~GameScene3()
 
 void GameScene3::PlayerStartPos()
 {
-	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(2, 98);
-	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(63, 69);
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(2, 98);
+	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(63, 69);
 }
 
 void GameScene3::PlayerCheckpoint1Pos()
 {
-	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(59, 69);
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(63, 69);
 }
 
 void GameScene3::PlayerCheckpoint2Pos()
@@ -354,6 +353,26 @@ void GameScene3::Initialize() {
 
 #pragma endregion
 
+	grey_ = new GreyPauseVeil();
+	grey_->Initialize(false);
+
+#pragma region Text
+
+	textModel1_ = Model::CreateFromOBJ("stage3text1", true);
+	dimensionText_ = new ParachuteText();
+	Vector3 parachuteTextPosition = mapChipField_->GetMapChipPositionByIndex((uint32_t)7, (uint32_t)90);
+	dimensionText_->Initialize(textModel1_, viewProjection_, parachuteTextPosition);
+	dimensionText_->SetMapChipField(mapChipField_);
+	dimensionText_->SetShowText(true);
+
+	textModel2_ = Model::CreateFromOBJ("stage3text2", true);
+	dimensionText2_ = new ParachuteText();
+	Vector3 parachuteTextPosition2 = mapChipField_->GetMapChipPositionByIndex((uint32_t)7, (uint32_t)90);
+	dimensionText2_->Initialize(textModel2_, viewProjection_, parachuteTextPosition2);
+	dimensionText2_->SetMapChipField(mapChipField_);
+	dimensionText2_->SetShowText(false);
+
+#pragma endregion
 
 }
 
@@ -378,7 +397,16 @@ void GameScene3::Update() {
 
 		}
 		IsEnemyCloseToPlayer();
-
+		if (dimensionText_->GetShowText())
+		{
+			dimensionText_->Update();
+		}
+		if (dimensionText2_->GetShowText())
+		{
+			dimensionText2_->Update();
+		}
+		DimensionText();
+		grey_->Update();
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) { //everything this is inside worldTransformBlocks_ gets copied into worldTransformBlockLine, and every time a new thing goes inside we go inside the for function and then repeat
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -520,9 +548,6 @@ void GameScene3::Update() {
 		{
 			deathParticles_->Update();
 		}
-		checkpoint1_->Update();
-
-		checkpoint2_->Update();
 
 #ifdef _DEBUG
 
@@ -894,7 +919,7 @@ void GameScene3::ChangePhase()
 	switch (phase_)
 	{
 	case Phase::kFadeIn:
-		if (fade_->IsFinished())
+		if (fade_->IsFinished() && shownText_)
 		{
 			phase_ = Phase::kPlay;
 		}
@@ -994,14 +1019,14 @@ void GameScene3::DimensionText()
 {
 	if (dimensionTextCount_ >= 0)
 	{
-		//parachuteText_->SetShowText(true);
-		//parachuteText2_->SetShowText(false);
+		dimensionText_->SetShowText(true);
+		dimensionText2_->SetShowText(false);
 
 	}
 	if (dimensionTextCount_ >= 1)
 	{
-		//parachuteText_->SetShowText(false);
-		//parachuteText2_->SetShowText(true);
+		dimensionText_->SetShowText(false);
+		dimensionText2_->SetShowText(true);
 
 	}
 
@@ -1085,6 +1110,18 @@ void GameScene3::Draw() {
 			}
 		}
 		goal_->Draw();
+		if (dimensionText_->GetShowText() && !shownText_)
+		{
+			dimensionText_->Draw();
+		}
+		if (dimensionText2_->GetShowText() && !shownText_)
+		{
+			dimensionText2_->Draw();
+		}
+		if (!shownText_)
+		{
+			grey_->Draw();
+		}
 		fade_->Draw();
 
 		break;
@@ -1111,11 +1148,19 @@ void GameScene3::Draw() {
 		for (ReverseCubes* reverseCube : reversedCubes_) { //create new Enemy enemy 
 			if (reverseCube->GetIsReversed() && !IsChanged)
 			{
-				reverseCube->Draw();
+				if (reverseCube->GetWorldPosition().x - player_->GetWorldTransform().translation_.x >= -60 && reverseCube->GetWorldPosition().x - player_->GetWorldTransform().translation_.x < 60 &&
+					reverseCube->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 50 && reverseCube->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -40)
+				{
+					reverseCube->Draw();
+				}
 			}
 			else if (!reverseCube->GetIsReversed() && IsChanged) 
 			{
-				reverseCube->Draw();
+				if (reverseCube->GetWorldPosition().x - player_->GetWorldTransform().translation_.x >= -60 && reverseCube->GetWorldPosition().x - player_->GetWorldTransform().translation_.x < 60 &&
+					reverseCube->GetWorldPosition().y - player_->GetWorldTransform().translation_.y <= 50 && reverseCube->GetWorldPosition().y - player_->GetWorldTransform().translation_.y >= -40)
+				{
+					reverseCube->Draw();
+				}
 			}
 		}
 		for (Spring* spring : springs_) { //create new Enemy enemy 
@@ -1179,9 +1224,28 @@ void GameScene3::Draw() {
 		else
 		{
 			skydome2_->Draw();
+			if (!key1_->GetIsKeyTaken())
+			{
+				for (Lock* lock : locks_) { //create new Enemy enemy 
+					lock->Draw();
+
+				}
+			}
 
 		}
 		goal_->Draw();
+
+		for (ReverseCubes* reverseCube : reversedCubes_) { //create new Enemy enemy 
+			if (reverseCube->GetIsReversed() && !IsChanged)
+			{
+				reverseCube->Draw();
+			}
+			else if (!reverseCube->GetIsReversed() && IsChanged)
+			{
+				reverseCube->Draw();
+			}
+		}
+
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				if (!worldTransformBlock)
