@@ -7,9 +7,9 @@
 #define MAXWINDS 5
 #define MAXTHANKYOU 12
 #define MAXFIREWORKS 4
-#define MAXREVERSECUBES 30
+#define MAXREVERSECUBES 31
 #define MAXSPRINGS 2
-#define MAXSDEATHSPRINS 3
+#define MAXSDEATHSPRINS 4
 
 struct AABB {
 	Vector3 min;

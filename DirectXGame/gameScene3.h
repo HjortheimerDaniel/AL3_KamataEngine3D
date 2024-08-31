@@ -26,6 +26,8 @@
 #include "Spring.h"
 #include "DeathSpikeBlue.h"
 #include "Lock.h"
+#include "Key.h"
+#include "GreyPauseVeil.h"
 
 #define NOMINMAX
 
@@ -81,6 +83,8 @@ public: // メンバ関数
 
 	void StageClearCamera();
 
+	void DimensionText();
+
 	void TransitionScene();
 
 	/// <summary>
@@ -110,9 +114,11 @@ private: // メンバ変数
 	uint32_t audioHandle_ = 0;
 	uint32_t audioHandle2_ = 0;
 	uint32_t audioHandle3_ = 0;
+	uint32_t audioHandle4_ = 0;
 	uint32_t playHandle = {};
 	uint32_t playHandle2 = {};
 	uint32_t playHandle3 = {};
+	uint32_t playHandle4 = {};
 	Model* playerModel_ = nullptr;
 	Model* enemyModel_ = nullptr;
 	Model* deathparticleModel_ = nullptr;
@@ -122,6 +128,7 @@ private: // メンバ変数
 	Model* springModel_ = nullptr;
 	Model* deathSpikeBlueModel_ = nullptr;
 	Model* lockModel_ = nullptr;
+	Model* keyModel_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
@@ -149,6 +156,8 @@ private: // メンバ変数
 	ReverseCubes* reverseCube_ = nullptr;
 	DeathSpikeBlue* deathSpikeBlue_ = nullptr;
 	Lock* lock_ = nullptr;
+	Key* key1_ = nullptr;
+	Key* key2_ = nullptr;
 	bool isDead_ = false;
 	bool finished_ = false;
 	Fade* fade_ = nullptr;
@@ -174,7 +183,7 @@ private: // メンバ変数
 	//Spike spawn position
 	uint32_t spikeSpawnX[MAXSPIKES] = { 45, 48, 51 };
 	uint32_t spikeSpawnY[MAXSPIKES] = { 6, 6, 6 };
-
+	
 	uint32_t reverseCubeSpawnX[MAXREVERSECUBES] = 
 	{ 
 		6, 12, 6, 6, 6,
@@ -182,7 +191,8 @@ private: // メンバ変数
 		25, 28, 31, 44 ,45,
 		46, 47, 48, 46, 53,
 		53, 54, 52, 51, 50,
-		55, 55, 55,
+		55, 55, 55, 96, 97, 
+		98,97,
 	};
 	uint32_t reverseCubeSpawnY[MAXREVERSECUBES] = 
 	{ 
@@ -192,24 +202,24 @@ private: // メンバ変数
 		86, 86, 86, 86,
 		86, 97, 83, 72, 72,
 		72, 72, 72, 69, 68,
-		67,
+		67, 73, 73, 73, 78
 	};
 
 	uint32_t springPosX[MAXSPRINGS] = { 46, 53 };
 	uint32_t springPosY[MAXSPRINGS] = {98, 84};
 
-	uint32_t deathBluePosX[MAXSDEATHSPRINS] = { 70, 80, 90 };
-	uint32_t deathBluePosY[MAXSDEATHSPRINS] = { 68, 68, 68 };
+	uint32_t deathBluePosX[MAXSDEATHSPRINS] = { 70, 77, 84, 92 };
+	uint32_t deathBluePosY[MAXSDEATHSPRINS] = { 68, 68, 68, 68 };
 
-	uint32_t lockPosX[MAXSPRINGS] = { 96, 96 };
-	uint32_t lockPosY[MAXSPRINGS] = { 73, 77 };
+	uint32_t lockPosX = 96;
+	uint32_t lockPosY = 73;
 	
 	bool reverseCubeActive[MAXREVERSECUBES] = 
 	{ true, false, true, true, true, false,
 	  false,false, false, true, false, true,
 	  true,true,true,true,true, false, false,
 	  true, true, true, true, true, false,
-	  false, false,
+	  false, false, false, false, false, false
 	};
 
 	bool isReversedBlock[MAXREVERSECUBES] = 
@@ -219,7 +229,8 @@ private: // メンバ変数
 	  true,true,true,true,true,
 	  false,false, true, true,
 	  true, true, true, false,
-		false, false,
+		false, false, false,
+		false, false, false
 	};
 
 	uint32_t sceneTransitionTimer = 0;
@@ -236,10 +247,10 @@ private: // メンバ変数
 	Vector3 playerPosition;
 	Vector3 playerSpawnPos;
 
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
-
+	GreyPauseVeil* grey_ = nullptr;
+	int dimensionTextCount_ = 0;
+	int delayBetweenText_ = 0;
+	bool shownText_ = false;
 };
 
 

@@ -3,15 +3,17 @@
 #include "WorldTransform.h"
 #include "struct.h"
 
+class Player;
+
 class MapChipField;
 
-class Lock
+class Key
 {
 public:
 
-	Lock();
+	Key();
 
-	~Lock();
+	~Key();
 
 	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position);
 
@@ -23,6 +25,10 @@ public:
 
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; };
 
+	void OnCollision(const Player* player);
+
+	bool GetIsKeyTaken() { return isKeyTaken; };
+
 	void Draw();
 
 private:
@@ -31,8 +37,8 @@ private:
 	Model* model_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	MapChipField* mapChipField_ = nullptr;
-	static inline const float kWidth = 8.8f;
-	static inline const float kHeight = 2.0f;
+	static inline const float kWidth = 1.8f;
+	static inline const float kHeight = 1.8f;
 	bool isKeyTaken = false;
 };
 

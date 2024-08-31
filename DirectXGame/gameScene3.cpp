@@ -118,9 +118,11 @@ void GameScene3::Initialize() {
 	audioHandle_ = audio_->LoadWave("powerUp.wav");
 	audioHandle2_ = audio_->LoadWave("explosion.wav");
 	audioHandle3_ = audio_->LoadWave("test.m4a");
+	audioHandle4_ = audio_->LoadWave("key.wav");
 	playHandle = 1;
 	playHandle2 = 1;
 	playHandle3 = 1;
+	playHandle4 = 1;
 
 #pragma endregion
 
@@ -328,10 +330,10 @@ void GameScene3::Initialize() {
 
 	lockModel_ = Model::CreateFromOBJ("lock", true);
 
-	for (int32_t i = 0; i < MAXSPRINGS; i++)
+	for (int32_t i = 0; i < 1; i++)
 	{
 		Lock* newLock = new Lock();
-		Vector3 lockPosition = mapChipField_->GetMapChipPositionByIndex(lockPosX[i], lockPosY[i]);
+		Vector3 lockPosition = mapChipField_->GetMapChipPositionByIndex(lockPosX, lockPosY);
 		newLock->Initialize(lockModel_, viewProjection_, lockPosition);
 		locks_.push_back(newLock);
 		newLock->SetMapChipField(mapChipField_);
@@ -339,6 +341,20 @@ void GameScene3::Initialize() {
 	}
 
 #pragma endregion
+
+#pragma region Key
+
+
+	keyModel_ = Model::CreateFromOBJ("key", true);
+	key1_ = new Key();
+	Vector3 keyPosition = mapChipField_->GetMapChipPositionByIndex(79, 66);
+	key1_->Initialize(keyModel_, viewProjection_, keyPosition);
+	key1_->SetMapChipField(mapChipField_);
+
+
+#pragma endregion
+
+
 }
 
 void GameScene3::Update() {
@@ -403,6 +419,7 @@ void GameScene3::Update() {
 			skydome2_->Update();
 			for (DeathSpikeBlue* deathBlue : deathSpikesBlue_) { //create new Enemy enemy 
 				deathBlue->Update();
+				key1_->Update();
 			}
 
 		}
@@ -740,7 +757,7 @@ void GameScene3::CheckAllCollisions()
 
 		AABB aabb10 = lock->GetAABB();
 
-		if (IsCollision(aabb1, aabb10))
+		if (IsCollision(aabb1, aabb10) && !key1_->GetIsKeyTaken())
 		{
 			player_->OnCollision(lock);
 			//spring->OnCollision(player_);
@@ -749,6 +766,23 @@ void GameScene3::CheckAllCollisions()
 	}
 
 #pragma endregion
+
+
+#pragma region player key
+
+	AABB aabb11 = key1_->GetAABB();
+
+	if (IsCollision(aabb1, aabb11) && IsChanged) 
+	{
+		key1_->OnCollision(player_);
+		if (audio_->IsPlaying(playHandle4) == 0 && playHandle4 == 1)
+		{
+			playHandle4 = audio_->PlayWave(audioHandle4_, false, 0.3f);
+		}
+	}
+
+#pragma endregion
+
 
 }
 
@@ -956,6 +990,39 @@ void GameScene3::StageClearCamera()
 	cameraController_->Update();
 }
 
+void GameScene3::DimensionText()
+{
+	if (dimensionTextCount_ >= 0)
+	{
+		//parachuteText_->SetShowText(true);
+		//parachuteText2_->SetShowText(false);
+
+	}
+	if (dimensionTextCount_ >= 1)
+	{
+		//parachuteText_->SetShowText(false);
+		//parachuteText2_->SetShowText(true);
+
+	}
+
+	if (Input::GetInstance()->TriggerKey(DIK_RETURN) && dimensionTextCount_ == 0 || Input::GetInstance()->TriggerKey(DIK_SPACE) && dimensionTextCount_ == 0)
+	{
+		dimensionTextCount_ = 1;
+		delayBetweenText_ = 1;
+	}
+
+	if (delayBetweenText_ >= 1 && delayBetweenText_ <= 29)
+	{
+		delayBetweenText_++;
+	}
+
+	if (Input::GetInstance()->TriggerKey(DIK_RETURN) && delayBetweenText_ >= 29 || Input::GetInstance()->TriggerKey(DIK_SPACE) && delayBetweenText_ >= 29)
+	{
+		dimensionTextCount_ = 2;
+		shownText_ = true;
+	}
+}
+
 void GameScene3::TransitionScene()
 {
 	sceneTransitionTimer++;
@@ -1061,8 +1128,13 @@ void GameScene3::Draw() {
 		if (!IsChanged)
 		{
 			skydome_->Draw();
-			for (Lock* lock : locks_) { //create new Enemy enemy 
-				lock->Draw();
+			
+				if (!key1_->GetIsKeyTaken()) 
+				{
+					for (Lock* lock : locks_) { //create new Enemy enemy 
+					lock->Draw();
+
+				}
 			}
 		}
 		else
@@ -1071,6 +1143,7 @@ void GameScene3::Draw() {
 			for (DeathSpikeBlue* deathBlue : deathSpikesBlue_) { //create new Enemy enemy 
 				deathBlue->Draw();
 			}
+			key1_->Draw();
 
 		}
 		//skydome_->Draw();
