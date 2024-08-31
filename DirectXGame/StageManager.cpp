@@ -32,6 +32,7 @@ void StageManager::Initialize()
 	gameScene2->Initialize();
 
 	gameScene3 = new GameScene3();
+	gameScene3->PlayerStartPos();
 	gameScene3->Initialize();
 
 	titleScene = new TitleScene();
@@ -52,7 +53,11 @@ void StageManager::Update()
 	}
 	if(scene == Scene::kGame2)
 	{
-		ConstantThingies();
+		ConstantThingiesStage2();
+	}
+	if (scene == Scene::kGame3) 
+	{
+		ConstantThingiesStage3();
 	}
 	ChangeScene();
 	UpdateScene();
@@ -69,7 +74,7 @@ void StageManager::Update()
 	}
 }
 
-void StageManager::ConstantThingies()
+void StageManager::ConstantThingiesStage2()
 {
 	if (gameScene2->GetCheckpoint2Reached())
 	{
@@ -84,6 +89,18 @@ void StageManager::ConstantThingies()
 		shownParachuteText = true;
 	}
 	gameScene2->SetShownText(shownParachuteText);
+}
+
+void StageManager::ConstantThingiesStage3()
+{
+	if (gameScene3->GetCheckpoint2Reached())
+	{
+		checkpoint2Stage3 = true;
+	}
+	if (gameScene3->GetCheckpoint1Reached())
+	{
+		checkpoint1Stage3 = true;
+	}
 }
 
 void StageManager::ChangeScene()
@@ -160,6 +177,7 @@ void StageManager::ChangeScene()
 			delete gameScene2;
 			gameScene2 = nullptr;
 			gameScene3 = new GameScene3;
+			gameScene3->PlayerStartPos();
 			gameScene3->Initialize();
 		}
 
@@ -172,6 +190,18 @@ void StageManager::ChangeScene()
 			delete gameScene3;
 			gameScene3 = nullptr;
 			gameScene3 = new GameScene3;
+			if (checkpoint2Stage3)
+			{
+				gameScene3->PlayerCheckpoint2Pos();
+			}
+			else if (checkpoint1Stage3 && !checkpoint2Stage3)
+			{
+				gameScene3->PlayerCheckpoint1Pos();
+			}
+			else
+			{
+				gameScene3->PlayerStartPos();
+			}
 			gameScene3->Initialize();
 			//titleScene = new TitleScene;
 			//titleScene->Initialize();

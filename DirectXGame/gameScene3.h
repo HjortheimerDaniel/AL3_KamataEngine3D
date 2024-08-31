@@ -22,6 +22,7 @@
 #include "ClearText.h"
 #include "Spikes.h"
 #include "ReverseCubes.h"
+#include "Checkpoint.h"
 
 #define NOMINMAX
 
@@ -41,6 +42,12 @@ public: // メンバ関数
 	/// デストラクタ
 	/// </summary>
 	~GameScene3();
+
+	void PlayerStartPos();
+
+	void PlayerCheckpoint1Pos();
+
+	void PlayerCheckpoint2Pos();
 
 	/// <summary>
 	/// 初期化
@@ -85,6 +92,10 @@ public: // メンバ関数
 	bool GetIsFinished() const { return finished_; };
 
 	bool GetStageClear() const { return stageClear_; };
+
+	bool GetCheckpoint2Reached() const { return checkPoint2Reached_; };
+
+	bool GetCheckpoint1Reached() const { return checkPoint1Reached_; };
 
 	bool GetGoToNextStage() const { return goToNextStage_; };
 
@@ -152,17 +163,24 @@ private: // メンバ変数
 	uint32_t spikeSpawnX[MAXSPIKES] = { 45, 48, 51 };
 	uint32_t spikeSpawnY[MAXSPIKES] = { 6, 6, 6 };
 
-	uint32_t reverseCubeSpawnX[MAXREVERSECUBES] = { 6, 12, 6, 6, 6, 12, 12, 12 };
-	uint32_t reverseCubeSpawnY[MAXREVERSECUBES] = { 95, 95, 96, 97, 98, 96, 97, 98 };
-	bool reverseCubeActive[MAXREVERSECUBES] = { true, false, true, true, true, false,false,false };
+	uint32_t reverseCubeSpawnX[MAXREVERSECUBES] = { 6, 12, 6, 6, 6, 12, 12, 12, 22, 25, 28, 31 };
+	uint32_t reverseCubeSpawnY[MAXREVERSECUBES] = { 95, 95, 96, 97, 98, 96, 97, 98, 98, 98, 98, 98 };
+	bool reverseCubeActive[MAXREVERSECUBES] = { true, false, true, true, true, false,false,false, false, true, false, true };
 
-	bool isReversedBlock[MAXREVERSECUBES] = { true, false, true, true, true,false,false,false };
+	bool isReversedBlock[MAXREVERSECUBES] = { true, false, true, true, true,false,false,false, false, true, false, true };
 
 	uint32_t sceneTransitionTimer = 0;
 	bool isSceneTransitioning = false;
 	bool playerCanMove;
 
+	Model* checkpointModel_ = nullptr;
+	Checkpoint* checkpoint1_ = nullptr;
+	Checkpoint* checkpoint2_ = nullptr;
+	bool checkPoint2Reached_ = false;
+	bool checkPoint1Reached_ = false;
 
+	Vector3 playerPosition;
+	Vector3 playerSpawnPos;
 
 	/// <summary>
 	/// ゲームシーン用

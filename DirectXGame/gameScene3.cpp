@@ -55,6 +55,27 @@ GameScene3::~GameScene3()
 		delete reversecube;
 	}
 	reversedCubes_.clear();
+
+	delete checkpointModel_;
+	delete checkpoint1_;
+	delete checkpoint2_;
+}
+
+void GameScene3::PlayerStartPos()
+{
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(2, 97);
+	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(68, 5);
+}
+
+void GameScene3::PlayerCheckpoint1Pos()
+{
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(12, 98);
+}
+
+void GameScene3::PlayerCheckpoint2Pos()
+{
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(12, 97);
+	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(1, 3);
 }
 
 void GameScene3::Initialize() {
@@ -103,7 +124,7 @@ void GameScene3::Initialize() {
 
 	playerModel_ = Model::CreateFromOBJ("player", true);
 	player_ = new Player();
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 98);
+	playerPosition = playerSpawnPos;
 	player_->Initialize(playerModel_, viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -229,6 +250,21 @@ void GameScene3::Initialize() {
 
 #pragma endregion
 
+#pragma region Checkpoint
+
+	checkpointModel_ = Model::CreateFromOBJ("checkpoint", true);
+	checkpoint1_ = new Checkpoint();
+	Vector3 checkpointPosition = mapChipField_->GetMapChipPositionByIndex(10, 97);
+	checkpoint1_->Initialize(checkpointModel_, viewProjection_, checkpointPosition);
+	checkpoint1_->SetMapChipField(mapChipField_);
+
+	checkpoint2_ = new Checkpoint();
+	Vector3 checkpoint2Position = mapChipField_->GetMapChipPositionByIndex(34, 98);
+	checkpoint2_->Initialize(checkpointModel_, viewProjection_, checkpoint2Position);
+	checkpoint2_->SetMapChipField(mapChipField_);
+
+#pragma endregion
+
 }
 
 void GameScene3::Update() {
@@ -277,11 +313,10 @@ void GameScene3::Update() {
 		ReverseCamera();
 		if (playerCanMove) 
 		{
-			
-
+			player_->Update();
+			player_->Movement();
 		}
-		player_->Update();
-		player_->Movement();
+	
 		if (!IsChanged) 
 		{
 			skydome_->Update();
@@ -292,6 +327,11 @@ void GameScene3::Update() {
 
 		}
 		skydome_->Update();
+
+		checkpoint1_->Update();
+
+		checkpoint2_->Update();
+
 		MoveCameraHorizontally();
 		goal_->Update();
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
@@ -321,7 +361,10 @@ void GameScene3::Update() {
 		}
 
 
-
+		if (!checkpoint2_->GetHasBeenTouchedPoint1() && !checkpoint1_->GetHasBeenTouched())
+		{
+			playHandle = 1;
+		}
 
 #ifdef _DEBUG
 
@@ -372,7 +415,9 @@ void GameScene3::Update() {
 		{
 			deathParticles_->Update();
 		}
+		checkpoint1_->Update();
 
+		checkpoint2_->Update();
 
 #ifdef _DEBUG
 
@@ -534,6 +579,36 @@ void GameScene3::CheckAllCollisions()
 
 	}
 
+#pragma endregion
+
+#pragma  region player checkpoint
+
+	AABB aabb6 = checkpoint1_->GetAABB();
+
+	if (IsCollision(aabb1, aabb6))
+	{
+		player_->OnCollision(checkpoint1_);
+		checkpoint1_->OnCollision(player_);
+		checkPoint2Reached_ = true;
+		if (audio_->IsPlaying(playHandle) == 0 && playHandle == 1)
+		{
+			playHandle = audio_->PlayWave(audioHandle_, false, 0.1f);
+		}
+	}
+
+	AABB aabb7 = checkpoint2_->GetAABB();
+
+	if (IsCollision(aabb1, aabb7))
+	{
+		player_->OnCollision(checkpoint2_);
+		checkpoint2_->OnCollisionFirst(player_);
+		checkPoint1Reached_ = true;
+		if (audio_->IsPlaying(playHandle) == 0 && playHandle == 1)
+		{
+			playHandle = audio_->PlayWave(audioHandle_, false, 0.1f);
+		}
+
+	}
 #pragma endregion
 
 }
@@ -808,6 +883,8 @@ void GameScene3::Draw() {
 #pragma region Play
 	case Phase::kPlay:
 		player_->Draw();
+		checkpoint1_->Draw();
+		checkpoint2_->Draw();
 		for (Enemy* enemy : enemies_) {
 			enemy->Draw();
 		}
@@ -862,6 +939,8 @@ void GameScene3::Draw() {
 		for (Enemy* enemy : enemies_) {
 			enemy->Draw();
 		}
+		checkpoint1_->Draw();
+		checkpoint2_->Draw();
 		deathParticles_->Draw();
 		if (!IsChanged)
 		{

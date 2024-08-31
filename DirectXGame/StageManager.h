@@ -17,7 +17,9 @@ public:
 
 	void Update();
 
-	void ConstantThingies();
+	void ConstantThingiesStage2();
+
+	void ConstantThingiesStage3();
 
 	void ChangeScene();
 
@@ -37,7 +39,9 @@ private:
 	GreyPauseVeil* greyPauseVeil = nullptr;
 	GameClearScreen* gameClearScreen = nullptr;
 	bool checkpoint1 = false;
+	bool checkpoint1Stage3 = false;
 	bool checkpoint2 = false;
+	bool checkpoint2Stage3 = false;
 	bool shownParachuteText = false;
 	uint32_t audioHandle_ = 0;
 	uint32_t playHandle = {};
