@@ -252,7 +252,10 @@ void StageManager::UpdateScene()
 	case Scene::kUnknown:
 		break;
 	case Scene::kTitle:
-		titleScene->Update();
+		if (!isPaused) 
+		{
+			titleScene->Update();
+		}
 		break;
 	case Scene::kGame:
 		if (!isPaused) 
@@ -272,7 +275,10 @@ void StageManager::UpdateScene()
 			gameScene3->Update();
 		}
 	case Scene::kGameClear:
-		gameClearScreen->Update();
+		if (!isPaused) 
+		{
+			gameClearScreen->Update();
+		}
 	default:
 		break;
 	}
