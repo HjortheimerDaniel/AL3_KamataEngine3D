@@ -32,6 +32,8 @@ class Spring;
 
 class DeathSpikeBlue;
 
+class Lock;
+
 class Player
 {
 	public:
@@ -97,6 +99,8 @@ class Player
 		void OnCollision(const Spring* spring);
 
 		void OnCollision(const DeathSpikeBlue* deathSpikeBlue);
+
+		void OnCollision(const Lock* lock);
 
 		void OnCollisionGoal(const Goal* goal);
 		

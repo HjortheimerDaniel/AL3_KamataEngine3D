@@ -125,6 +125,7 @@
     <ClCompile Include="gameScene3.cpp" />
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="GreyPauseVeil.cpp" />
+    <ClCompile Include="Lock.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapChipField.cpp" />
     <ClCompile Include="OwnMath.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Goal.h" />
     <ClInclude Include="GreyPauseVeil.h" />
     <ClInclude Include="input\Input.h" />
+    <ClInclude Include="Lock.h" />
     <ClInclude Include="MapChipField.h" />
     <ClInclude Include="math\Matrix4x4.h" />
     <ClInclude Include="math\Vector2.h" />

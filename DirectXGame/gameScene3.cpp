@@ -77,6 +77,14 @@ GameScene3::~GameScene3()
 	}
 	deathSpikesBlue_.clear();
 
+	delete lockModel_;
+	delete lock_;
+
+	for (Lock* lock : locks_)
+	{
+		delete lock;
+	}
+	locks_.clear();
 }
 
 void GameScene3::PlayerStartPos()
@@ -314,6 +322,23 @@ void GameScene3::Initialize() {
 	}
 
 #pragma endregion
+
+
+#pragma region Lock
+
+	lockModel_ = Model::CreateFromOBJ("lock", true);
+
+	for (int32_t i = 0; i < MAXSPRINGS; i++)
+	{
+		Lock* newLock = new Lock();
+		Vector3 lockPosition = mapChipField_->GetMapChipPositionByIndex(lockPosX[i], lockPosY[i]);
+		newLock->Initialize(lockModel_, viewProjection_, lockPosition);
+		locks_.push_back(newLock);
+		newLock->SetMapChipField(mapChipField_);
+
+	}
+
+#pragma endregion
 }
 
 void GameScene3::Update() {
@@ -369,6 +394,9 @@ void GameScene3::Update() {
 		if (!IsChanged) 
 		{
 			skydome_->Update();
+			for (Lock* lock : locks_) { //create new Enemy enemy 
+				lock->Update();
+			}
 		}
 		else 
 		{
@@ -705,6 +733,23 @@ void GameScene3::CheckAllCollisions()
 
 #pragma endregion
 
+
+#pragma region player lock
+
+	for (Lock* lock : locks_) { //create new Enemy enemy 
+
+		AABB aabb10 = lock->GetAABB();
+
+		if (IsCollision(aabb1, aabb10))
+		{
+			player_->OnCollision(lock);
+			//spring->OnCollision(player_);
+
+		}
+	}
+
+#pragma endregion
+
 }
 
 bool GameScene3::IsCollision(const AABB& aabb1, const AABB& aabb2)
@@ -1016,6 +1061,9 @@ void GameScene3::Draw() {
 		if (!IsChanged)
 		{
 			skydome_->Draw();
+			for (Lock* lock : locks_) { //create new Enemy enemy 
+				lock->Draw();
+			}
 		}
 		else
 		{

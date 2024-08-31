@@ -663,6 +663,12 @@ void Player::OnCollision(const DeathSpikeBlue* deathSpikeBlue)
 	isDead_ = true;
 }
 
+void Player::OnCollision(const Lock* lock)
+{
+	(void)lock;
+	isDead_ = true;
+}
+
 void Player::OnCollisionGoal(const Goal* goal)
 {
 	(void)goal;
