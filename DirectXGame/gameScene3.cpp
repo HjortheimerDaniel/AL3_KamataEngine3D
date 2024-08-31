@@ -220,7 +220,7 @@ void GameScene3::Initialize() {
 	{
 		ReverseCubes* newReverseCubes = new ReverseCubes();
 		Vector3 reverseBlockPosition = mapChipField_->GetMapChipPositionByIndex(reverseCubeSpawnX[i], reverseCubeSpawnY[i]);
-		newReverseCubes->Initialize(viewProjection_, reverseBlockPosition, isReversedBlock[i]);
+		newReverseCubes->Initialize(viewProjection_, reverseBlockPosition, isReversedBlock[i], reverseCubeActive[i]);
 		reversedCubes_.push_back(newReverseCubes);
 		newReverseCubes->SetMapChipField(mapChipField_);
 
@@ -277,10 +277,11 @@ void GameScene3::Update() {
 		ReverseCamera();
 		if (playerCanMove) 
 		{
-			player_->Update();
-			player_->Movement();
+			
 
 		}
+		player_->Update();
+		player_->Movement();
 		if (!IsChanged) 
 		{
 			skydome_->Update();
@@ -300,9 +301,11 @@ void GameScene3::Update() {
 			spike->Update();
 			spike->SpikeTimer();
 		}
+		
 		for (ReverseCubes* reverseCube : reversedCubes_) { //create new Enemy enemy 
 			reverseCube->Update();
 		}
+			
 		CheckAllCollisions();
 		IsEnemyCloseToPlayer();
 
@@ -352,6 +355,16 @@ void GameScene3::Update() {
 	case Phase::kDeath:
 		skydome_->Update();
 		goal_->Update();
+		ReverseCamera();
+		if (!IsChanged)
+		{
+			skydome_->Update();
+		}
+		else
+		{
+			skydome2_->Update();
+
+		}
 		for (Enemy* enemy : enemies_) { //create new Enemy enemy 
 			enemy->Update();
 		}
@@ -514,7 +527,7 @@ void GameScene3::CheckAllCollisions()
 	{
 		AABB aabb5 = reversecube->GetAABB();
 
-		if (IsCollision(aabb1, aabb5))
+		if (IsCollision(aabb1, aabb5) && reversecube->GetIsActive() && changeTimer == 20)
 		{
 			player_->OnCollision(reversecube);
 		}
@@ -569,6 +582,17 @@ void GameScene3::ReverseCamera()
 		IsChanged = true;
 		cameraController_->SetIsReversed(true);
 		cameraController_->SetTargetOffset({ 0.0f, 0.0f, 40.0f });
+		for (ReverseCubes* reverseCube : reversedCubes_) { //create new Enemy enemy 
+			if (reverseCube->GetIsActive())
+			{
+				reverseCube->SetIsActive(false);
+			}
+			else
+			{
+				reverseCube->SetIsActive(true);
+
+			}
+		}
 
 	}
 
@@ -579,7 +603,17 @@ void GameScene3::ReverseCamera()
 		IsChanged = false;
 		cameraController_->SetIsReversed(false);
 		cameraController_->SetTargetOffset({ 0.0f, 0.0f, -40.0f });
+		for (ReverseCubes* reverseCube : reversedCubes_) { //create new Enemy enemy 
+			if (reverseCube->GetIsActive())
+			{
+				reverseCube->SetIsActive(false);
+			}
+			else
+			{
+				reverseCube->SetIsActive(true);
 
+			}
+		}
 	}
 
 
@@ -829,7 +863,15 @@ void GameScene3::Draw() {
 			enemy->Draw();
 		}
 		deathParticles_->Draw();
-		skydome_->Draw();
+		if (!IsChanged)
+		{
+			skydome_->Draw();
+		}
+		else
+		{
+			skydome2_->Draw();
+
+		}
 		goal_->Draw();
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -870,7 +912,15 @@ void GameScene3::Draw() {
 #pragma region FadeOut
 
 	case Phase::kFadeOut:
-		skydome_->Draw();
+		if (!IsChanged)
+		{
+			skydome_->Draw();
+		}
+		else
+		{
+			skydome2_->Draw();
+
+		}
 		stageClearText_->Draw();
 		if (isSceneTransitioning)
 		{

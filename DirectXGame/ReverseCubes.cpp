@@ -12,16 +12,18 @@ ReverseCubes::~ReverseCubes()
 	delete reversedCubeModel[1];
 }
 
-void ReverseCubes::Initialize(ViewProjection* viewProjection, const Vector3& position, bool isReversedCube)
+void ReverseCubes::Initialize(ViewProjection* viewProjection, const Vector3& position, bool isReversedCube, bool isActive)
 {
 	isReversedCube_ = isReversedCube;
 	viewProjection_ = viewProjection;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
+	isActive_ = isActive;
 }
 
 void ReverseCubes::Update()
 {
+	worldTransform_.rotation_.y += 0.01f;
 	if (isReversedCube_) 
 	{
 		model_ = reversedCubeModel[1];

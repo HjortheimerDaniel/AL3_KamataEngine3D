@@ -152,10 +152,11 @@ private: // メンバ変数
 	uint32_t spikeSpawnX[MAXSPIKES] = { 45, 48, 51 };
 	uint32_t spikeSpawnY[MAXSPIKES] = { 6, 6, 6 };
 
-	uint32_t reverseCubeSpawnX[MAXREVERSECUBES] = { 6, 8};
-	uint32_t reverseCubeSpawnY[MAXREVERSECUBES] = { 95, 95 };
+	uint32_t reverseCubeSpawnX[MAXREVERSECUBES] = { 6, 12, 6, 6, 6, 12, 12, 12 };
+	uint32_t reverseCubeSpawnY[MAXREVERSECUBES] = { 95, 95, 96, 97, 98, 96, 97, 98 };
+	bool reverseCubeActive[MAXREVERSECUBES] = { true, false, true, true, true, false,false,false };
 
-	bool isReversedBlock[MAXREVERSECUBES] = { true, false };
+	bool isReversedBlock[MAXREVERSECUBES] = { true, false, true, true, true,false,false,false };
 
 	uint32_t sceneTransitionTimer = 0;
 	bool isSceneTransitioning = false;

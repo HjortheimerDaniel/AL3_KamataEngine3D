@@ -13,7 +13,7 @@ public:
 
 	~ReverseCubes();
 
-	void Initialize(ViewProjection* viewProjection, const Vector3& position, bool isReversedCube);
+	void Initialize(ViewProjection* viewProjection, const Vector3& position, bool isReversedCube, bool isActive);
 
 	void Update();
 
@@ -24,6 +24,10 @@ public:
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; };
 
 	bool GetIsReversed() { return isReversedCube_;};
+
+	void SetIsActive(bool isActive) { isActive_ = isActive; };
+
+	bool GetIsActive() { return isActive_;};
 
 	//void OnCollision(const Player* player);
 
@@ -38,6 +42,7 @@ private:
 	static inline const float kWidth = 1.8f;
 	static inline const float kHeight = 1.8f;
 	bool isReversedCube_ = false;
+	bool isActive_ = false;
 	Model* reversedCubeModel[2] =
 	{
 		Model::CreateFromOBJ("reversedcube", true),
