@@ -397,12 +397,7 @@ void Player::CollisionFalling(CollisionMapInfo& info)
 	{
 		hit = true;
 	} 
-	else 
-	{
-		hit = false;
-
-
-	}
+	
 
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom] + Vector3(0, kAdjustLanding, 0));
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
@@ -410,12 +405,7 @@ void Player::CollisionFalling(CollisionMapInfo& info)
 	{
 		hit = true;
 	}
-	else
-	{
-		hit = false;
 
-
-	}
 
 	if (!hit)
 	{
