@@ -657,6 +657,12 @@ void Player::OnCollision(const Spring* spring)
 
 }
 
+void Player::OnCollision(const DeathSpikeBlue* deathSpikeBlue)
+{
+	(void)deathSpikeBlue;
+	isDead_ = true;
+}
+
 void Player::OnCollisionGoal(const Goal* goal)
 {
 	(void)goal;

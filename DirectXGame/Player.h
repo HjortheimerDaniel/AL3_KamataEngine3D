@@ -30,6 +30,8 @@ class ReverseCubes;
 
 class Spring;
 
+class DeathSpikeBlue;
+
 class Player
 {
 	public:
@@ -93,6 +95,8 @@ class Player
 		void OnCollision(const ReverseCubes* reverseCubes);
 
 		void OnCollision(const Spring* spring);
+
+		void OnCollision(const DeathSpikeBlue* deathSpikeBlue);
 
 		void OnCollisionGoal(const Goal* goal);
 		

@@ -114,6 +114,7 @@
     <ClCompile Include="Checkpoint.cpp" />
     <ClCompile Include="ClearText.cpp" />
     <ClCompile Include="DeathParticles.cpp" />
+    <ClCompile Include="DeathSpikeBlue.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="Fireworks.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Checkpoint.h" />
     <ClInclude Include="ClearText.h" />
     <ClInclude Include="DeathParticles.h" />
+    <ClInclude Include="DeathSpikeBlue.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="Fireworks.h" />

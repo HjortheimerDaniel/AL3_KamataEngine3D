@@ -9,6 +9,7 @@
 #define MAXFIREWORKS 4
 #define MAXREVERSECUBES 30
 #define MAXSPRINGS 2
+#define MAXSDEATHSPRINS 3
 
 struct AABB {
 	Vector3 min;

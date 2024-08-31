@@ -24,6 +24,7 @@
 #include "ReverseCubes.h"
 #include "Checkpoint.h"
 #include "Spring.h"
+#include "DeathSpikeBlue.h"
 
 #define NOMINMAX
 
@@ -118,6 +119,7 @@ private: // メンバ変数
 	Model* clearTextModel_ = nullptr;
 	Model* spikeModel_ = nullptr;
 	Model* springModel_ = nullptr;
+	Model* deathSpikeBlueModel_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
@@ -137,10 +139,12 @@ private: // メンバ変数
 	std::list<Enemy*> enemies_;
 	std::list<Spikes*> spikes_;
 	std::list<ReverseCubes*> reversedCubes_;
+	std::list<DeathSpikeBlue*> deathSpikesBlue_;
 	std::list<Spring*> springs_;
 	DeathParticles* deathParticles_ = nullptr;
 	Phase phase_;
 	ReverseCubes* reverseCube_ = nullptr;
+	DeathSpikeBlue* deathSpikeBlue_ = nullptr;
 	bool isDead_ = false;
 	bool finished_ = false;
 	Fade* fade_ = nullptr;
@@ -189,6 +193,9 @@ private: // メンバ変数
 
 	uint32_t springPosX[MAXSPRINGS] = { 46, 53 };
 	uint32_t springPosY[MAXSPRINGS] = {98, 84};
+
+	uint32_t deathBluePosX[MAXSDEATHSPRINS] = { 70, 80, 90 };
+	uint32_t deathBluePosY[MAXSDEATHSPRINS] = { 68, 68, 68 };
 	
 	bool reverseCubeActive[MAXREVERSECUBES] = 
 	{ true, false, true, true, true, false,

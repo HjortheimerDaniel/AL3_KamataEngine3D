@@ -67,12 +67,22 @@ GameScene3::~GameScene3()
 		delete spring;
 	}
 	springs_.clear();
+
+	delete deathSpikeBlueModel_;
+	delete deathSpikeBlue_;
+
+	for (DeathSpikeBlue* deathSpikeBlue : deathSpikesBlue_)
+	{
+		delete deathSpikeBlue;
+	}
+	deathSpikesBlue_.clear();
+
 }
 
 void GameScene3::PlayerStartPos()
 {
 	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(2, 98);
-	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(42, 98);
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(63, 69);
 }
 
 void GameScene3::PlayerCheckpoint1Pos()
@@ -194,7 +204,7 @@ void GameScene3::Initialize() {
 
 	goalModel_ = Model::CreateFromOBJ("goal", true);
 	goal_ = new Goal();
-	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(8, 7);
+	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(97, 80);
 	goal_->Initialize(goalModel_, viewProjection_, doorPosition);
 	goal_->SetMapChipField(mapChipField_);
 
@@ -288,6 +298,22 @@ void GameScene3::Initialize() {
 	}
 
 #pragma endregion
+
+#pragma region DeathSpikeBlue
+
+	deathSpikeBlueModel_ = Model::CreateFromOBJ("deathspikeblue", true);
+
+	for (int32_t i = 0; i < MAXSDEATHSPRINS; i++)
+	{
+		DeathSpikeBlue* newDeathSpikeBlue = new DeathSpikeBlue();
+		Vector3 deathBluePosition = mapChipField_->GetMapChipPositionByIndex(deathBluePosX[i], deathBluePosY[i]);
+		newDeathSpikeBlue->Initialize(deathSpikeBlueModel_, viewProjection_, deathBluePosition);
+		deathSpikesBlue_.push_back(newDeathSpikeBlue);
+		newDeathSpikeBlue->SetMapChipField(mapChipField_);
+
+	}
+
+#pragma endregion
 }
 
 void GameScene3::Update() {
@@ -347,8 +373,13 @@ void GameScene3::Update() {
 		else 
 		{
 			skydome2_->Update();
+			for (DeathSpikeBlue* deathBlue : deathSpikesBlue_) { //create new Enemy enemy 
+				deathBlue->Update();
+			}
 
 		}
+
+		
 		skydome_->Update();
 
 		checkpoint1_->Update();
@@ -371,6 +402,8 @@ void GameScene3::Update() {
 		for (Spring* spring : springs_) { //create new Enemy enemy 
 			spring->Update();
 		}
+
+		
 		
 			
 		CheckAllCollisions();
@@ -653,6 +686,22 @@ void GameScene3::CheckAllCollisions()
 		}
 	}
 	
+
+#pragma endregion
+
+#pragma region player deathspikeblue
+
+	for (DeathSpikeBlue* deathSpikeBlue : deathSpikesBlue_) { //create new Enemy enemy 
+
+		AABB aabb9 = deathSpikeBlue->GetAABB();
+
+		if (IsCollision(aabb1, aabb9) && IsChanged)
+		{
+			player_->OnCollision(deathSpikeBlue);
+			//spring->OnCollision(player_);
+			
+		}
+	}
 
 #pragma endregion
 
@@ -962,6 +1011,7 @@ void GameScene3::Draw() {
 			spring->Draw();
 		}
 
+		
 
 		if (!IsChanged)
 		{
@@ -970,6 +1020,9 @@ void GameScene3::Draw() {
 		else
 		{
 			skydome2_->Draw();
+			for (DeathSpikeBlue* deathBlue : deathSpikesBlue_) { //create new Enemy enemy 
+				deathBlue->Draw();
+			}
 
 		}
 		//skydome_->Draw();
