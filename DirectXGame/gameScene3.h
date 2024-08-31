@@ -23,6 +23,7 @@
 #include "Spikes.h"
 #include "ReverseCubes.h"
 #include "Checkpoint.h"
+#include "Spring.h"
 
 #define NOMINMAX
 
@@ -116,6 +117,7 @@ private: // メンバ変数
 	Model* goalModel_ = nullptr;
 	Model* clearTextModel_ = nullptr;
 	Model* spikeModel_ = nullptr;
+	Model* springModel_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
@@ -135,6 +137,7 @@ private: // メンバ変数
 	std::list<Enemy*> enemies_;
 	std::list<Spikes*> spikes_;
 	std::list<ReverseCubes*> reversedCubes_;
+	std::list<Spring*> springs_;
 	DeathParticles* deathParticles_ = nullptr;
 	Phase phase_;
 	ReverseCubes* reverseCube_ = nullptr;
@@ -152,6 +155,7 @@ private: // メンバ変数
 	static inline const float maxCameraRangeTop = 22.0f + 160.0f;
 	static inline const float minCameraRangeTop = 16.0f + 160.0f;
 	Spikes* spike_ = nullptr;
+	Spring* spring_ = nullptr;
 	bool IsChanged = false;
 	int changeTimer = 20;
 
@@ -163,11 +167,46 @@ private: // メンバ変数
 	uint32_t spikeSpawnX[MAXSPIKES] = { 45, 48, 51 };
 	uint32_t spikeSpawnY[MAXSPIKES] = { 6, 6, 6 };
 
-	uint32_t reverseCubeSpawnX[MAXREVERSECUBES] = { 6, 12, 6, 6, 6, 12, 12, 12, 22, 25, 28, 31 };
-	uint32_t reverseCubeSpawnY[MAXREVERSECUBES] = { 95, 95, 96, 97, 98, 96, 97, 98, 98, 98, 98, 98 };
-	bool reverseCubeActive[MAXREVERSECUBES] = { true, false, true, true, true, false,false,false, false, true, false, true };
+	uint32_t reverseCubeSpawnX[MAXREVERSECUBES] = 
+	{ 
+		6, 12, 6, 6, 6,
+		12, 12, 12, 22,
+		25, 28, 31, 44 ,45,
+		46, 47, 48, 46, 53,
+		53, 54, 52, 51, 50,
+		55, 55, 55,
+	};
+	uint32_t reverseCubeSpawnY[MAXREVERSECUBES] = 
+	{ 
+		95, 95, 96, 97,
+		98, 96, 97, 98,
+		98, 98, 98, 98,
+		86, 86, 86, 86,
+		86, 97, 83, 72, 72,
+		72, 72, 72, 69, 68,
+		67,
+	};
 
-	bool isReversedBlock[MAXREVERSECUBES] = { true, false, true, true, true,false,false,false, false, true, false, true };
+	uint32_t springPosX[MAXSPRINGS] = { 46, 53 };
+	uint32_t springPosY[MAXSPRINGS] = {98, 84};
+	
+	bool reverseCubeActive[MAXREVERSECUBES] = 
+	{ true, false, true, true, true, false,
+	  false,false, false, true, false, true,
+	  true,true,true,true,true, false, false,
+	  true, true, true, true, true, false,
+	  false, false,
+	};
+
+	bool isReversedBlock[MAXREVERSECUBES] = 
+	{ true, false, true, true,
+	  true,false,false,false,
+	  false, true, false, true,
+	  true,true,true,true,true,
+	  false,false, true, true,
+	  true, true, true, false,
+		false, false,
+	};
 
 	uint32_t sceneTransitionTimer = 0;
 	bool isSceneTransitioning = false;
@@ -178,6 +217,7 @@ private: // メンバ変数
 	Checkpoint* checkpoint2_ = nullptr;
 	bool checkPoint2Reached_ = false;
 	bool checkPoint1Reached_ = false;
+	bool touchedSpring = false;
 
 	Vector3 playerPosition;
 	Vector3 playerSpawnPos;

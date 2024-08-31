@@ -28,6 +28,8 @@ class Checkpoint;
 
 class ReverseCubes;
 
+class Spring;
+
 class Player
 {
 	public:
@@ -90,11 +92,11 @@ class Player
 
 		void OnCollision(const ReverseCubes* reverseCubes);
 
+		void OnCollision(const Spring* spring);
+
 		void OnCollisionGoal(const Goal* goal);
 		
 		void StompCollision(const Enemy* enemy);
-
-		void StompCollision(const ReverseCubes* reverseCubes);
 
 		bool GetIsDead() const { return isDead_; };
 
@@ -137,8 +139,9 @@ class Player
 		bool onGround_ = true;
 		static inline const float kGravityAcceleration = 0.1f;
 		float kLimitFallSpeed = 0.3f; //change this with the parachute
-		static inline const float kJumpAcceleration = 0.9f;
+		static inline float kJumpAcceleration = 0.9f;
 		static inline const float kStompAcceleration = 1.1f;
+		static inline const float kSpringAcceleration = 2.1f;
 
 		//player collision
 

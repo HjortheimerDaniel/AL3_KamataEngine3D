@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector3.h"
+
 #define MAXENEMIES 4
 #define MAXSPIKES 3
 #define MAXSPIKES2 194
@@ -7,6 +8,7 @@
 #define MAXTHANKYOU 12
 #define MAXFIREWORKS 4
 #define MAXREVERSECUBES 30
+#define MAXSPRINGS 2
 
 struct AABB {
 	Vector3 min;

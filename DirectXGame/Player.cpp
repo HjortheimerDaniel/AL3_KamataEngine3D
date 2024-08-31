@@ -650,6 +650,13 @@ void Player::OnCollision(const ReverseCubes* reverseCubes)
 	isDead_ = true;
 }
 
+void Player::OnCollision(const Spring* spring)
+{
+	(void)spring;
+	velocity_ += Vector3(0, kSpringAcceleration, 0);
+
+}
+
 void Player::OnCollisionGoal(const Goal* goal)
 {
 	(void)goal;

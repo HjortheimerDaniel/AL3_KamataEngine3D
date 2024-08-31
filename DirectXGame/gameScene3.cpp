@@ -59,17 +59,25 @@ GameScene3::~GameScene3()
 	delete checkpointModel_;
 	delete checkpoint1_;
 	delete checkpoint2_;
+	delete springModel_;
+	delete spring_;
+
+	for (Spring* spring : springs_)
+	{
+		delete spring;
+	}
+	springs_.clear();
 }
 
 void GameScene3::PlayerStartPos()
 {
-	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(2, 98);
-	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(68, 5);
+	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(2, 98);
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(42, 98);
 }
 
 void GameScene3::PlayerCheckpoint1Pos()
 {
-	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(12, 98);
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(59, 69);
 }
 
 void GameScene3::PlayerCheckpoint2Pos()
@@ -259,12 +267,27 @@ void GameScene3::Initialize() {
 	checkpoint1_->SetMapChipField(mapChipField_);
 
 	checkpoint2_ = new Checkpoint();
-	Vector3 checkpoint2Position = mapChipField_->GetMapChipPositionByIndex(84, 96);
+	Vector3 checkpoint2Position = mapChipField_->GetMapChipPositionByIndex(59, 68);
 	checkpoint2_->Initialize(checkpointModel_, viewProjection_, checkpoint2Position);
 	checkpoint2_->SetMapChipField(mapChipField_);
 
 #pragma endregion
 
+#pragma region Spring
+
+	springModel_ = Model::CreateFromOBJ("spring", true);
+
+	for (int32_t i = 0; i < MAXSPRINGS; i++)
+	{
+		Spring* newsprings= new Spring();
+		Vector3 springPosition = mapChipField_->GetMapChipPositionByIndex(springPosX[i], springPosY[i]);
+		newsprings->Initialize(springModel_,viewProjection_, springPosition);
+		springs_.push_back(newsprings);
+		newsprings->SetMapChipField(mapChipField_);
+
+	}
+
+#pragma endregion
 }
 
 void GameScene3::Update() {
@@ -345,6 +368,10 @@ void GameScene3::Update() {
 		for (ReverseCubes* reverseCube : reversedCubes_) { //create new Enemy enemy 
 			reverseCube->Update();
 		}
+		for (Spring* spring : springs_) { //create new Enemy enemy 
+			spring->Update();
+		}
+		
 			
 		CheckAllCollisions();
 		IsEnemyCloseToPlayer();
@@ -603,12 +630,30 @@ void GameScene3::CheckAllCollisions()
 		player_->OnCollision(checkpoint2_);
 		checkpoint2_->OnCollisionFirst(player_);
 		checkPoint1Reached_ = true;
+		touchedSpring = false;
 		if (audio_->IsPlaying(playHandle) == 0 && playHandle == 1)
 		{
 			playHandle = audio_->PlayWave(audioHandle_, false, 0.1f);
 		}
 
 	}
+
+#pragma endregion
+
+#pragma region player spring
+	for (Spring* spring : springs_) { //create new Enemy enemy 
+
+		AABB aabb8 = spring->GetAABB();
+
+		if (IsCollision(aabb1, aabb8))
+		{
+			player_->OnCollision(spring);
+			spring->OnCollision(player_);
+			touchedSpring = true;
+		}
+	}
+	
+
 #pragma endregion
 
 }
@@ -780,13 +825,18 @@ void GameScene3::ChangePhase()
 
 void GameScene3::MoveCameraHorizontally()
 {
-	if (player_->GetWorldTransform().translation_.y > 23.0f)
+	if (player_->GetWorldTransform().translation_.y > 23.0f && !touchedSpring)
 	{
-		cameraRange.top = player_->GetWorldPosition().y - 9.0f;
+		cameraRange.top = player_->GetWorldPosition().y - 5.0f;
 	}
-	else
+	if (player_->GetWorldTransform().translation_.y < 23.0f)
 	{
 		cameraRange.top = 15.0f;
+	}
+
+	if (touchedSpring && player_->GetWorldTransform().translation_.y > 23.0f)
+	{
+		cameraRange.top = player_->GetWorldPosition().y + 12.0f;
 	}
 
 	cameraController_->SetMoveableArea(cameraRange);
@@ -907,6 +957,12 @@ void GameScene3::Draw() {
 				reverseCube->Draw();
 			}
 		}
+		for (Spring* spring : springs_) { //create new Enemy enemy 
+
+			spring->Draw();
+		}
+
+
 		if (!IsChanged)
 		{
 			skydome_->Draw();
