@@ -63,7 +63,7 @@ GameScene3::~GameScene3()
 
 void GameScene3::PlayerStartPos()
 {
-	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(2, 97);
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(2, 98);
 	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(68, 5);
 }
 
@@ -74,7 +74,7 @@ void GameScene3::PlayerCheckpoint1Pos()
 
 void GameScene3::PlayerCheckpoint2Pos()
 {
-	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(12, 97);
+	playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(42, 98);
 	//playerSpawnPos = mapChipField_->GetMapChipPositionByIndex(1, 3);
 }
 
@@ -254,12 +254,12 @@ void GameScene3::Initialize() {
 
 	checkpointModel_ = Model::CreateFromOBJ("checkpoint", true);
 	checkpoint1_ = new Checkpoint();
-	Vector3 checkpointPosition = mapChipField_->GetMapChipPositionByIndex(10, 97);
+	Vector3 checkpointPosition = mapChipField_->GetMapChipPositionByIndex(40, 97);
 	checkpoint1_->Initialize(checkpointModel_, viewProjection_, checkpointPosition);
 	checkpoint1_->SetMapChipField(mapChipField_);
 
 	checkpoint2_ = new Checkpoint();
-	Vector3 checkpoint2Position = mapChipField_->GetMapChipPositionByIndex(34, 98);
+	Vector3 checkpoint2Position = mapChipField_->GetMapChipPositionByIndex(84, 96);
 	checkpoint2_->Initialize(checkpointModel_, viewProjection_, checkpoint2Position);
 	checkpoint2_->SetMapChipField(mapChipField_);
 
